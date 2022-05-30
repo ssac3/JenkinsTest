@@ -17,8 +17,7 @@ export const Signup = () => {
 
 
   const [info, setInfo] = useState({
-    "name"    : "",
-    "id"      : "",
+    "username"    : "",
     "password": "",
     "auth"    : "user"
   });
@@ -29,8 +28,7 @@ export const Signup = () => {
 
   const postEnroll = () => {
     axios.post("http://localhost:8080/signup", {
-      name    : info.name,
-      id      : info.id,
+      username    : info.name,
       password: info.password,
       auth    : AuthInfo[info.auth],
 
@@ -68,13 +66,10 @@ export const Signup = () => {
 
       <Grid item style={{width: "80%"}}>
         <Grid>
-          <TextField id={"name"} label={"name"} variant={"outlined"} style={{width: "100%"}}
+          <TextField id={"username"} label={"username"} variant={"outlined"} style={{width: "100%"}}
                       onChange={onHandleInfo}></TextField>
         </Grid>
-        <Grid>
-          <TextField id={"id"} label={"id"} variant={"outlined"} style={{width: "100%"}}
-                      onChange={onHandleInfo}></TextField>
-        </Grid>
+
         <Grid>
           <TextField type={"password"} id={"password"} label={"password"} variant={"outlined"}
                     style={{width: "100%"}} onChange={onHandleInfo}></TextField>
