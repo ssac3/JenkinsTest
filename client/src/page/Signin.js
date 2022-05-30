@@ -25,7 +25,7 @@ export const Signin = () => {
         const myToken = res.headers.authorization;
         localStorage.setItem("TOKEN", myToken);
         history.push("/api/user");
-      }
+      } 
     }).catch(function (err){
       console.log(err);
     });

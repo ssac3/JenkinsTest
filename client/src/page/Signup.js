@@ -19,7 +19,7 @@ export const Signup = () => {
   const [info, setInfo] = useState({
     "username"    : "",
     "password": "",
-    "auth"    : "user"
+    "auth" : "user"
   });
 
   const onHandleInfo = (e) => {
@@ -28,9 +28,9 @@ export const Signup = () => {
 
   const postEnroll = () => {
     axios.post("http://localhost:8080/signup", {
-      username    : info.name,
+      username    : info.username,
       password: info.password,
-      auth    : AuthInfo[info.auth],
+      roles    : AuthInfo[info.auth],
 
     }).then(function (res) {
       if (res.status === 200) {
@@ -55,7 +55,7 @@ export const Signup = () => {
           id={"auth"}
           row
           aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="none"
+          defaultValue="user"
           name="radio-buttons-group"
           onChange={onHandleInfo}
         >
