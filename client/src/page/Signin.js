@@ -1,10 +1,15 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {Grid, Button, TextField, Typography} from '@mui/material';
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 
 export const Signin = () => {
   const history = useHistory();
+  useEffect(()=>{
+    localStorage.clear();
+  },[])
+
+
   const [info, setInfo] = useState({
     username:"",
     password:""
@@ -20,12 +25,16 @@ export const Signin = () => {
       username:info.username,
       password:info.password
     }).then(function (res){
-      if(res.status === 200){
-        // const myToken = res.headers.authorization.replace("Bearer ", "");
-        const myToken = res.headers.authorization;
-        localStorage.setItem("TOKEN", myToken);
+      if(res.data.resCode === 1){
+        alert("존재하지 않는 사용자 정보입니다.")
+      }else{
+        const access = res.headers.authorization;
+        const refresh = res.headers.refresh_token;
+        localStorage.setItem("ACCESS_TOKEN", access);
+        localStorage.setItem("REFRESH_TOKEN",refresh);
+
         history.push("/api/user");
-      } 
+      }
     }).catch(function (err){
       console.log(err);
     });

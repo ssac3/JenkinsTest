@@ -2,7 +2,6 @@ plugins {
     id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-
 //    id "com.moowork.node" version "1.3.1"
 }
 
@@ -10,14 +9,19 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+//def webappDir = "$projectDir/../client"
 //task runReactServer(type: NpmTask) {
-//    workingDir = file("/Users/chaeyeon/Documents/GitHub/SecurityTask/client");
-//    args = ["npm", "run", "start"]
+//    workingDir = file("${webappDir}");
+//    args = ["run", "start"]
 //}
 //
-//bootRun.doFirst {
-//    runReactServer
+//task copyWebApp(type: Copy){
+//    from '../client/build'
+//    into "./build/resources/main/static"
 //}
+//
+//copyWebApp.dependsOn(appNpmInstall)
+//compileJava.dependsOn(copyWebApp)
 
 configurations {
 

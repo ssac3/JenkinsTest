@@ -2,7 +2,9 @@ package com.example.server.config;
 
 
 import com.example.server.config.jwt.JwtAuthenticationFilter;
-import com.example.server.config.jwt.JwtAuthoriazationFilter;
+import com.example.server.config.jwt.JwtAuthorizationFilter;
+import com.example.server.config.jwt.JwtTokenProvider;
+import com.example.server.domain.tokenRepository.TokenRepository;
 import com.example.server.domain.userRepository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsConfig;
     private final UserRepository userRepository;
 
+    private final TokenRepository tokenRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -30,8 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilter(corsConfig)
             .formLogin().disable()
             .httpBasic().disable()
-            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-            .addFilter(new JwtAuthoriazationFilter(authenticationManager(), userRepository))
+            .addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenRepository, jwtTokenProvider))
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenRepository, jwtTokenProvider))
             .authorizeRequests()
             .antMatchers("/api/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
             .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
