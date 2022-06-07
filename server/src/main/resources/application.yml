@@ -9,18 +9,36 @@ server:
 
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@mydb_high?TNS_ADMIN=/Users/chaeyeon/Documents/oracle/Wallet_mydb
-    username: ADMIN
-    password: Whgdmstkfka123
+     driver-class-name: com.mysql.cj.jdbc.Driver
+     url: jdbc:mysql://rds-2.c0shydo6kpe1.ap-northeast-2.rds.amazonaws.com:3306/testdb
+     username: admin
+     password: 71039818hH!!
+
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@mydb_high?TNS_ADMIN=/Users/chaeyeon/Documents/oracle/Wallet_mydb
+#    username: ADMIN
+#    password: Whgdmstkfka123
 
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: create
 
-    show-sql: true
-    database-platform: org.hibernate.dialect.Oracle12cDialect
-    database: oracle
+    database: mysql
     properties:
       hibernate:
         format_sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+#    hibernate:
+#      ddl-auto: create
+#
+#    show-sql: true
+#    database-platform: org.hibernate.dialect.Oracle12cDialect
+#    database: oracle
+#    properties:
+#      hibernate:
+#        format_sql: true
+
+
+

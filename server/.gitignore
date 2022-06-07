@@ -35,3 +35,7 @@ bin/
 ### test ###
 **/test
 
+## JWT Bcrypt ##
+**/src/main/java/com/example/server/config/jwt/JwtProperties.java
+
+## 
