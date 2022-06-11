@@ -1,7 +1,7 @@
 !#/bin/bash
 
 echo "Start Spring Boot Application!"
-CURRENT_PID=$(ps -ef | grep java | grep dokotlin | awk '{print $2}')
+CURRENT_PID=$(ps -ef | grep java | grep server | awk '{print $2}')
 echo "$CURRENT_PID"
 
  if [ -z $CURRENT_PID ]; then
