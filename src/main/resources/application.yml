@@ -9,10 +9,10 @@ server:
 
 spring:
   datasource:
-     driver-class-name: org.mariadb.jdbc.Driver
-     url: jdbc:mysql://teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com:3306/ATTENDANCE_MANAGEMENT
-     username: admin
-     password: qwer1234!
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mysql://teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com:3306/ATTENDANCE_MANAGEMENT
+    username: admin
+    password: qwer1234!
 
 
 
