@@ -1,7 +1,7 @@
-package com.example.server.web.controller;
+package com.example.server.controller;
 
 import com.example.server.service.UserService;
-import com.example.server.web.dto.UserSaveRequestDto;
+import com.example.server.model.dto.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

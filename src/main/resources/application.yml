@@ -10,14 +10,9 @@ server:
 spring:
   datasource:
      driver-class-name: com.mysql.cj.jdbc.Driver
-     url: jdbc:mysql://rds-2.c0shydo6kpe1.ap-northeast-2.rds.amazonaws.com:3306/testdb
-     username: admin
-     password: 71039818hH!!
-
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    url: jdbc:oracle:thin:@mydb_high?TNS_ADMIN=/Users/chaeyeon/Documents/oracle/Wallet_mydb
-#    username: ADMIN
-#    password: Whgdmstkfka123
+     url: jdbc:mysql://localhost:3306/spring_test?serverTimezone=UTC&characterEncoding=UTF-8
+     username: root
+     password: qwsa9412!
 
   jpa:
     show-sql: true
@@ -30,15 +25,15 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
-#    hibernate:
-#      ddl-auto: create
-#
-#    show-sql: true
-#    database-platform: org.hibernate.dialect.Oracle12cDialect
-#    database: oracle
-#    properties:
-#      hibernate:
-#        format_sql: true
+  mybatis:
+    configuration:
+      map-underscore-to-camel-case: true
+
+    config: mybatis-config.xml
+
+    mapper-locations: classpath:/mybatis/mapper/**/*.xml
+
+    type-aliases-package: com.example.server.model
 
 
 

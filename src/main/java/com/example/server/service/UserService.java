@@ -2,7 +2,7 @@ package com.example.server.service;
 
 
 import com.example.server.domain.userRepository.UserRepository;
-import com.example.server.web.dto.UserSaveRequestDto;
+import com.example.server.model.dto.UserSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.example.server.web.dto;
+package com.example.server.model.dto;
 
 import lombok.Builder;
 import lombok.Getter;

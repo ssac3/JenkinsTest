@@ -40,22 +40,19 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'mysql:mysql-connector-java:8.0.21'
+    implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3' // jwt
+    implementation 'junit:junit:4.13.1' //junit
+
+    runtimeOnly 'mysql:mysql-connector-java'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-        // 오라클 클라우드 접속하기 위한 라이브러리
-    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
-    implementation 'com.oracle.database.security:osdt_cert'
-    implementation 'com.oracle.database.security:oraclepki'
-    implementation 'com.oracle.database.security:osdt_core'
-    //mysql에 접속하기 위한 라이브러리
-    implementation 'mysql:mysql-connector-java:8.0.21'
 
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3' // jwt
-    implementation 'junit:junit:4.13.1' //junit
 }
 
 tasks.named('test') {

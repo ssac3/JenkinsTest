@@ -1,4 +1,4 @@
-package com.example.server.web.dto;
+package com.example.server.model.dto;
 
 import com.example.server.domain.userRepository.User;
 import lombok.Builder;
