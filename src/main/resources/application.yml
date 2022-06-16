@@ -14,7 +14,12 @@ spring:
     username: admin
     password: qwer1234!
 
-
+  mybatis:
+    configuration:
+      map-underscore-to-camel-case: true
+    config: mybatis-config.xml
+    mapper-locations: classpath:/mybatis/mapper/**/*.xml
+    type-aliases-package: com.example.server.model
 
 
 

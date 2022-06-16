@@ -27,7 +27,7 @@ bin/
 !**/src/test/**/bin/
 
 
-### JPA ###
+### mybatis ###
 /src/main/resources/application.yml
 
 
