@@ -22,13 +22,10 @@ sourceCompatibility = '8'
 //
 //copyWebApp.dependsOn(appNpmInstall)
 //compileJava.dependsOn(copyWebApp)
-
 configurations {
-
     compileOnly {
         extendsFrom annotationProcessor
     }
-
 }
 
 repositories {

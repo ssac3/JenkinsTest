@@ -14,3 +14,4 @@ sleep 10
 fi
  echo ">어플리케이션 배포 진행!"
 nohup java -jar /var/lib/jenkins/workspace/server/build/libs/server-0.0.1-SNAPSHOT.jar & >> /home/ec2-user/deploy/logs/dokotlin.log &
+echo "FINISH"
