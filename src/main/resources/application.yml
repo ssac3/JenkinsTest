@@ -17,7 +17,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
     database: mysql
     properties:
@@ -25,15 +25,14 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
-  mybatis:
-    configuration:
-      map-underscore-to-camel-case: true
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
 
-    config: mybatis-config.xml
+  config: mybatis-config.xml
 
-    mapper-locations: classpath:/mybatis/mapper/**/*.xml
+  mapper-locations: mybatis/mapper/**/*.xml
 
-    type-aliases-package: com.example.server.model
-
+  type-aliases-package: com.example.server.model.dto.user, com.example.server.model.dto.manager, com.example.server.model.dto.admin, com.example.server.model.dto.token
 
 

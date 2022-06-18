@@ -1,6 +1,6 @@
 package com.example.server.config.auth;
 
-import com.example.server.domain.userRepository.User;
+import com.example.server.model.dto.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

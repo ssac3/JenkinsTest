@@ -1,7 +1,7 @@
 package com.example.server.config.auth;
 
-import com.example.server.domain.userRepository.User;
-import com.example.server.domain.userRepository.UserRepository;
+import com.example.server.model.dao.user.UserMapper;
+import com.example.server.model.dto.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserMapper userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User userEntity = userRepository.findByUsername(username);

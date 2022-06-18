@@ -1,6 +1,6 @@
-package com.example.server.model.dao;
+package com.example.server.model.dao.token;
 
-import com.example.server.model.dto.Token;
+import com.example.server.model.dto.token.Token;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 
 public interface TokenMapper {
-    public Token findByUsername(String username);
+    Token findByUsername(String username);
 }
