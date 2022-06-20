@@ -48,12 +48,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             String username = jwtTokenProvider.getVerifyToken(accessToken).getClaim("username").asString();
 
             if (username != null && !username.equals("")) {
-                User user = userRepository.findByUsername(username);
+                User user = userRepository.findByUsername(Long.parseLong(username));
                 PrincipalDetails principalDetails = new PrincipalDetails(user);
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails.getUsername(), null, principalDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                request.setAttribute("username",username);
                 chain.doFilter(request, response);
             }else{
                 System.out.println("[ERR] ACCESS TOKEN 사용자 정보 에러");
@@ -76,7 +77,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 System.out.println("refresh = " + refresh);
                 String username = JWT.decode(accessToken).getClaim("username").asString();
                 // DB의 Refresh와 클라이언트에서 받은 Refresh 비교
-                if(refresh.equals(tokenRepository.findByUsername(username).getToken())){
+                if(refresh.equals(tokenRepository.findByUsername(Long.parseLong(username)).getRefresh_token())){
                     System.out.println("[SUCCESS] 정상적인 Refresh Token");
 
                     if(jwtTokenProvider.refreshTokenValid(refresh)){ // refresh token 만료 여부 확인
@@ -84,7 +85,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + reissueAccessToken);
                     }else{
                         System.out.println("[WARN] Refresh Token 만료됨, 재로그인 요청");
-                        tokenRepository.deleteById(username);
+                        tokenRepository.deleteById(Long.parseLong(username));
                         statusCode.setResCode(2); statusCode.setResMsg("만료된 Refresh Token");
                         String result = om.writeValueAsString(statusCode);
                         response.getWriter().write(result);
@@ -92,7 +93,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     }
                 }else{
                     System.out.println("[ERR] 비정상적인 Refresh Token");
-                    tokenRepository.deleteById(username); // DB에 존재하는 refresh token 삭제
+                    tokenRepository.deleteById(Long.parseLong(username)); // DB에 존재하는 refresh token 삭제
                     statusCode.setResCode(2); statusCode.setResMsg("비정상적인 Refresh Token");
                     String result = om.writeValueAsString(statusCode);
                     response.getWriter().write(result);

@@ -17,9 +17,7 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        for(String role : user.getRoleList()){
-            authorities.add(()-> role);
-        }
+        authorities.add(()-> user.getRole());
         return authorities;
     }
 
@@ -30,7 +28,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getUsername().toString();
     }
 
     @Override

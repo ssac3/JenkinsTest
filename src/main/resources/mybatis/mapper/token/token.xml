@@ -6,14 +6,14 @@
 <mapper namespace="com.example.server.model.dao.token.TokenMapper">
 
     <select id="findByUsername" resultType="Token">
-        SELECT * FROM token where username = #{username};
+        SELECT * FROM TOKEN where EMPLOYEE_username = #{EMPLOYEE_username};
     </select>
 
-    <delete id="deleteById" parameterType="String">
-        DELETE FROM token where username = #{username};
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM TOKEN where EMPLOYEE_username = #{EMPLOYEE_username};
     </delete>
 
     <insert id="save" parameterType="Token">
-        INSERT INTO token (username, token ) values (#{username}, #{token});
+        INSERT INTO TOKEN (EMPLOYEE_username, refresh_token ) values (#{EMPLOYEE_username}, #{refresh_token});
     </insert>
 </mapper>
