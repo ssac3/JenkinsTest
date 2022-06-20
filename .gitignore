@@ -31,7 +31,6 @@ bin/
 /src/main/resources/application.yml
 
 
-
 ### test ###
 **/test
 
