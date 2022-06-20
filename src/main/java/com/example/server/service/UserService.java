@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Service
@@ -27,15 +30,15 @@ public class UserService {
     private final TokenMapper tokenMapper;
 
     public User selectUser(String username) {
-        return userMapper.findByUsername(username);
+        return userMapper.findByUsername(Long.parseLong(username));
     }
 
-    public void deleteById(String username){
+    public void deleteById(Long username){
         tokenMapper.deleteById(username);
     }
 
     public String selectPw(String username) {
-        return userMapper.findByUsername(username).getPassword();
+        return userMapper.findByUsername(Long.parseLong(username)).getPassword();
     }
 
     //    userMapper.updateByUsername(User.pwBcrypt(bCryptPasswordEncoder));
@@ -59,7 +62,7 @@ public class UserService {
         String username = tokendecoder(token);
         if(comparepw(username, user.getPassword())){
             String changePw = userMapper.pwBcrypt(user.getN_password()).getPassword();
-            userMapper.updateByUsername(User.builder().username(username).password(changePw).build());
+            userMapper.updateByUsername(User.builder().username(Long.parseLong(username)).password(changePw).build());
         }
         else{
             statusCode = StatusCode.builder().resCode(2).resMsg("현재 비밀번호가 일치하지 않습니다..").build();
@@ -68,8 +71,8 @@ public class UserService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> myview(String token){
-        String username = tokendecoder(token);
+    public ResponseEntity<StatusCode> myview(HttpServletRequest request){
+        String username = request.getAttribute("username").toString();
         System.out.println(username);
         StatusCode statusCode;
         if(username != null && !username.equals("")){
@@ -81,14 +84,28 @@ public class UserService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
+//    public ResponseEntity<StatusCode> myview(String token){
+//        String username = tokendecoder(token);
+//        System.out.println(username);
+//        StatusCode statusCode;
+//        if(username != null && !username.equals("")){
+//            statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공").data(selectUser(username)).build();
+//
+//        }
+//        else{
+//            statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();
+//        }
+//        return new JsonResponse().send(HttpStatus.OK, statusCode);
+//    }
 
-    public ResponseEntity<StatusCode> logout(String token){
-        String username = tokendecoder(token);
+    public ResponseEntity<StatusCode> logout(HttpServletRequest request) {
+//        String username = tokendecoder(token);
+        String username = request.getAttribute("username").toString();
         System.out.println(username);
         StatusCode statusCode;
         if(username != null && !username.equals("")){
             statusCode = StatusCode.builder().resCode(0).resMsg("로그아웃 성공").build();
-            deleteById(username);
+            deleteById(Long.parseLong(username));
         }
         else{
             statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();

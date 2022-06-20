@@ -30,9 +30,13 @@ public class UserController {
     public void admin(){
     }
 
-    @GetMapping("/api/myview")
-    public ResponseEntity<StatusCode> myview(@RequestHeader(JwtProperties.HEADER_STRING) String token){
-        return userService.myview(token);
+//    @GetMapping("/api/myview")
+//    public ResponseEntity<StatusCode> myview(@RequestHeader(JwtProperties.HEADER_STRING) String token){
+//        return userService.myview(token);
+//    }
+    @GetMapping("/myview")
+    public ResponseEntity<StatusCode> myview(HttpServletRequest request){
+        return userService.myview(request);
     }
 
 //    @GetMapping("/myview")
@@ -47,14 +51,14 @@ public class UserController {
         return userService.updatepw(user, token) ;
     }
 
-    @PostMapping("/delete")
-    public void delete(@RequestBody Token token){
-        userService.deleteById(token.getUsername());
-    }
+//    @PostMapping("/delete")
+//    public void delete(@RequestBody Token token){
+//        userService.deleteById(token.getEMPLOYEE_username());
+//    }
 
     @PostMapping("/logoutuser")
-    public ResponseEntity<StatusCode> logout(@RequestHeader(JwtProperties.HEADER_STRING) String token){
-        return userService.logout(token);
+    public ResponseEntity<StatusCode> logout(HttpServletRequest request){
+        return userService.logout(request);
     }
-
+//    @RequestHeader(JwtProperties.HEADER_STRING) String token
 }

@@ -4,16 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.server.model.dao.user.UserMapper">
-    <select id="findByUsername" parameterType="String" resultType="User">
-        SELECT * FROM my_user where username = #{username};
+    <select id="findByUsername" resultType="User">
+        SELECT * FROM EMPLOYEE where username = #{username};
     </select>
 
     <insert id="save" parameterType="User">
-        INSERT INTO my_user (password, roles, username ) values (#{password}, #{roles}, #{username});
+        INSERT INTO EMPLOYEE (username, dep_id, password, name, email, img, gender,
+                             position, role, qr_path ) values (#{username}, #{dep_id}, #{password}, #{name}, #{email}, #{img}, #{gender},
+                                                                          #{position}, #{role}, #{qr_path});
     </insert>
 
     <update id="updateByUsername" parameterType="User">
-        UPDATE my_user set password = #{password} where username = #{username};
+        UPDATE EMPLOYEE set password = #{N_password} where username = #{username};
     </update>
 
 </mapper>

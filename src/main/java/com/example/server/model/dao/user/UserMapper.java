@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface UserMapper {
-    User findByUsername(String username);
+    User findByUsername(Long username);
     void updateByUsername(User user);
     void save(User user);
 
