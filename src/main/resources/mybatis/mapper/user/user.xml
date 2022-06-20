@@ -7,4 +7,13 @@
     <select id="findByUsername" parameterType="String" resultType="User">
         SELECT * FROM my_user where username = #{username};
     </select>
+
+    <insert id="save" parameterType="User">
+        INSERT INTO my_user (password, roles, username ) values (#{password}, #{roles}, #{username});
+    </insert>
+
+    <update id="updateByUsername" parameterType="User">
+        UPDATE my_user set password = #{password} where username = #{username};
+    </update>
+
 </mapper>
