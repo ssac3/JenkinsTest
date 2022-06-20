@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="rds" uuid="b0e395cf-1af2-485f-adaf-5abd364c6dac">
-      <driver-ref>mysql.8</driver-ref>
+    <data-source source="LOCAL" name="@teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com" uuid="46511b89-5aa4-48aa-8b21-54f36278a322">
+      <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://rds-2.c0shydo6kpe1.ap-northeast-2.rds.amazonaws.com:3306</jdbc-url>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
