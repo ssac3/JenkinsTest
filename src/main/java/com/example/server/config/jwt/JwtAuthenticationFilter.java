@@ -4,9 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.StatusCode;
-import com.example.server.domain.tokenRepository.Token;
-import com.example.server.domain.tokenRepository.TokenRepository;
-import com.example.server.domain.userRepository.User;
+import com.example.server.model.dao.token.TokenMapper;
+import com.example.server.model.dto.token.Token;
+import com.example.server.model.dto.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +27,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final TokenRepository tokenRepository;
+    private final TokenMapper tokenRepository;
     private  final JwtTokenProvider jwtTokenProvider;
 
     private ObjectMapper om = new ObjectMapper();
@@ -58,6 +58,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jwtToken = jwtTokenProvider.creatAccessToken(principalDetails.getUsername()); // accessToken 발급
         String refreshToken = jwtTokenProvider.createRefreshToken(); // refreshToken 발급
 
+
         Token token = Token.builder().username(principalDetails.getUsername()).token(refreshToken).build(); // refreshToken DB에 저장
         tokenRepository.save(token);
 
@@ -67,7 +68,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        StatusCode statusCode = new StatusCode(1, "로그인 실패");
+        StatusCode statusCode = StatusCode.builder().resCode(1).resMsg( "로그인 실패").build();
         ObjectMapper om = new ObjectMapper();
         String result = om.writeValueAsString(statusCode);
         response.getWriter().write(result);

@@ -4,5 +4,6 @@
 <configuration>
     <mappers>
         <mapper resource="user.xml"/>
+        <mapper resource="token.xml"/>
     </mappers>
 </configuration>

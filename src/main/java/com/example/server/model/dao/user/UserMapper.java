@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserMapper {
     User findByUsername(String username);
+    void updateByUsername(User user);
+    void save(User user);
+
+    User pwBcrypt(String n_password);
 }

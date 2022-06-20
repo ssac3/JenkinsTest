@@ -3,9 +3,9 @@ package com.example.server.config.jwt;
 import com.auth0.jwt.JWT;
 import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.StatusCode;
-import com.example.server.domain.tokenRepository.TokenRepository;
-import com.example.server.domain.userRepository.User;
-import com.example.server.domain.userRepository.UserRepository;
+import com.example.server.model.dao.token.TokenMapper;
+import com.example.server.model.dao.user.UserMapper;
+import com.example.server.model.dto.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,13 +20,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    private UserRepository userRepository;
-    private TokenRepository tokenRepository;
+    private UserMapper userRepository;
+    private TokenMapper tokenRepository;
 
     private JwtTokenProvider jwtTokenProvider;
     private ObjectMapper om = new ObjectMapper();
     private StatusCode statusCode = new StatusCode();
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, TokenRepository tokenRepository, JwtTokenProvider jwtTokenProvider) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserMapper userRepository, TokenMapper tokenRepository, JwtTokenProvider jwtTokenProvider) {
         super(authenticationManager);
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;

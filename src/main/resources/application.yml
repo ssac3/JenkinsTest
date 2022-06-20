@@ -1,0 +1,28 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+spring:
+  datasource:
+     driver-class-name: com.mysql.cj.jdbc.Driver
+     url: jdbc:mysql://localhost:3306/spring_test?serverTimezone=UTC&characterEncoding=UTF-8
+     username: root
+     password: qwsa9412!
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+  config: mybatis-config.xml
+
+  mapper-locations: mybatis/mapper/**/*.xml
+
+  type-aliases-package: com.example.server.model.dto.user, com.example.server.model.dto.manager, com.example.server.model.dto.admin, com.example.server.model.dto.token
+
+
