@@ -14,16 +14,6 @@ spring:
      username: root
      password: qwsa9412!
 
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-
-    database: mysql
-    properties:
-      hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
 mybatis:
   configuration:

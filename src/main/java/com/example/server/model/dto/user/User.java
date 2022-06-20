@@ -1,6 +1,7 @@
 package com.example.server.model.dto.user;
 
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,14 +17,15 @@ public class User {
     private String username;
     private String password;
     private String roles;
-
+    private String n_password;
 
     @Builder
-    public User(Long id, String username, String password, String roles) {
+    public User(Long id, String username, String password, String roles, String n_password) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.n_password = n_password;
     }
 
     public List<String> getRoleList(){
@@ -32,4 +34,13 @@ public class User {
         }
         return new ArrayList<>();
     }
+
+    public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
+        return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).roles(roles).build();
+    }
+
+    public User pwBcrypt(BCryptPasswordEncoder bCryptPasswordEncoder){
+        return User.builder().password(bCryptPasswordEncoder.encode(password)).build();
+    }
+
 }

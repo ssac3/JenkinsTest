@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 
 public interface TokenMapper {
     Token findByUsername(String username);
+    void deleteById(String username);
+    void save(Token token);
 }
