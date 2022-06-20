@@ -4,8 +4,8 @@ package com.example.server.config;
 import com.example.server.config.jwt.JwtAuthenticationFilter;
 import com.example.server.config.jwt.JwtAuthorizationFilter;
 import com.example.server.config.jwt.JwtTokenProvider;
-import com.example.server.domain.tokenRepository.TokenRepository;
-import com.example.server.domain.userRepository.UserRepository;
+import com.example.server.model.dao.token.TokenMapper;
+import com.example.server.model.dao.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +22,9 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsConfig;
-    private final UserRepository userRepository;
+    private final UserMapper userRepository;
 
-    private final TokenRepository tokenRepository;
+    private final TokenMapper tokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -38,8 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenRepository, jwtTokenProvider))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenRepository, jwtTokenProvider))
             .authorizeRequests()
-            .antMatchers("/api/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-            .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
+            .antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER')")
+            .antMatchers("/manager/**").access("hasRole('ROLE_MANAGER')")
+            .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
             .anyRequest().permitAll();
     }
 
