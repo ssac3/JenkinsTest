@@ -1,5 +1,6 @@
 package com.example.server.model.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -8,25 +9,31 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private Long username;
     private Long depId;
     private String password;
     private String name;
+    private String department;
+    private String position;
     private String email;
+    private String manager;
+    private String location;
+    private String qrPath;
     private String img;
     private String gender;
-    private String position;
     private String role;
     private Date createdAt;
-    private String qrPath;
     private Long restTime;
     private String workingStatus;
     private String nPassword;
+
+
     @Builder
-    public User(Long username, Long depId, String password, String name, String email,
-                String img, String gender, String position, String role, Date createdAt,
-                String qrPath, Long restTime, String workingStatus, String nPassword) {
+    public User(Long username, Long depId, String password, String name, String email, String img,
+                String gender, String position, String role, Date createdAt, String qrPath, Long restTime,
+                String workingStatus, String nPassword, String department, String manager, String location) {
         this.username = username;
         this.depId = depId;
         this.password = password;
@@ -41,24 +48,18 @@ public class User {
         this.restTime = restTime;
         this.workingStatus = workingStatus;
         this.nPassword = nPassword;
+        this.department = department;
+        this.manager = manager;
+        this.location = location;
     }
 
-    //        public List<Long> getRole(){
-//
-//            return new ArrayList<>();
-//        }
-//    public List<Long> getRoleList(){
-//        if(this.role > 0){
-//            return Arrays.asList(this.roles.split(","));
-//        }
-//        return new ArrayList<>();
-//    }
 
     public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().username(username).name(name).depId(depId).img(img).email(email).gender(gender)
                 .password(bCryptPasswordEncoder.encode(password)).position(position).role(role)
                 .qrPath(qrPath).build();
     }
+
 
     public User pwBcrypt(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().password(bCryptPasswordEncoder.encode(password)).build();

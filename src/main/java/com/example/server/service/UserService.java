@@ -29,9 +29,9 @@ public class UserService {
 
     private final TokenMapper tokenMapper;
 
-    public User selectUser(String username) {
-        return userMapper.findByUsername(Long.parseLong(username));
-    }
+//    public User selectUser(String username) {
+//        return userMapper.findByUsername(Long.parseLong(username));
+//    }
 
     public void deleteById(Long username){
         tokenMapper.deleteById(username);
@@ -76,8 +76,8 @@ public class UserService {
         System.out.println(username);
         StatusCode statusCode;
         if(username != null && !username.equals("")){
-            statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공").data(selectUser(username)).build();
-
+            statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공")
+                    .data(userMapper.myview(Long.parseLong(username))).build();
         }
         else{
             statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();

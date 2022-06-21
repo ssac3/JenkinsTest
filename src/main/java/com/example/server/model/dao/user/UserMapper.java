@@ -12,4 +12,7 @@ public interface UserMapper {
     void save(User user);
 
     User pwBcrypt(String nPassword);
+
+    User myview(Long username);
+
 }
