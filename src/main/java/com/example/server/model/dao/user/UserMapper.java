@@ -11,5 +11,8 @@ public interface UserMapper {
     void updateByUsername(User user);
     void save(User user);
 
-    User pwBcrypt(String n_password);
+    User pwBcrypt(String nPassword);
+
+    User myview(Long username);
+
 }
