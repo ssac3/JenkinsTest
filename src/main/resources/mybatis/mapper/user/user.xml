@@ -10,8 +10,8 @@
 
     <insert id="save" parameterType="User">
         INSERT INTO EMPLOYEE (username, dep_id, password, name, email, img, gender,
-                             position, role, qr_path ) values (#{username}, #{dep_id}, #{password}, #{name}, #{email}, #{img}, #{gender},
-                                                                          #{position}, #{role}, #{qr_path});
+                             position, role, qr_path ) values (#{username}, #{depId}, #{password}, #{name}, #{email}, #{img}, #{gender},
+                                                                          #{position}, #{role}, #{qrPath});
     </insert>
 
     <update id="updateByUsername" parameterType="User">

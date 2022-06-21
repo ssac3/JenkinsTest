@@ -61,7 +61,7 @@ public class UserService {
         StatusCode statusCode;
         String username = tokendecoder(token);
         if(comparepw(username, user.getPassword())){
-            String changePw = userMapper.pwBcrypt(user.getN_password()).getPassword();
+            String changePw = userMapper.pwBcrypt(user.getNPassword()).getPassword();
             userMapper.updateByUsername(User.builder().username(Long.parseLong(username)).password(changePw).build());
         }
         else{

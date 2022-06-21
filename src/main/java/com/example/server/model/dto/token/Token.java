@@ -5,17 +5,16 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
 @ToString
 public class Token {
     private Long id;
-    private Long EMPLOYEE_username;
-    private String refresh_token;
+    private Long employeeUsername;
+    private String refreshToken;
 
     @Builder
-    public Token(Long EMPLOYEE_username, String refresh_token) {
-        this.EMPLOYEE_username = EMPLOYEE_username;
-        this.refresh_token = refresh_token;
+    public Token(Long employeeUsername, String refreshToken) {
+        this.employeeUsername = employeeUsername;
+        this.refreshToken = refreshToken;
     }
 
 
