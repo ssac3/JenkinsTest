@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface DepartmentMapper {
+
+    int existDeptId(Long id);
     Department findByDeptInfo(Long id);
 
-    void updateById(Department department);
+    void updateByOne(String id, String start_time, String end_time);
 
     void save(Department department);
 }

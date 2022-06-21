@@ -4,7 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.server.model.dao.manager.DepartmentMapper">
-    <select id="findByDeptInfo" resultType="Department">
-        SELECT * FROM DEPARTMENT where id = #{id};
+    <select id="existDeptId" resultType="Integer">
+        select exists(select id from DEPARTMENT where id = #{id} limit  1) as success;
     </select>
+
+    <select id="findByDeptInfo" resultType="Department">
+        SELECT name, location, date_format(start_time, '%H:%i') as start_time, end_time FROM DEPARTMENT where id = #{id};
+    </select>
+
+    <update id="updateByOne">
+        UPDATE DEPARTMENT SET start_time = #{start_time} and end_time=${end_time} where id=#{id}
+    </update>
 </mapper>
