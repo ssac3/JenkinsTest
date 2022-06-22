@@ -12,15 +12,9 @@ public interface UserMapper {
     User findByUsername(Long username);
     void updateByUsername(User user);
     void save(User user);
-
-<<<<<<< HEAD
+    
     User pwBcrypt(String n_password);
-
     List<MonthJoin> getAllAttendance(Long username);
-=======
-    User pwBcrypt(String nPassword);
-
     User myview(Long username);
->>>>>>> 0b5f24c4b197e90b7068c82c2d3a98cbee6608f6
 
 }
