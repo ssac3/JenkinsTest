@@ -1,38 +1,41 @@
 package com.example.server.model.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private Long username;
-    private Long dep_id;
+    private Long depId;
     private String password;
     private String name;
+    private String department;
+    private String position;
     private String email;
+    private String manager;
+    private String location;
+    private String qrPath;
     private String img;
     private String gender;
-    private String position;
     private String role;
-    private Date created_at;
-    private String qr_path;
-    private Long rest_time;
-    private String working_status;
-    private String N_password;
+    private Date createdAt;
+    private Long restTime;
+    private String workingStatus;
+    private String nPassword;
+
 
     @Builder
-    public User(Long username, Long dep_id, String password, String name, String email, String img,
-                String gender, String position, String role, Date created_at, String qr_path,
-                Long rest_time, String working_status, String N_password) {
+    public User(Long username, Long depId, String password, String name, String email, String img,
+                String gender, String position, String role, Date createdAt, String qrPath, Long restTime,
+                String workingStatus, String nPassword, String department, String manager, String location) {
         this.username = username;
-        this.dep_id = dep_id;
+        this.depId = depId;
         this.password = password;
         this.name = name;
         this.email = email;
@@ -40,30 +43,23 @@ public class User {
         this.gender = gender;
         this.position = position;
         this.role = role;
-        this.created_at = created_at;
-        this.qr_path = qr_path;
-        this.rest_time = rest_time;
-        this.working_status = working_status;
-        this.N_password = N_password;
+        this.createdAt = createdAt;
+        this.qrPath = qrPath;
+        this.restTime = restTime;
+        this.workingStatus = workingStatus;
+        this.nPassword = nPassword;
+        this.department = department;
+        this.manager = manager;
+        this.location = location;
     }
 
-
-//        public List<Long> getRole(){
-//
-//            return new ArrayList<>();
-//        }
-//    public List<Long> getRoleList(){
-//        if(this.role > 0){
-//            return Arrays.asList(this.roles.split(","));
-//        }
-//        return new ArrayList<>();
-//    }
 
     public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
-        return User.builder().username(username).name(name).dep_id(dep_id).img(img).email(email).gender(gender)
+        return User.builder().username(username).name(name).depId(depId).img(img).email(email).gender(gender)
                 .password(bCryptPasswordEncoder.encode(password)).position(position).role(role)
-                .qr_path(qr_path).build();
+                .qrPath(qrPath).build();
     }
+
 
     public User pwBcrypt(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().password(bCryptPasswordEncoder.encode(password)).build();

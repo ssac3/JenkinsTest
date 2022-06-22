@@ -22,12 +22,14 @@ public class UserController {
         userService.saveUser(user);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/main")
     public void user(){
+        System.out.println("user접근");
     }
 
     @GetMapping("/admin")
     public void admin(){
+        System.out.println("admin접근");
     }
 
 //    @GetMapping("/api/myview")

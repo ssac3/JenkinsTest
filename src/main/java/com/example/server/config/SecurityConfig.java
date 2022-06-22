@@ -35,12 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilter(corsConfig)
             .formLogin().disable()
             .httpBasic().disable()
-            //.addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenRepository, jwtTokenProvider))
-            //.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenRepository, jwtTokenProvider))
+            .addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenRepository, jwtTokenProvider))
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenRepository, jwtTokenProvider))
             .authorizeRequests()
-           // .antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER')")
-            //.antMatchers("/manager/**").access("hasRole('ROLE_MANAGER')")
-            //.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+            .antMatchers("/user/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
+            .antMatchers("/manager/**").access("hasRole('ROLE_MANAGER')")
+            .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
             .anyRequest().permitAll();
     }
 

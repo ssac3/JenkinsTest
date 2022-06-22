@@ -53,7 +53,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails.getUsername(), null, principalDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
                 request.setAttribute("username",username);
                 chain.doFilter(request, response);
             }else{
@@ -77,7 +76,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 System.out.println("refresh = " + refresh);
                 String username = JWT.decode(accessToken).getClaim("username").asString();
                 // DB의 Refresh와 클라이언트에서 받은 Refresh 비교
-                if(refresh.equals(tokenRepository.findByUsername(Long.parseLong(username)).getRefresh_token())){
+                if(refresh.equals(tokenRepository.findByUsername(Long.parseLong(username)).getRefreshToken())){
                     System.out.println("[SUCCESS] 정상적인 Refresh Token");
 
                     if(jwtTokenProvider.refreshTokenValid(refresh)){ // refresh token 만료 여부 확인
