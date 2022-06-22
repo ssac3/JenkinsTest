@@ -8,6 +8,7 @@ import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.token.TokenMapper;
 import com.example.server.model.dao.user.UserMapper;
+import com.example.server.model.dto.user.MonthJoin;
 import com.example.server.model.dto.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Service
@@ -116,5 +118,15 @@ public class UserService {
     public void saveUser(User user){
         userMapper.save(user.toEntity(bCryptPasswordEncoder));
     }
+
+    public ResponseEntity<StatusCode> getAllAttendance(HttpServletRequest request) {
+        String username = request.getAttribute("username").toString();
+        MonthJoin monthJoin;
+        StatusCode statusCode;
+        statusCode = StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").data(userMapper.getAllAttendance(Long.parseLong(username))).build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+
 
 }
