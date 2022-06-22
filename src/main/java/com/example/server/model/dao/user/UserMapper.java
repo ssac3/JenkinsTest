@@ -10,9 +10,6 @@ public interface UserMapper {
     User findByUsername(Long username);
     void updateByUsername(User user);
     void save(User user);
-
-    User pwBcrypt(String nPassword);
-
-    User myview(Long username);
+    User myView(Long username);
 
 }

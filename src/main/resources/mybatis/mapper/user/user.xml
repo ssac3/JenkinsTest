@@ -8,7 +8,7 @@
         SELECT * FROM EMPLOYEE where username = #{username};
     </select>
 
-    <select id="myview" resultType="User">
+    <select id="myView" resultType="User">
         select * from (select e.name, d.name as department, e.position, e.email, d.location, e.qr_path, e.img
                        from (SELECT name, dep_id, position, email, qr_path, img from EMPLOYEE where username = #{username}) e
                                 JOIN DEPARTMENT d ON e.dep_id = d.id) a
@@ -22,7 +22,9 @@
     </insert>
 
     <update id="updateByUsername" parameterType="User">
-        UPDATE EMPLOYEE set password = #{N_password} where username = #{username};
+        UPDATE EMPLOYEE set password = #{password} where username = #{username};
     </update>
+
+
 
 </mapper>

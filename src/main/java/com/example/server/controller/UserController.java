@@ -17,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     public void saveUser(@RequestBody User user){
         userService.saveUser(user);
     }
@@ -32,35 +32,21 @@ public class UserController {
         System.out.println("admin접근");
     }
 
-//    @GetMapping("/api/myview")
-//    public ResponseEntity<StatusCode> myview(@RequestHeader(JwtProperties.HEADER_STRING) String token){
-//        return userService.myview(token);
-//    }
-    @GetMapping("/myview")
-    public ResponseEntity<StatusCode> myview(HttpServletRequest request){
-        return userService.myview(request);
+    @GetMapping("/myView")
+    public ResponseEntity<StatusCode> myView(HttpServletRequest request){
+        return userService.myView(request);
     }
 
-//    @GetMapping("/myview")
-//    public User selectUser(@RequestBody User user){
-//        return userService.selectUser(user.getUsername());
-//    }
 
-
-    @PostMapping("/updatepw")
-    public ResponseEntity<StatusCode> updatepw(@RequestBody User user,
-                                               @RequestHeader(JwtProperties.HEADER_STRING) String token){
-        return userService.updatepw(user, token) ;
+    @PostMapping("/updatePw")
+    public ResponseEntity<StatusCode> updatepw(HttpServletRequest request,
+                                               @RequestBody User user)
+    {
+        return userService.updatepw(request, user);
     }
 
-//    @PostMapping("/delete")
-//    public void delete(@RequestBody Token token){
-//        userService.deleteById(token.getEMPLOYEE_username());
-//    }
-
-    @PostMapping("/logoutuser")
+    @PostMapping("/logoutUser")
     public ResponseEntity<StatusCode> logout(HttpServletRequest request){
         return userService.logout(request);
     }
-//    @RequestHeader(JwtProperties.HEADER_STRING) String token
 }
