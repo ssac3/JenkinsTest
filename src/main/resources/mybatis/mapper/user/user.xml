@@ -24,7 +24,4 @@
     <update id="updateByUsername" parameterType="User">
         UPDATE EMPLOYEE set password = #{password} where username = #{username};
     </update>
-
-
-
 </mapper>

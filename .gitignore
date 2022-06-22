@@ -4,7 +4,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-
 # Ignore Gradle GUI config
 gradle-app.setting
 
@@ -35,5 +34,4 @@ bin/
 **/test
 
 ## JWT Bcrypt ##
-**/src/main/java/com/example/server/config/jwt/JwtProperties.java
-## 
+/src/main/java/com/example/server/config/jwt/JwtProperties.java
