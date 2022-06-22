@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//TEST_AMDTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.server.model.dao.manager.DepartmentMapper">
+    <select id="existDeptId" resultType="Integer">
+        select exists(select id from DEPARTMENT where id = #{id} limit  1) as success;
+    </select>
+
+    <select id="findByDeptInfo" resultType="Department">
+        SELECT name, location, start_time, end_time FROM DEPARTMENT where id = #{id};
+    </select>
+
+    <update id="updateByOne">
+        UPDATE DEPARTMENT SET start_time = #{startTime}, end_time=#{endTime} where id=#{id}
+    </update>
+</mapper>
