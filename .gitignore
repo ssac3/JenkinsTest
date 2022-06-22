@@ -30,5 +30,8 @@ bin/
 /src/main/resources/application.yml
 
 
+### test ###
+**/test
+
 ## JWT Bcrypt ##
 /src/main/java/com/example/server/config/jwt/JwtProperties.java

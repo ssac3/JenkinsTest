@@ -1,6 +1,9 @@
 package com.example.server.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -10,6 +13,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class User {
     private Long username;
     private Long depId;
@@ -53,16 +57,10 @@ public class User {
         this.location = location;
     }
 
-
     public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().username(username).name(name).depId(depId).img(img).email(email).gender(gender)
                 .password(bCryptPasswordEncoder.encode(password)).position(position).role(role)
                 .qrPath(qrPath).build();
-    }
-
-
-    public User pwBcrypt(BCryptPasswordEncoder bCryptPasswordEncoder){
-        return User.builder().password(bCryptPasswordEncoder.encode(password)).build();
     }
 
 }

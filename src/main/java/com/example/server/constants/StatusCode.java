@@ -19,6 +19,4 @@ public class StatusCode {
         this.resMsg = resMsg;
         this.data = data;
     }
-
-
 }

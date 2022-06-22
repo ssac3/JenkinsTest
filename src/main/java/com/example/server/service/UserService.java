@@ -26,14 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final UserMapper userMapper;
-
     private final TokenMapper tokenMapper;
-
-//    public User selectUser(String username) {
-//        return userMapper.findByUsername(Long.parseLong(username));
-//    }
+    private StatusCode statusCode;
 
     public void deleteById(Long username){
         tokenMapper.deleteById(username);
@@ -43,68 +38,45 @@ public class UserService {
         return userMapper.findByUsername(Long.parseLong(username)).getPassword();
     }
 
-    //    userMapper.updateByUsername(User.pwBcrypt(bCryptPasswordEncoder));
-    public boolean comparepw(String username, String password) {
-        String pw = selectPw(username);
-        String n_pw = userMapper.pwBcrypt(password).getPassword();
-        if (pw.equals(n_pw)) {
-            return true;
-        }
-        return false;
-    }
-    public String tokendecoder(String token){
-        String jwtToken = token.replace("Bearer ", ""); // Bearer를 제외한 실제 토큰 값만 추출
-        // JWT 검증 => 검증 실패 시 exception 발생, 통과는 서명이 완료되었다는 것을 의미함
-        String username = JWT.require(Algorithm.HMAC256(JwtProperties.SECRET)).build().verify(jwtToken).getClaim("username").asString();
-        return username;
-    }
+    public ResponseEntity<StatusCode> updatepw(HttpServletRequest request, User user){
+        String username = request.getAttribute("username").toString();
+        if(username != null && !username.equals("")){
+//            String pw = bCryptPasswordEncoder.encode(user.getPassword());
+            String pw_check = selectPw(username);
+            if (bCryptPasswordEncoder.matches(user.getPassword(), pw_check)){
+                String n_pw = bCryptPasswordEncoder.encode(user.getNPassword());
+                System.out.println(n_pw);
+                userMapper.updateByUsername(User.builder().username(Long.parseLong(username))
+                        .password(n_pw).build());
 
-    public ResponseEntity<StatusCode> updatepw(User user, String token){
-        StatusCode statusCode;
-        String username = tokendecoder(token);
-        if(comparepw(username, user.getPassword())){
-            String changePw = userMapper.pwBcrypt(user.getNPassword()).getPassword();
-            userMapper.updateByUsername(User.builder().username(Long.parseLong(username)).password(changePw).build());
+                statusCode = StatusCode.builder().resCode(0).resMsg("비밀번호 수정 성공").build();
+            }
+            else{
+                statusCode = StatusCode.builder().resCode(2).resMsg("현재 비밀번호가 일치하지 않습니다..").build();
+            }
         }
         else{
-            statusCode = StatusCode.builder().resCode(2).resMsg("현재 비밀번호가 일치하지 않습니다..").build();
+            statusCode = StatusCode.builder().resCode(1).resMsg("에러 발생").build();
         }
-        statusCode = StatusCode.builder().resCode(0).resMsg("비밀번호 수정 성공").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> myview(HttpServletRequest request){
+    public ResponseEntity<StatusCode> myView(HttpServletRequest request){
         String username = request.getAttribute("username").toString();
         System.out.println(username);
         StatusCode statusCode;
         if(username != null && !username.equals("")){
             statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공")
-                    .data(userMapper.myview(Long.parseLong(username))).build();
+                    .data(userMapper.myView(Long.parseLong(username))).build();
         }
         else{
             statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-//    public ResponseEntity<StatusCode> myview(String token){
-//        String username = tokendecoder(token);
-//        System.out.println(username);
-//        StatusCode statusCode;
-//        if(username != null && !username.equals("")){
-//            statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공").data(selectUser(username)).build();
-//
-//        }
-//        else{
-//            statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();
-//        }
-//        return new JsonResponse().send(HttpStatus.OK, statusCode);
-//    }
-
     public ResponseEntity<StatusCode> logout(HttpServletRequest request) {
-//        String username = tokendecoder(token);
         String username = request.getAttribute("username").toString();
         System.out.println(username);
-        StatusCode statusCode;
         if(username != null && !username.equals("")){
             statusCode = StatusCode.builder().resCode(0).resMsg("로그아웃 성공").build();
             deleteById(Long.parseLong(username));
