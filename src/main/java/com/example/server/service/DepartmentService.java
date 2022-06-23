@@ -24,7 +24,7 @@ public class DepartmentService {
     public ResponseEntity<StatusCode> findByOne(HttpServletRequest request, Long id) {
         String username = request.getAttribute("username").toString();
         if(username != null && !username.equals("")){
-            int result = departmentMapper.existDeptId(id);
+            int result = departmentMapper.validDeptId(id);
 
             if(result == 0){
                 statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 부서 ID 입니다.").build();
@@ -42,7 +42,7 @@ public class DepartmentService {
 
     @Transactional
     public ResponseEntity<StatusCode> updateByOne(Long id, String startTime, String endTime){
-        int checkValidId = departmentMapper.existDeptId(id);
+        int checkValidId = departmentMapper.validDeptId(id);
 
         if(checkValidId == 0){
             statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 부서 ID 입니다.").build();
@@ -79,6 +79,24 @@ public class DepartmentService {
             statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
         }
 
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> updateVacationByOne(String userInfo, Long vId, String approvalFlag) {
+        System.out.println("userInfo = " + userInfo);
+
+        if (userInfo != null && !userInfo.equals("")) {
+            int checkValidId = departmentMapper.validVid(vId);
+            System.out.println("checkValidId = " + checkValidId);
+            if(checkValidId == 0){
+                statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 휴가 ID 입니다.").build();
+            }else{
+                System.out.println("vId = " + vId);
+                System.out.println("approvalFlag = " + approvalFlag);
+                departmentMapper.updateVacationByOne(approvalFlag, vId);
+                statusCode = StatusCode.builder().resCode(0).resMsg("휴가 수정 완료").build();
+            }
+        }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }

@@ -17,7 +17,7 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL) // Null 값인 필드 제외
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Department {
     private Long id;
     private String name;
