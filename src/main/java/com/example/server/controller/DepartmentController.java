@@ -25,18 +25,18 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @PostMapping("/deptUpdate")
-    public ResponseEntity<StatusCode> findByOne(HttpServletRequest request, @RequestBody Department department) {
-        return departmentService.findByOne(request, department.getId());
+    public ResponseEntity<StatusCode> findByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Department department) {
+        return departmentService.findByOne(principalDetails.getUsername(), department.getId());
     }
 
     @PostMapping("/update")
-    public ResponseEntity<StatusCode> updateByOne(@RequestBody Department department) {
-        return departmentService.updateByOne(department.getId(), department.getStartTime(), department.getEndTime());
+    public ResponseEntity<StatusCode> updateByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Department department) {
+        return departmentService.updateByOne(principalDetails.getUsername(), department.getId(), department.getStartTime(), department.getEndTime());
     }
 
     @PostMapping("/vacView")
-    public ResponseEntity<StatusCode> findByVacationAll(HttpServletRequest request) {
-        return departmentService.findByVacationAll(request);
+    public ResponseEntity<StatusCode> findByVacationAll(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return departmentService.findByVacationAll(principalDetails.getUsername());
     }
 
     @PostMapping("/vacUpdate")

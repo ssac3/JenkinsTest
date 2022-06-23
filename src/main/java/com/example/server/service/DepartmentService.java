@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -20,10 +18,9 @@ import java.util.*;
 public class DepartmentService {
     private final DepartmentMapper departmentMapper;
     private StatusCode statusCode;
-    @Transactional
-    public ResponseEntity<StatusCode> findByOne(HttpServletRequest request, Long id) {
-        String username = request.getAttribute("username").toString();
-        if(username != null && !username.equals("")){
+
+    public ResponseEntity<StatusCode> findByOne(String userInfo, Long id) {
+        if(userInfo != null && !userInfo.equals("")){
             int result = departmentMapper.validDeptId(id);
 
             if(result == 0){
@@ -40,24 +37,29 @@ public class DepartmentService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    @Transactional
-    public ResponseEntity<StatusCode> updateByOne(Long id, String startTime, String endTime){
-        int checkValidId = departmentMapper.validDeptId(id);
+    public ResponseEntity<StatusCode> updateByOne(String userInfo, Long id, String startTime, String endTime){
 
-        if(checkValidId == 0){
-            statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 부서 ID 입니다.").build();
-        }else{
-            LocalDateTime sDate = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime eDate = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            departmentMapper.updateByOne(sDate, eDate, id);
-            statusCode = StatusCode.builder().resCode(0).resMsg("출/퇴근 시간 수정 완료").build();
+        if(userInfo != null && !userInfo.equals("")){
+            int checkValidId = departmentMapper.validDeptId(id);
+
+            if(checkValidId == 0){
+                statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 부서 ID 입니다.").build();
+            }else{
+                LocalDateTime sDate = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                LocalDateTime eDate = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                departmentMapper.updateByOne(sDate, eDate, id);
+                statusCode = StatusCode.builder().resCode(0).resMsg("출/퇴근 시간 수정 완료").build();
+            }
+        }
+        else{
+            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
+            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
 
-    public ResponseEntity<StatusCode> findByVacationAll( HttpServletRequest request){
-        String userInfo = request.getAttribute("username").toString();
+    public ResponseEntity<StatusCode> findByVacationAll(String userInfo){
         if(userInfo != null && !userInfo.equals("")){
             List<VacationView> result = departmentMapper.findByVacationAll();
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
