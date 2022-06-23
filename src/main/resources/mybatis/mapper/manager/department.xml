@@ -15,4 +15,10 @@
     <update id="updateByOne">
         UPDATE DEPARTMENT SET start_time = #{startTime}, end_time=#{endTime} where id=#{id}
     </update>
+
+    <select id="findByVacationAll" resultType="VacationView">
+        SELECT VACATION.id as vId, username, date, type, contents, approval_flag FROM EMPLOYEE
+        INNER JOIN VACATION ON EMPLOYEE.username = VACATION.emp_id
+        WHERE VACATION.approval_flag = '0';
+    </select>
 </mapper>
