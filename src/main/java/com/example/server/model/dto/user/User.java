@@ -33,7 +33,6 @@ public class User {
     private String workingStatus;
     private String nPassword;
 
-
     @Builder
     public User(Long username, Long depId, String password, String name, String email, String img,
                 String gender, String position, String role, Date createdAt, String qrPath, Long restTime,

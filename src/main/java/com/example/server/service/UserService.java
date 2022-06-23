@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserMapper userMapper;
     private final TokenMapper tokenMapper;
@@ -48,7 +47,6 @@ public class UserService {
                 System.out.println(n_pw);
                 userMapper.updateByUsername(User.builder().username(Long.parseLong(username))
                         .password(n_pw).build());
-
                 statusCode = StatusCode.builder().resCode(0).resMsg("비밀번호 수정 성공").build();
             }
             else{
@@ -74,6 +72,7 @@ public class UserService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
+
     public ResponseEntity<StatusCode> logout(HttpServletRequest request) {
         String username = request.getAttribute("username").toString();
         System.out.println(username);
@@ -90,15 +89,4 @@ public class UserService {
     public void saveUser(User user){
         userMapper.save(user.toEntity(bCryptPasswordEncoder));
     }
-
-    public ResponseEntity<StatusCode> getAllAttendance(HttpServletRequest request) {
-        String username = request.getAttribute("username").toString();
-        MonthJoin monthJoin;
-        StatusCode statusCode;
-        statusCode = StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").data(userMapper.getAllAttendance(Long.parseLong(username))).build();
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
-    }
-
-
-
 }
