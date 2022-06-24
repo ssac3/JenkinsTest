@@ -12,6 +12,7 @@ import lombok.*;
 public class VacationView {
     private Long vId;
     private Long username;
+    private String name;
     private String date;
     private String type;
     private String contents;
