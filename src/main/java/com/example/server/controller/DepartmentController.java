@@ -24,12 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 public class DepartmentController {
     private final DepartmentService departmentService;
 
-    @PostMapping("/deptUpdate")
+    @PostMapping("/deptView")
     public ResponseEntity<StatusCode> findByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Department department) {
         return departmentService.findByOne(principalDetails.getUsername(), department.getId());
     }
 
-    @PostMapping("/update")
+    @PostMapping("/deptUpdate")
     public ResponseEntity<StatusCode> updateByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Department department) {
         return departmentService.updateByOne(principalDetails.getUsername(), department.getId(), department.getStartTime(), department.getEndTime());
     }
