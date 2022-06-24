@@ -30,9 +30,8 @@ public class AdminController {
     }
 
     //사원등록하기기
-    @PostMapping("/admin/saveEmp")
+    /*@PostMapping("/admin/saveEmp")
     public ResponseEntity<StatusCode> saveEmp(@RequestBody User user){
-        adminService.
-
-    }
+        return "사원저장"
+    }*/
 }
