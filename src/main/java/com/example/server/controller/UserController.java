@@ -27,10 +27,10 @@ public class UserController {
         System.out.println("user접근");
     }
 
-    @GetMapping("/admin")
+   /* @GetMapping("/admin")
     public void admin(){
         System.out.println("admin접근");
-    }
+    }*/
 
     @GetMapping("/myView")
     public ResponseEntity<StatusCode> myView(HttpServletRequest request){
