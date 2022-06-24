@@ -15,7 +15,9 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Vacation {
     Long id;
+    @JsonProperty("aId")
     Long aId;
+    @JsonProperty("empId")
     Long empId;
     String date;
     String type;
