@@ -67,6 +67,7 @@ public class DepartmentService {
             Object data = result.stream().map(value -> {
                 map.put("vId", value.getVId());
                 map.put("username", value.getUsername());
+                map.put("name", value.getName());
                 map.put("date", value.getDate());
                 map.put("type", value.getType());
                 map.put("contents", value.getContents());
