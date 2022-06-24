@@ -1,11 +1,15 @@
 package com.example.server.controller;
 
+import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dto.manager.Department;
+import com.example.server.model.dto.manager.VacationUpdate;
 import com.example.server.model.dto.manager.VacationView;
 import com.example.server.service.DepartmentService;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,18 +24,23 @@ import javax.servlet.http.HttpServletResponse;
 public class DepartmentController {
     private final DepartmentService departmentService;
 
-    @PostMapping("/deptUpdate")
-    public ResponseEntity<StatusCode> findByOne(HttpServletRequest request, @RequestBody Department department){
-        return departmentService.findByOne(request, department.getId());
+    @PostMapping("/deptView")
+    public ResponseEntity<StatusCode> findByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Department department) {
+        return departmentService.findByOne(principalDetails.getUsername(), department.getId());
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<StatusCode> updateByOne(@RequestBody Department department){
-        return departmentService.updateByOne(department.getId(), department.getStartTime(), department.getEndTime());
+    @PostMapping("/deptUpdate")
+    public ResponseEntity<StatusCode> updateByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Department department) {
+        return departmentService.updateByOne(principalDetails.getUsername(), department.getId(), department.getStartTime(), department.getEndTime());
     }
 
     @PostMapping("/vacView")
-    public ResponseEntity<StatusCode> findByVacationAll(HttpServletRequest request){
-        return departmentService.findByVacationAll(request);
+    public ResponseEntity<StatusCode> findByVacationAll(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return departmentService.findByVacationAll(principalDetails.getUsername());
+    }
+
+    @PostMapping("/vacUpdate")
+    public ResponseEntity<StatusCode> updateVacationByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody VacationUpdate vacationUpdate){
+        return departmentService.updateVacationByOne(principalDetails.getUsername(), vacationUpdate.getVId(), vacationUpdate.getApprovalFlag());
     }
 }

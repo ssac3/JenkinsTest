@@ -2,6 +2,7 @@ package com.example.server.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -31,6 +32,7 @@ public class User {
     private Date createdAt;
     private Long restTime;
     private String workingStatus;
+    @JsonProperty("nPassword")
     private String nPassword;
 
     @Builder
