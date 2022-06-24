@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,26 @@ public class AttendanceService {
         return Optional.of(new JsonResponse())
                 .map(v -> {
                     List<MonthJoin> monthJoin = attendanceMapper.getAllAttendance(Long.parseLong(username));
-                    return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").data(monthJoin).build());
+                    LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+                    Object data = monthJoin.stream().map(value -> {
+                        map.put("enum", value.getENum());
+                        map.put("a_id", value.getAId());
+                        map.put("a_s", );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        map.put(, );
+                        return map;
+                    });
+                    return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").data(attendanceMapper.getAllAttendance(Long.parseLong(username))).build());
                 }).orElseGet(() -> new JsonResponse().send(HttpStatus.BAD_REQUEST, StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").build()));
     }
 }
