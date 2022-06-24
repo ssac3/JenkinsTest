@@ -27,7 +27,7 @@ public class AdminService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> saveEmp(HttpServletRequest request){
-        adminMapper.
-    }
+    /*public ResponseEntity<StatusCode> saveEmp(HttpServletRequest request){
+        //adminMapper.
+    }*/
 }

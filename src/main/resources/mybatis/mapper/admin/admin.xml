@@ -7,8 +7,11 @@
         SELECT * FROM EMPLOYEE;
     </select>
 
-    <insert id="saveEmp" resultType="User">
-        insert into employee ()
+    <insert id="saveEmp" >
+        insert into employee (username, depId, password, name, department,
+                            position, email, manager, location, qrPath, img, gender, role, createAt, restTime, workingStatus)
+        values (#{username}, #{name},#{email}, #{img}, #{gender},
+                #{department}, #{location}, #{position}, #{manager}, #{qrPath})
     </insert>
 
 
