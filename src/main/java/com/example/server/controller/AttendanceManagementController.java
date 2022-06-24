@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 @RestController
@@ -21,16 +22,8 @@ public class AttendanceManagementController {
     private final AttendanceService attendanceService;
 
     @PostMapping("/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
-    public ResponseEntity<StatusCode> getAllAttendance(HttpServletRequest request) {
-        return attendanceService.getAllAttendance(request);
-        // Instance String username 추가
+    public ResponseEntity<StatusCode> getAllAttendance(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String username = principalDetails.getUsername();
+        return attendanceService.getAllAttendance(username);
     }
-
-//    @PostMapping("/addVacation")
-//    public ResponseEntity<StatusCode> addVacation(@AuthenticationPrincipal PrincipalDetails principalDetails,
-//                                                  HttpServletRequest request,
-//                                                  @RequestBody Vacation vacation) {
-//        User user = principalDetails.getUser();
-//        return attendanceService.Vacation(user,vacation);
-//    }
 }

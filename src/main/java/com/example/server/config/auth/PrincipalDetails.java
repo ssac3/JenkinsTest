@@ -11,7 +11,8 @@ import java.util.Collection;
 
 @Data
 @AllArgsConstructor
-public class PrincipalDetails implements UserDetails {
+public class
+PrincipalDetails implements UserDetails {
     private final User user;
 
     @Override
