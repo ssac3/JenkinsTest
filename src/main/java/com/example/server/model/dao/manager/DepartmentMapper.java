@@ -12,12 +12,14 @@ import java.util.List;
 @Mapper
 public interface DepartmentMapper {
 
-    int existDeptId(Long id);
+    int validDeptId(Long id);
     Department findByDeptInfo(Long id);
 
     void updateByOne(LocalDateTime startTime, LocalDateTime endTime, Long id);
 
     List<VacationView> findByVacationAll();
 
+    int validVid(Long vId);
+    void updateVacationByOne(String approvalFlag, Long vId);
 
 }
