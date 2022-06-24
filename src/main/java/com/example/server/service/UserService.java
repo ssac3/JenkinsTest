@@ -98,7 +98,4 @@ public class UserService {
         statusCode = StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").data(userMapper.getAllAttendance(Long.parseLong(username))).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
-
-
 }
