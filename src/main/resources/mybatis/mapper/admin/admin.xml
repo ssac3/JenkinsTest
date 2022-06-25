@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//TEST_AMDTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.server.model.dao.admin.AdminMapper">
+    <select id="findByUsername" resultType="User">
+        SELECT * FROM EMPLOYEE;
+    </select>
+
+    <insert id="insertEmp"  parameterType="User" >
+        INSERT INTO EMPLOYEE (username, dep_id,  name, password, email, img, gender, position, role, qr_path , working_status)
+        values (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath}, #{workingStatus});
+    </insert>
+
+
+</mapper>

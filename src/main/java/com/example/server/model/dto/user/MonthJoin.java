@@ -1,5 +1,6 @@
 package com.example.server.model.dto.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,4 +24,5 @@ public class MonthJoin {
     String vType;
     String vApprovalFlag;
     String vContents;
+
 }

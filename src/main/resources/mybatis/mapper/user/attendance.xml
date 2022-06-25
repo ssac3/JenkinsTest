@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.model.dao.user.AttendanceMapper">
+    <select id="getAllAttendance" parameterType="Long" resultType="MonthJoin">
+        SELECT AR.e_num, AR.a_id, AR.a_status, AR.a_start_time, AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time, AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.date as 'v_date', V.type as 'v_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+        FROM VACATION V LEFT OUTER JOIN (
+            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time', A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time', R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+            FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
+            UNION
+            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time', A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time', R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+            FROM ATTENDANCE A RIGHT OUTER JOIN REARRANGE R ON A.id = R.a_id
+        ) AR
+                                        ON AR.e_num = V.emp_id
+        UNION
+        SELECT AR.e_num, AR.a_id, AR.a_status, AR.a_start_time,
+               AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
+               AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.date as 'v_date',
+                V.type as 'v_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+        FROM VACATION V RIGHT OUTER JOIN (
+            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
+                    A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
+                    R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+            FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
+            UNION
+            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
+                    A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
+                    R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+            FROM ATTENDANCE A RIGHT OUTER JOIN REARRANGE R ON A.id = R.a_id
+        ) AR
+                                         ON AR.e_num = V.emp_id
+        WHERE e_num = #{username};
+    </select>
+
+    <select id="viewAttendance" parameterType="Attendance" resultType="Attendance">
+        SELECT * FROM ATTENDANCE WHERE emp_id = #{empId} AND a_id = #{aId};
+    </select>
+
+    <insert id="rearrangeAttendance" parameterType="Long">
+        INSERT INTO REARRANGE(a_id, start_time, end_time, contents) VALUES (#{aId}, #{startTime}, #{endTime}, #{contents});
+    </insert>
+</mapper>

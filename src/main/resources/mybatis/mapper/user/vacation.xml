@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.model.dao.user.VacationMapper">
+    <insert id="regVacation" parameterType="Vacation">
+        INSERT INTO VACATION(a_id, emp_id, date, contents, type) values(#{aId}, #{empId}, #{date}, #{contents}, #{type});
+    </insert>
+
+    <select id="viewVacation" parameterType="Vacation" resultType="Vacation">
+        SELECT * FROM VACATION WHERE emp_id = #{empId} and date = #{date}
+    </select>
+
+    <delete id="cancelVacation" parameterType="Vacation" >
+        UPDATE VACATION SET approval_flag = '3' WHERE emp_id = #{empId} and date = #{date}
+    </delete>
+    
+    <update id="returnRestTime" parameterType="Map">
+        UPDATE EMPLOYEE SET rest_time = rest_time + #{time} WHERE username = #{username};
+    </update>
+</mapper>
