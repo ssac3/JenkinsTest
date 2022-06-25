@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -64,6 +62,7 @@ public class VacationService {
 
     public ResponseEntity<StatusCode> viewVacation(String username, Vacation vacation) {
         vacation.setEmpId(Long.parseLong(username));
+
         return Optional.of(new JsonResponse())
                 .map( v -> {
                     Vacation result = vacationMapper.viewVacation(vacation);

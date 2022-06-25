@@ -31,4 +31,12 @@
                                          ON AR.e_num = V.emp_id
         WHERE e_num = #{username};
     </select>
+
+    <select id="viewAttendance" parameterType="Attendance" resultType="Attendance">
+        SELECT * FROM ATTENDANCE WHERE emp_id = #{empId} AND a_id = #{aId};
+    </select>
+
+    <insert id="rearrangeAttendance" parameterType="Long">
+        INSERT INTO REARRANGE(a_id, start_time, end_time, contents) VALUES (#{aId}, #{startTime}, #{endTime}, #{contents});
+    </insert>
 </mapper>
