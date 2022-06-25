@@ -21,7 +21,7 @@ public class MonthJoin {
     String rApprovalFlag;
     Long vId;
     String vDate;
-    String vType;
+    String vacationType;
     String vApprovalFlag;
     String vContents;
 

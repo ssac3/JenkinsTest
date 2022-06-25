@@ -47,7 +47,7 @@ public class VacationService {
                     vacationMapper.cancelVacation(vDTO);
                     if(res.getApprovalFlag().equals("1")) {
                         int time;
-                        if(vDTO.getType().equals("0")) {
+                        if(vDTO.getVacationType().equals("0")) {
                             time = 8;
                         } else {
                             time = 4;

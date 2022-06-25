@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.server.model.dao.user.VacationMapper">
     <insert id="regVacation" parameterType="Vacation">
-        INSERT INTO VACATION(a_id, emp_id, date, contents, type) values(#{aId}, #{empId}, #{date}, #{contents}, #{type});
+        INSERT INTO VACATION(a_id, emp_id, date, contents, vacation_type) values(#{aId}, #{empId}, #{date}, #{contents}, #{vacation_type});
     </insert>
 
     <select id="viewVacation" parameterType="Vacation" resultType="Vacation">
