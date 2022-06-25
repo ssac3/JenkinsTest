@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
 
 
 @Service
@@ -28,6 +29,9 @@ public class UserService {
     private final UserMapper userMapper;
     private final TokenMapper tokenMapper;
     private StatusCode statusCode;
+
+    private User user;
+
 
     public void deleteById(Long username){
         tokenMapper.deleteById(username);
@@ -59,17 +63,22 @@ public class UserService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> myView(HttpServletRequest request){
-        String username = request.getAttribute("username").toString();
+    public ResponseEntity<StatusCode> myView(String username){
         System.out.println(username);
-        StatusCode statusCode;
-        if(username != null && !username.equals("")){
-            statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공")
-                    .data(userMapper.myView(Long.parseLong(username))).build();
-        }
-        else{
-            statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();
-        }
+//        User user = userMapper.myView(Long.parseLong(username));
+//        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//        map.put("name", user.getName());
+//        map.put("department", user.getDepartment());
+//        map.put("position", user.getPosition());
+//        map.put("email", user.getEmail());
+//        map.put("manager", user.getManager());
+//        map.put("location", user.getLocation());
+//        map.put("qrPath", user.getQrPath());
+//        Object data = map;
+//        System.out.println("data = " + data);
+        statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공")
+                .data(userMapper.myView(Long.parseLong(username))).build();
+        System.out.println(statusCode.getData().toString());
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
