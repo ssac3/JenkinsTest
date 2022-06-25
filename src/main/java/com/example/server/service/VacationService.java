@@ -62,6 +62,7 @@ public class VacationService {
 
     public ResponseEntity<StatusCode> viewVacation(String username, Vacation vacation) {
         vacation.setEmpId(Long.parseLong(username));
+
         return Optional.of(new JsonResponse())
                 .map( v -> {
                     Vacation result = vacationMapper.viewVacation(vacation);
