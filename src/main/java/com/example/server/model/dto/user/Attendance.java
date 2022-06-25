@@ -1,6 +1,7 @@
 package com.example.server.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,10 +16,17 @@ public class Attendance {
     @JsonProperty("empId")
     Long empId;
     @JsonProperty("startTime")
-    Date startTime;
+    String startTime;
     @JsonProperty("endTime")
-    Date endTime;
+    String endTime;
     String status;
 
-
+    @Builder
+    public Attendance(Long id, Long empId, String startTime, String endTime, String status) {
+        this.id = id;
+        this.empId = empId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = status;
+    }
 }

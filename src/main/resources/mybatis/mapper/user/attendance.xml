@@ -32,11 +32,11 @@
         WHERE e_num = #{username};
     </select>
 
-    <select id="viewAttendance" parameterType="Attendance" resultType="Attendance">
-        SELECT * FROM ATTENDANCE WHERE emp_id = #{empId} AND a_id = #{aId};
+    <select id="viewAttendance" parameterType="Map" resultType="Attendance">
+        SELECT * FROM ATTENDANCE WHERE emp_id = #{empId} AND id = #{id} AND status != 0;
     </select>
 
-    <insert id="rearrangeAttendance" parameterType="Long">
-        INSERT INTO REARRANGE(a_id, start_time, end_time, contents) VALUES (#{aId}, #{startTime}, #{endTime}, #{contents});
+    <insert id="rearrangeAttendance" parameterType="Map">
+        INSERT INTO REARRANGE(a_id, start_time, end_time, contents) VALUES (#{id}, #{rStartTime}, #{rEndTime}, #{contents});
     </insert>
 </mapper>
