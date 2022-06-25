@@ -17,4 +17,5 @@ public class VacationView {
     private String type;
     private String contents;
     private String approvalFlag;
+    private String restTime;
 }

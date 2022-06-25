@@ -72,6 +72,7 @@ public class DepartmentService {
                 map.put("type", value.getType());
                 map.put("contents", value.getContents());
                 map.put("approvalFlag", value.getApprovalFlag());
+                map.put("restTime", value.getRestTime());
                 return map;
             });
 

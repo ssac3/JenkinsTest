@@ -17,7 +17,7 @@
     </update>
 
     <select id="findByVacationAll" resultType="VacationView">
-        SELECT VACATION.id as vId, name, username, date, type, contents, approval_flag FROM EMPLOYEE
+        SELECT VACATION.id as vId, name, username, date, type, contents, approval_flag, rest_time FROM EMPLOYEE
         INNER JOIN VACATION ON EMPLOYEE.username = VACATION.emp_id
         WHERE VACATION.approval_flag = '0';
     </select>
