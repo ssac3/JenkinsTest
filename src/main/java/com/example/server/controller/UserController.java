@@ -32,7 +32,7 @@ public class UserController {
         System.out.println("admin접근");
     }
 
-    @GetMapping("/myView")
+    @GetMapping("/user/myView")
     public ResponseEntity<StatusCode> myView(HttpServletRequest request){
         return userService.myView(request);
     }
