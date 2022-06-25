@@ -16,9 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 public class AdminController {
     private final AdminService adminService;
 
+    // 사원리스트
     @GetMapping("/admin")
-    public void admin(@AuthenticationPrincipal PrincipalDetails principalDetails){
+    public ResponseEntity<StatusCode> viewEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
         System.out.println("admin접근");
+        return adminService.viewEmp(principalDetails.getUsername());
     }
 
     //사원등록
@@ -26,18 +28,5 @@ public class AdminController {
     public ResponseEntity<StatusCode> insertEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
         return adminService.insertEmp(principalDetails.getUsername(), user);
     }
-
-    // 사원리스트보여주기
-    @GetMapping("/admin/viewEmpList")
-    public ResponseEntity<StatusCode> viewEmpList(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        return adminService.viewEmpList(principalDetails.getUsername());
-    }
-
-    //사원수정하기
-    /*@PutMapping("/admin/updateEmp")
-    public ResponseEntity<StatusCode> updateEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
-        adminService.updateEmp()
-    }*/
-
 
 }
