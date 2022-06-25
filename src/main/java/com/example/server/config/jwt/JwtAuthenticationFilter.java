@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             ObjectMapper om = new ObjectMapper();
             User user = om.readValue(request.getInputStream(), User.class);
-
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
@@ -60,9 +59,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Token token = Token.builder().employeeUsername(Long.parseLong(principalDetails.getUsername())).refreshToken(refreshToken).build(); // refreshToken DB에 저장
         tokenRepository.save(token);
-
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, refreshToken);
+
+        StatusCode statusCode =  StatusCode.builder().resCode(0).resMsg( "로그인 성공").build();
+
+        ObjectMapper om = new ObjectMapper();
+        String result = om.writeValueAsString(statusCode);
+        response.getWriter().write(result);
+
     }
 
     @Override
