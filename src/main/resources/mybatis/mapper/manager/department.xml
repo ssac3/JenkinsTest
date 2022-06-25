@@ -17,7 +17,7 @@
     </update>
 
     <select id="findByVacationAll" resultType="VacationView">
-        SELECT VACATION.id as vId, name, username, date, type, contents, approval_flag FROM EMPLOYEE
+        SELECT VACATION.id as vId, name, username, date, vacation_type as type, contents, approval_flag as approvalFlag, rest_time as restTime FROM EMPLOYEE
         INNER JOIN VACATION ON EMPLOYEE.username = VACATION.emp_id
         WHERE VACATION.approval_flag = '0';
     </select>
@@ -31,4 +31,11 @@
         SET approval_flag = #{approvalFlag}
         WHERE id = #{vId};
     </update>
+
+    <select id="findByRearrangeAll" resultType="RearrangeView">
+        SELECT REARRANGE.id as rId, a_id as aId, username, name, img, contents, REARRANGE.start_time as rStartTime, REARRANGE.end_time as rEndTime, A.start_time as startTime, A.end_time as endTime, approval_flag as approvalFlag
+        from REARRANGE
+        INNER JOIN ATTENDANCE A on REARRANGE.a_id = A.id
+        INNER JOIN EMPLOYEE E on A.emp_id = E.username;
+    </select>
 </mapper>

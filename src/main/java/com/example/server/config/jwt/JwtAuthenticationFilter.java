@@ -33,13 +33,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private ObjectMapper om = new ObjectMapper();
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public  Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
 
         try {
             ObjectMapper om = new ObjectMapper();
             User user = om.readValue(request.getInputStream(), User.class);
-
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
@@ -54,20 +53,36 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-
+        
         String jwtToken = jwtTokenProvider.creatAccessToken(principalDetails.getUsername()); // accessToken 발급
         String refreshToken = jwtTokenProvider.createRefreshToken(); // refreshToken 발급
-
+        
         Token token = Token.builder().employeeUsername(Long.parseLong(principalDetails.getUsername())).refreshToken(refreshToken).build(); // refreshToken DB에 저장
         tokenRepository.save(token);
-
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, refreshToken);
+        System.out.println("principalDetails.getUser().getRole() = " + principalDetails.getUser().getRole());
+        StatusCode statusCode;
+        String getRole = principalDetails.getUser().getRole();
+        if(getRole.equals("0")) {
+            System.out.println("[ADMIN]");
+            statusCode =  StatusCode.builder().resCode(0).resMsg("로그인 성공").build();
+        } else if(getRole.equals("1")) {
+            System.out.println("[MANAGER]");
+            statusCode = StatusCode.builder().resCode(0).data(User.builder().depId(1L).build()).resMsg("로그인 성공").build();
+        } else {
+            System.out.println("[USER]");
+            statusCode = StatusCode.builder().resCode(0).data(User.builder().username(Long.parseLong(principalDetails.getUsername())).build()).resMsg("로그인 성공").build();
+        }
+        ObjectMapper om = new ObjectMapper();
+        String result = om.writeValueAsString(statusCode);
+        response.getWriter().write(result);
+
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        StatusCode statusCode = StatusCode.builder().resCode(1).resMsg( "로그인 실패").build();
+        StatusCode statusCode = StatusCode.builder().resCode(1).resMsg( "유효하지 않는 사용자입니다.").build();
         ObjectMapper om = new ObjectMapper();
         String result = om.writeValueAsString(statusCode);
         response.getWriter().write(result);

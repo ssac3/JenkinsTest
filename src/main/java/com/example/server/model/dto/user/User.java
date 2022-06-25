@@ -14,12 +14,13 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ToString
 //@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class User {
-    private Long username;
     private Long depId;
     private String password;
     private String name;
+    private Long username;
     private String department;
     private String position;
     private String email;
@@ -36,13 +37,13 @@ public class User {
     private String nPassword;
 
     @Builder
-    public User(Long username, Long depId, String password, String name, String email, String img,
+    public User(Long depId, String password, String name, Long username, String email, String img,
                 String gender, String position, String role, Date createdAt, String qrPath, Long restTime,
                 String workingStatus, String nPassword, String department, String manager, String location) {
-        this.username = username;
         this.depId = depId;
         this.password = password;
         this.name = name;
+        this.username = username;
         this.email = email;
         this.img = img;
         this.gender = gender;

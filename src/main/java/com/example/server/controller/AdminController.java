@@ -16,9 +16,18 @@ import javax.servlet.http.HttpServletRequest;
 public class AdminController {
     private final AdminService adminService;
 
+    // 사원리스트
     @GetMapping("/admin")
-    public void admin(@AuthenticationPrincipal PrincipalDetails principalDetails){
+    public ResponseEntity<StatusCode> viewEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
         System.out.println("admin접근");
+        return adminService.viewEmp(principalDetails.getUsername(), user);
+    }
+
+    //사원상세보기
+    @GetMapping("/admin/empDetail")
+    public ResponseEntity<StatusCode> viewEmpDetail(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
+        System.out.println("사원디테일");
+        return adminService.viewEmpDetail(principalDetails.getUsername(), user);
     }
 
     //사원등록
@@ -27,17 +36,17 @@ public class AdminController {
         return adminService.insertEmp(principalDetails.getUsername(), user);
     }
 
-    // 사원리스트보여주기
-    @GetMapping("/admin/viewEmpList")
-    public ResponseEntity<StatusCode> viewEmpList(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        return adminService.viewEmpList(principalDetails.getUsername());
+    //사원삭제
+    @PostMapping("/admin/deleteEmp")
+    public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user) {
+        return adminService.deleteEmp(principalDetails.getUsername(), user);
     }
 
-    //사원수정하기
-    /*@PutMapping("/admin/updateEmp")
-    public ResponseEntity<StatusCode> updateEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
-        adminService.updateEmp()
-    }*/
-
+    //사원수정
+    @PostMapping("/admin/updateEmp")
+    public ResponseEntity<StatusCode> updateEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
+        System.out.println("사원수정테스트1");
+        return adminService.updateEmp(principalDetails.getUsername(), user);
+    }
 
 }

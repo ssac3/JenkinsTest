@@ -3,8 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.server.model.dao.admin.AdminMapper">
-    <select id="findByUsername" resultType="User">
+    <select id="viewEmp" resultType="User">
         SELECT * FROM EMPLOYEE;
+    </select>
+
+    <select id="viewEmpDetail" resultType="User">
+        select * from (select e.name, d.name as department, e.position, e.email, d.location, e.qr_path, e.img
+                       from (SELECT name, dep_id, position, email, qr_path, img from EMPLOYEE where username = #{username}) e
+                                JOIN DEPARTMENT d ON e.dep_id = d.id) a
+                          CROSS JOIN (select i.name as manager from EMPLOYEE i where dep_id IN (SELECT dep_id from EMPLOYEE where username = #{username}) and role = '1') b;
     </select>
 
     <insert id="insertEmp"  parameterType="User" >
@@ -12,5 +19,16 @@
         values (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath}, #{workingStatus});
     </insert>
 
+    <update id="deleteEmp">
+        UPDATE EMPLOYEE
+        SET working_status = 1
+        WHERE username = #{username};
+    </update>
+
+    <update id="updateEmp">
+        UPDATE EMPLOYEE
+        SET name = #{name}, gender = #{gender}, position = #{position}, role = #{role}
+        WHERE username = #{username};
+    </update>
 
 </mapper>
