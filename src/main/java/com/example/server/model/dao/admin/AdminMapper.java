@@ -8,9 +8,15 @@ import org.springframework.stereotype.Repository;
 @Mapper
 // User랑 Admin DTO랑 유사 -> User 사용
 public interface AdminMapper {
+
+    //사원등록
+    void insertEmp(User user);
+
     // 사원조회
     User findByUsername(Long username);
 
-    //사원등록
-    User saveEmp(User user);
+    //사원수정
+    void updateEmp(User user);
+
+
 }
