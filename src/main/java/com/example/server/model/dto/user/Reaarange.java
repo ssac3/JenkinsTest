@@ -17,11 +17,12 @@ public class Reaarange {
     @JsonProperty("aId")
     Long aId;
     @JsonProperty("startTime")
-    Date startTime;
+    String startTime;
     @JsonProperty("endTime")
-    Date endTime;
+    String endTime;
     String contents;
     @JsonProperty("approvalFlag")
     String approvalFlag;
+
 
 }

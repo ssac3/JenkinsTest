@@ -3,6 +3,7 @@ package com.example.server.model.dao.user;
 import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.MonthJoin;
 
+import com.example.server.model.dto.user.Reaarange;
 import com.example.server.model.dto.user.Vacation;
 import com.example.server.service.AttendanceService;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Repository
 @Mapper
 public interface AttendanceMapper {
-    MonthJoin viewAttendance(Attendance attendance);
+    Attendance viewAttendance(Long id, Long empId);
     List<MonthJoin> getAllAttendance(Long username);
-    int rearrangeAttendance(MonthJoin monthJoin);
+    int rearrangeAttendance(Long id, String rStartTime, String rEndTime, String contents);
 }

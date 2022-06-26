@@ -6,16 +6,14 @@ import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.user.AttendanceMapper;
 import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.MonthJoin;
+import com.example.server.model.dto.user.Reaarange;
 import com.example.server.model.dto.user.Vacation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +26,7 @@ public class AttendanceService {
                     List<MonthJoin> monthJoin = attendanceMapper.getAllAttendance(Long.parseLong(username));
                     LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     Object data = monthJoin.stream().map(value -> {
-                        map.put("e_num", value.getENum());
+                        map.put("e_num", value.getEmpId());
                         map.put("a_id", value.getAId());
                         map.put("a_status", value.getAStatus() );
                         map.put("a_start_time", value.getAStartTime() );
@@ -49,18 +47,18 @@ public class AttendanceService {
                 }).orElseGet(() -> new JsonResponse().send(HttpStatus.BAD_REQUEST, StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").build()));
     }
 
-    public ResponseEntity<StatusCode> rearrangeAttendance(String username, Attendance attendance) {
-        attendance.setEmpId(Long.parseLong(username));
-
-        MonthJoin monthJoin = attendanceMapper.viewAttendance(attendance);
+    public ResponseEntity<StatusCode> rearrangeAttendance(String username, Map<String,String> reqMap) {
+        Long id = Long.parseLong(reqMap.get("id"));
+        Long aId = id;
+        Long empId = Long.parseLong(username);
+        String rStartTime = reqMap.get("rStartTime");
+        String rEndTime = reqMap.get("rEndTime");
+        String contents = reqMap.get("contents");
 
         return Optional.of(new JsonResponse())
-                .map(v -> {
-                    System.out.println(Optional.of(attendanceMapper.viewAttendance(attendance)));
-                    return Optional.of(attendanceMapper.viewAttendance(attendance));})
-                .filter(res -> !Objects.isNull(res))
+                .map(v -> Optional.of(attendanceMapper.viewAttendance(id, empId)))
                 .map(res -> {
-                    int result = attendanceMapper.rearrangeAttendance(monthJoin);
+                    int result = attendanceMapper.rearrangeAttendance(id, rStartTime, rEndTime, contents);
                     if (result > 0){
                         return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("이상 근태 조정요청이 완료되었습니다.").build());
                     }

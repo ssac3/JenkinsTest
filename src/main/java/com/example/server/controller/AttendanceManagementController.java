@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 
 @RestController
@@ -30,8 +31,10 @@ public class AttendanceManagementController {
 
     @PostMapping("/rearrangeAttendance")
     public ResponseEntity<StatusCode> rearrangeAttendance(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                          @RequestBody Attendance attendance) {
+                                                          @RequestBody Map<String, String> reqMap) {
         String username = principalDetails.getUsername();
-        return attendanceService.rearrangeAttendance(username, attendance);
+        return attendanceService.rearrangeAttendance(username, reqMap);
     }
+
+
 }

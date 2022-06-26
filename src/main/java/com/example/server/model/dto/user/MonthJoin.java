@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MonthJoin {
-    Long eNum;
+    Long empId;
     Long aId;
     String aStatus;
     String aStartTime;
