@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor // 하는 이유 질문
@@ -35,18 +37,23 @@ public class AdminService {
     }
 
     // 사원상세정보
-    public ResponseEntity<StatusCode> viewEmpList(String userInfo ) {
-        
-        // 사용자 정보가 있으면
+    @Transactional
+    public ResponseEntity<StatusCode> viewEmp(String userInfo) {
+
         if(userInfo != null && !userInfo.equals("")){
             // 사원의 리스트 보여주기, User의 정보를 전부 다 받아와야한다.
             System.out.println("회원리스트보여주기");
-
+            List<User> empList = adminMapper.viewEmp();
+            // 데이터 확인하기
+            for (User item: empList
+                 ) {
+                System.out.println(item.getCreatedAt());
+            }
+            statusCode = StatusCode.builder().resCode(0).resMsg("사원조회를 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
             statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
         }
-
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
