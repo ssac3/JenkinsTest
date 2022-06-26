@@ -1,11 +1,11 @@
 package com.example.server.model.dao.manager;
 
 import com.example.server.model.dto.manager.Department;
+import com.example.server.model.dto.manager.RearrangeView;
 import com.example.server.model.dto.manager.VacationView;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,5 +21,7 @@ public interface DepartmentMapper {
 
     int validVid(Long vId);
     void updateVacationByOne(String approvalFlag, Long vId);
+
+    List<RearrangeView> findByRearrangeAll();
 
 }

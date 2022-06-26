@@ -11,8 +11,8 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VacationView {
     private Long vId;
-    private Long username;
     private String name;
+    private Long username;
     private String date;
     private String type;
     private String contents;

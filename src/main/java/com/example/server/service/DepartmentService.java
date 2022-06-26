@@ -4,6 +4,7 @@ import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.manager.DepartmentMapper;
 import com.example.server.model.dto.manager.Department;
+import com.example.server.model.dto.manager.RearrangeView;
 import com.example.server.model.dto.manager.VacationView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,7 @@ public class DepartmentService {
     public ResponseEntity<StatusCode> findByVacationAll(String userInfo){
         if(userInfo != null && !userInfo.equals("")){
             List<VacationView> result = departmentMapper.findByVacationAll();
+            System.out.println(result.toArray().toString());
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
             Object data = result.stream().map(value -> {
@@ -100,6 +102,36 @@ public class DepartmentService {
                 departmentMapper.updateVacationByOne(approvalFlag, vId);
                 statusCode = StatusCode.builder().resCode(0).resMsg("휴가 수정 완료").build();
             }
+        }
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> findByRearrangeAll(String userInfo){
+        System.out.println("userInfo = " + userInfo);
+
+        if(userInfo != null && !userInfo.equals("")) {
+            List<RearrangeView> result = departmentMapper.findByRearrangeAll();
+            LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+            Object data = result.stream().map(value -> {
+                map.put("rId", value.getRId());
+                map.put("aId", value.getAId());
+                map.put("username", value.getUsername());
+                map.put("name", value.getName());
+                map.put("img", value.getImg());
+                map.put("contents", value.getContents());
+                map.put("rStartTime", value.getRStartTime());
+                map.put("rEndTime", value.getREndTime());
+                map.put("startTime", value.getStartTime());
+                map.put("endTime", value.getEndTime());
+                map.put("approvalFlag", value.getApprovalFlag());
+                return map;
+            });
+
+            statusCode = StatusCode.builder().resCode(0).resMsg("근태 조정 요청 조회 성공").data(data).build();
+        }else{
+            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
+            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
