@@ -15,10 +15,16 @@ public interface AdminMapper {
     void insertEmp(User user);
 
     // 사원조회
-    List<User> viewEmp();
+    List<User> viewEmp(User user);
+
+    //사원디테일
+    User viewEmpDetail(User user);
 
     //사원수정
     void updateEmp(User user);
+
+    //사원삭제
+    void deleteEmp(User user);
 
 
 }

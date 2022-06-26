@@ -36,14 +36,14 @@ public class AdminService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    // 사원상세정보
+    // 사원리스트정보
     @Transactional
-    public ResponseEntity<StatusCode> viewEmp(String userInfo) {
+    public ResponseEntity<StatusCode> viewEmp(String userInfo, User user) {
 
         if(userInfo != null && !userInfo.equals("")){
             // 사원의 리스트 보여주기, User의 정보를 전부 다 받아와야한다.
             System.out.println("회원리스트보여주기");
-            List<User> empList = adminMapper.viewEmp();
+            List<User> empList = adminMapper.viewEmp(user);
             // 데이터 확인하기
             for (User item: empList
                  ) {
@@ -57,10 +57,40 @@ public class AdminService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
+    //사원디테일리스트
+    @Transactional
+    public ResponseEntity<StatusCode> viewEmpDetail(String userInfo, User user) {
+
+        if(userInfo != null && !userInfo.equals("")){
+            System.out.println("회원디테일리스트보여주기");
+            adminMapper.viewEmpDetail(user);
+            System.out.println(user);
+
+            statusCode = StatusCode.builder().resCode(0).resMsg("사원디테일조회를 성공했습니다").build();
+        }else {
+            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
+            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
+        }
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+    
+    //사원삭제
+    @Transactional
+    public ResponseEntity<StatusCode> deleteEmp(String userInfo, User user) {
+        if(userInfo != null && !userInfo.equals("")){
+            System.out.println("사원삭제");
+            adminMapper.deleteEmp(user);
+            statusCode = StatusCode.builder().resCode(0).resMsg("사원삭제를 성공했습니다").build();
+        }else {
+            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
+            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
+        }
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
     // 사원수정
     public ResponseEntity<StatusCode> updateEmp(String userInfo, User user) {
         if(userInfo != null && !userInfo.equals("")){
-            // 사원 등록
             System.out.println("사원수정");
             adminMapper.updateEmp(user);
             statusCode = StatusCode.builder().resCode(0).resMsg("사원수정을 성공했습니다").build();
