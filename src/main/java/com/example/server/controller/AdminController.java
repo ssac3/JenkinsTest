@@ -20,13 +20,33 @@ public class AdminController {
     @GetMapping("/admin")
     public ResponseEntity<StatusCode> viewEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
         System.out.println("admin접근");
-        return adminService.viewEmp(principalDetails.getUsername());
+        return adminService.viewEmp(principalDetails.getUsername(), user);
+    }
+
+    //사원상세보기
+    @GetMapping("/admin/empDetail")
+    public ResponseEntity<StatusCode> viewEmpDetail(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
+        System.out.println("사원디테일");
+        return adminService.viewEmpDetail(principalDetails.getUsername(), user);
     }
 
     //사원등록
     @PostMapping("/admin/insertEmp")
     public ResponseEntity<StatusCode> insertEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
         return adminService.insertEmp(principalDetails.getUsername(), user);
+    }
+
+    //사원삭제
+    @PostMapping("/admin/deleteEmp")
+    public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user) {
+        return adminService.deleteEmp(principalDetails.getUsername(), user);
+    }
+
+    //사원수정
+    @PostMapping("/admin/updateEmp")
+    public ResponseEntity<StatusCode> updateEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
+        System.out.println("사원수정테스트1");
+        return adminService.updateEmp(principalDetails.getUsername(), user);
     }
 
 }
