@@ -38,4 +38,11 @@
         INNER JOIN ATTENDANCE A on REARRANGE.a_id = A.id
         INNER JOIN EMPLOYEE E on A.emp_id = E.username;
     </select>
+
+    <update id="updateRearrangeByOne">
+        call myProcedure(#{rId},#{aId},#{startTime},#{endTime},#{approvalFlag},@myResult);
+    </update>
+    <select id="checkSubmitResult" resultType="Integer">
+        select @myResult as result;
+    </select>
 </mapper>

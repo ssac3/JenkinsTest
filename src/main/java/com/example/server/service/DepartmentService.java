@@ -135,4 +135,14 @@ public class DepartmentService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
+
+
+    public void updateRearrangeByOne(String userInfo, Long rId, Long aId, String startTime, String endTime, String approvalFlag) {
+        System.out.println("userInfo = " + userInfo);
+        System.out.println("rId" + rId);
+        System.out.println("aId" + aId);
+        departmentMapper.updateRearrangeByOne(rId, aId, startTime, endTime, approvalFlag);
+
+        System.out.println(departmentMapper.checkSubmitResult());
+    }
 }

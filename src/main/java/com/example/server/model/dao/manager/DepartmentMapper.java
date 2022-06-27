@@ -24,4 +24,7 @@ public interface DepartmentMapper {
 
     List<RearrangeView> findByRearrangeAll();
 
+    void updateRearrangeByOne(Long rId, Long aId, String startTime, String endTime, String approvalFlag);
+
+    int checkSubmitResult();
 }

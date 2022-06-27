@@ -3,6 +3,7 @@ package com.example.server.controller;
 import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dto.manager.Department;
+import com.example.server.model.dto.manager.RearrangeUpdate;
 import com.example.server.model.dto.manager.VacationUpdate;
 import com.example.server.model.dto.manager.VacationView;
 import com.example.server.service.DepartmentService;
@@ -47,5 +48,10 @@ public class DepartmentController {
     @PostMapping("/reArrange")
     public ResponseEntity<StatusCode> findByRearrangeAll(@AuthenticationPrincipal PrincipalDetails principalDetails){
         return departmentService.findByRearrangeAll(principalDetails.getUsername());
+    }
+
+    @PostMapping("/rarUpdate")
+    public void updateRearrangeByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody RearrangeUpdate rearrangeUpdate){
+        departmentService.updateRearrangeByOne(principalDetails.getUsername(), rearrangeUpdate.getRId(), rearrangeUpdate.getAId(), rearrangeUpdate.getStartTime(), rearrangeUpdate.getEndTime(), rearrangeUpdate.getApprovalFlag());
     }
 }
