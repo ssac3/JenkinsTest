@@ -67,13 +67,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Long depId = principalDetails.getUser().getDepId();
         if(getRole.equals("0")) {
             System.out.println("[ADMIN]");
-            statusCode =  StatusCode.builder().resCode(0).resMsg("로그인 성공").build();
+            statusCode =  StatusCode.builder().resCode(0).data(User.builder().role(getRole).build()).resMsg("로그인 성공").build();
         } else if(getRole.equals("1")) {
             System.out.println("[MANAGER]");
-            statusCode = StatusCode.builder().resCode(0).data(User.builder().depId(depId).build()).resMsg("로그인 성공").build();
+            statusCode = StatusCode.builder().resCode(0).data(User.builder().depId(depId).role(getRole).build()).resMsg("로그인 성공").build();
         } else {
             System.out.println("[USER]");
-            statusCode = StatusCode.builder().resCode(0).data(User.builder().username(Long.parseLong(principalDetails.getUsername())).build()).resMsg("로그인 성공").build();
+            statusCode = StatusCode.builder().resCode(0).data(User.builder().role(getRole).build()).resMsg("로그인 성공").build();
         }
         ObjectMapper om = new ObjectMapper();
         String result = om.writeValueAsString(statusCode);
