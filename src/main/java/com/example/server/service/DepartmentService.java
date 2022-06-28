@@ -5,6 +5,7 @@ import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.manager.DepartmentMapper;
 import com.example.server.model.dto.manager.Department;
 import com.example.server.model.dto.manager.RearrangeView;
+import com.example.server.model.dto.manager.ResultAction;
 import com.example.server.model.dto.manager.VacationView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -132,6 +133,21 @@ public class DepartmentService {
         }else{
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
             statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
+        }
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+
+    public ResponseEntity<StatusCode> updateRearrangeByOne(String userInfo, Long rId, Long aId, String startTime, String endTime, String approvalFlag) {
+        departmentMapper.updateRearrangeByOne(rId, aId, startTime, endTime, approvalFlag);
+        ResultAction result = departmentMapper.checkRearrangeUpdate();
+        if(result.getResCode() == 0){
+            statusCode = StatusCode.builder().resCode(0).resMsg("성공적으로 근태 조정 요청을 수정했습니다.").build();
+        } else if(result.getResCode() == -1){
+            statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않은 근태 조정 요청 정보입니다.").build();
+        } else {
+            statusCode = StatusCode.builder().resCode(2).resMsg("알 수 없는 에러 발생").build();
+            System.out.println("[ERR]" + result.getResMsg());
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
