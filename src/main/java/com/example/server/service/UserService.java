@@ -52,16 +52,9 @@ public class UserService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> logout(HttpServletRequest request) {
-        String username = request.getAttribute("username").toString();
-        System.out.println(username);
-        if(username != null && !username.equals("")){
+    public ResponseEntity<StatusCode> logout(String username) {
             statusCode = StatusCode.builder().resCode(0).resMsg("로그아웃 성공").build();
             deleteById(Long.parseLong(username));
-        }
-        else{
-            statusCode = StatusCode.builder().resCode(2).resMsg("에러 발생").build();
-        }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 

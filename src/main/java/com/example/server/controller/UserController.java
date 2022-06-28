@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/logoutUser")
-    public ResponseEntity<StatusCode> logout(HttpServletRequest request){
-        return userService.logout(request);
+    public ResponseEntity<StatusCode> logout(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        return userService.logout(principalDetails.getUsername());
     }
 }
