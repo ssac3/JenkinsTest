@@ -8,12 +8,12 @@ import lombok.*;
 @ToString
 public class Token {
     private Long id;
-    private Long employeeUsername;
+    private Long username;
     private String refreshToken;
 
     @Builder
-    public Token(Long employeeUsername, String refreshToken) {
-        this.employeeUsername = employeeUsername;
+    public Token(Long username, String refreshToken) {
+        this.username = username;
         this.refreshToken = refreshToken;
     }
 
