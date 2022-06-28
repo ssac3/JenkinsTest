@@ -10,21 +10,19 @@
 
     <select id="myView" resultType="User">
         select name, username, department, position, email, manager, location, qr_path
-        from
-            (
-                select e.name,e.username, d.name as department, e.position, e.email, d.location, e.qr_path, e.img
+        from (  select e.name,e.username, d.name as department, e.position, e.email, d.location, e.qr_path, e.img
                 from (
                          SELECT name, username,dep_id, position, email, qr_path, img
                          from EMPLOYEE
                          where username = #{username}) e
                          JOIN DEPARTMENT d ON e.dep_id = d.id) a
-                CROSS JOIN (
-                select i.name as manager
-                from EMPLOYEE i
-                where dep_id IN (
-                    SELECT dep_id
-                    from EMPLOYEE
-                    where username = #{username}) and role = '1') b;
+                 CROSS JOIN (
+            select i.name as manager
+            from EMPLOYEE i
+            where dep_id IN (
+                SELECT dep_id
+                from EMPLOYEE
+                where username = #{username}) and role = '1') b
     </select>
 
     <insert id="save" parameterType="User">

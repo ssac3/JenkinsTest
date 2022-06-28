@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -36,8 +36,8 @@ public class UserController {
         return userService.updatepw(principalDetails.getUsername(), user);
     }
 
-    @PostMapping("/logoutUser")
-    public ResponseEntity<StatusCode> logout(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        return userService.logout(principalDetails.getUsername());
-    }
+//    @PostMapping("/logoutUser")
+//    public ResponseEntity<StatusCode> logout(@AuthenticationPrincipal PrincipalDetails principalDetails){
+//        return userService.logout(principalDetails.getUsername());
+//    }
 }
