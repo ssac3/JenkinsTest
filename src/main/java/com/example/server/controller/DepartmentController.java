@@ -45,7 +45,7 @@ public class DepartmentController {
         return departmentService.updateVacationByOne(principalDetails.getUsername(), vacationUpdate.getVId(), vacationUpdate.getApprovalFlag());
     }
 
-    @PostMapping("/reArrange")
+    @PostMapping("/rarView")
     public ResponseEntity<StatusCode> findByRearrangeAll(@AuthenticationPrincipal PrincipalDetails principalDetails){
         return departmentService.findByRearrangeAll(principalDetails.getUsername());
     }
