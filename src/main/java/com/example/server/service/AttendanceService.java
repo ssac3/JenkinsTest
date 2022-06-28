@@ -26,7 +26,7 @@ public class AttendanceService {
                     List<MonthJoin> monthJoin = attendanceMapper.getAllAttendance(Long.parseLong(username));
                     LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     Object data = monthJoin.stream().map(value -> {
-                        map.put("eNum", value.getEmpId());
+                        map.put("eNum", value.getUsername());
                         map.put("aId", value.getAId());
                         map.put("aStatus", value.getAStatus() );
                         map.put("aStartTime", value.getAStartTime() );
@@ -50,13 +50,12 @@ public class AttendanceService {
     public ResponseEntity<StatusCode> rearrangeAttendance(String username, Map<String,String> reqMap) {
         Long id = Long.parseLong(reqMap.get("id"));
         Long aId = id;
-        Long empId = Long.parseLong(username);
         String rStartTime = reqMap.get("rStartTime");
         String rEndTime = reqMap.get("rEndTime");
         String contents = reqMap.get("contents");
 
         return Optional.of(new JsonResponse())
-                .map(v -> Optional.of(attendanceMapper.viewAttendance(id, empId)))
+                .map(v -> Optional.of(attendanceMapper.viewAttendance(id, Long.parseLong(username))))
                 .map(res -> {
                     int result = attendanceMapper.rearrangeAttendance(id, rStartTime, rEndTime, contents);
                     if (result > 0){

@@ -3,37 +3,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.server.model.dao.user.AttendanceMapper">
     <select id="getAllAttendance" parameterType="Long" resultType="MonthJoin">
-        SELECT AR.e_num, AR.a_id, AR.a_status, AR.a_start_time, AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time, AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.date as 'v_date', V.vacation_type as 'v_vacation_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
-        FROM VACATION V LEFT OUTER JOIN (
-            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time', A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time', R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
-            FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
-            UNION
-            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time', A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time', R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
-            FROM ATTENDANCE A RIGHT OUTER JOIN REARRANGE R ON A.id = R.a_id
-        ) AR
-                                        ON AR.e_num = V.emp_id
+        SELECT AR.e_num, AR.a_id, AR.a_status, AR.a_start_time,
+               AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
+               AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.date as 'v_date',
+                V.vacation_type as 'v_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+        FROM VACATION V LEFT OUTER JOIN
+             (
+                 SELECT A.username as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
+                         A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
+                         R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+                 FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
+             ) AR
+        ON AR.a_id = V.a_id
         UNION
         SELECT AR.e_num, AR.a_id, AR.a_status, AR.a_start_time,
                AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
                AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.date as 'v_date',
-                V.vacation_type as 'v_vacation_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
-        FROM VACATION V RIGHT OUTER JOIN (
-            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
-                    A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
-                    R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
-            FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
-            UNION
-            SELECT A.emp_id as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
-                    A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
-                    R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
-            FROM ATTENDANCE A RIGHT OUTER JOIN REARRANGE R ON A.id = R.a_id
-        ) AR
-                                         ON AR.e_num = V.emp_id
-        WHERE e_num = #{username};
+                V.vacation_type as 'v_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+        FROM VACATION V RIGHT OUTER JOIN
+             (
+                 SELECT A.username as 'e_num', A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
+                         A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
+                         R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+                 FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
+             ) AR
+        ON AR.a_id = V.a_id
+        WHERE e_num = #{username} and date_format(AR.a_start_time,'%Y-%c') = '2022-6';
     </select>
 
     <select id="viewAttendance" parameterType="Map" resultType="Attendance">
-        SELECT * FROM ATTENDANCE WHERE emp_id = #{empId} AND id = #{id} AND status != 0;
+        SELECT * FROM ATTENDANCE WHERE username = #{username} AND id = #{id} AND status != 0;
     </select>
 
     <insert id="rearrangeAttendance" parameterType="Map">

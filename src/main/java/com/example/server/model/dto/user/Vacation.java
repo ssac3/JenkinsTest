@@ -17,8 +17,8 @@ public class Vacation {
     Long id;
     @JsonProperty("aId")
     Long aId;
-    @JsonProperty("empId")
-    Long empId;
+    @JsonProperty("username")
+    Long username;
     String date;
     String vacationType;
     String contents;
@@ -26,10 +26,10 @@ public class Vacation {
     String approvalFlag;
 
     @Builder
-    public Vacation(Long id, Long aId, Long empId, String date, String contents, String vacationType, String approvalFlag) {
+    public Vacation(Long id, Long aId, Long username, String date, String contents, String vacationType, String approvalFlag) {
         this.id = id;
         this.aId = aId;
-        this.empId = empId;
+        this.username = username;
         this.date = date;
         this.contents = contents;
         this.vacationType = vacationType;

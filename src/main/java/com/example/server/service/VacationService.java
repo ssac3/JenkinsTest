@@ -22,7 +22,7 @@ public class VacationService {
     private final VacationMapper vacationMapper;
 
     public ResponseEntity<StatusCode> regVacation(String username, Vacation vacation) {
-        vacation.setEmpId(Long.parseLong(username));
+        vacation.setUsername(Long.parseLong(username));
 
         return Optional.of(new JsonResponse())
                 .map(v -> Objects.isNull(vacationMapper.viewVacation(vacation)))
@@ -35,7 +35,7 @@ public class VacationService {
     }
     @Transactional
     public ResponseEntity<StatusCode> cancelVacation(String username, Vacation vacation){
-        vacation.setEmpId(Long.parseLong(username));
+        vacation.setUsername(Long.parseLong(username));
         Vacation vDTO =vacationMapper.viewVacation(vacation);
 
         return Optional.of(new JsonResponse())
@@ -61,7 +61,7 @@ public class VacationService {
     }
 
     public ResponseEntity<StatusCode> viewVacation(String username, Vacation vacation) {
-        vacation.setEmpId(Long.parseLong(username));
+        vacation.setUsername(Long.parseLong(username));
 
         return Optional.of(new JsonResponse())
                 .map( v -> {

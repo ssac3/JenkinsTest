@@ -13,8 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class Attendance {
     Long id;
-    @JsonProperty("empId")
-    Long empId;
+    Long username;
     @JsonProperty("startTime")
     String startTime;
     @JsonProperty("endTime")
@@ -22,9 +21,9 @@ public class Attendance {
     String status;
 
     @Builder
-    public Attendance(Long id, Long empId, String startTime, String endTime, String status) {
+    public Attendance(Long id, Long username, String startTime, String endTime, String status) {
         this.id = id;
-        this.empId = empId;
+        this.username = username;
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
