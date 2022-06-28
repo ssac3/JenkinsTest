@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MonthJoin {
-    Long empId;
+    Long username;
     Long aId;
     String aStatus;
     String aStartTime;
@@ -21,7 +21,7 @@ public class MonthJoin {
     String rApprovalFlag;
     Long vId;
     String vDate;
-    String vType;
+    String vacationType;
     String vApprovalFlag;
     String vContents;
 
