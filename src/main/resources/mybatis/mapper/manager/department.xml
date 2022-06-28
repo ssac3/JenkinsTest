@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.server.model.dao.manager.DepartmentMapper">
     <select id="validDeptId" resultType="Integer">
-        select exists(select id from DEPARTMENT where id = #{id} limit  1) as success;
+        select exists(select * from DEPARTMENT where id = #{id} limit  1) as success;
     </select>
 
     <select id="findByDeptInfo" resultType="Department">
@@ -23,7 +23,7 @@
     </select>
 
     <select id="validVid" resultType="Integer">
-        select exists(select id from VACATION where id = #{vId} limit 1) as success;
+        select exists(select * from VACATION where id = #{vId} limit 1) as success;
     </select>
 
     <update id="updateVacationByOne">
@@ -40,9 +40,9 @@
     </select>
 
     <update id="updateRearrangeByOne">
-        call myProcedure(#{rId},#{aId},#{startTime},#{endTime},#{approvalFlag},@myResult);
+        call REARRANGE_UPDATE(#{rId},#{aId},#{startTime},#{endTime},#{approvalFlag},@resCode,@resMsg);
     </update>
-    <select id="checkSubmitResult" resultType="Integer">
-        select @myResult as result;
+    <select id="checkRearrangeUpdate" resultType="ResultAction">
+        select @resCode, @resMsg as result;
     </select>
 </mapper>

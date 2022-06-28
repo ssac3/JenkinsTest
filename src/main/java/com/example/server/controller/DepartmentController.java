@@ -51,7 +51,7 @@ public class DepartmentController {
     }
 
     @PostMapping("/rarUpdate")
-    public void updateRearrangeByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody RearrangeUpdate rearrangeUpdate){
-        departmentService.updateRearrangeByOne(principalDetails.getUsername(), rearrangeUpdate.getRId(), rearrangeUpdate.getAId(), rearrangeUpdate.getStartTime(), rearrangeUpdate.getEndTime(), rearrangeUpdate.getApprovalFlag());
+    public ResponseEntity<StatusCode> updateRearrangeByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody RearrangeUpdate rearrangeUpdate){
+        return departmentService.updateRearrangeByOne(principalDetails.getUsername(), rearrangeUpdate.getRId(), rearrangeUpdate.getAId(), rearrangeUpdate.getStartTime(), rearrangeUpdate.getEndTime(), rearrangeUpdate.getApprovalFlag());
     }
 }
