@@ -52,11 +52,11 @@ public class UserService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> logout(String username) {
-            statusCode = StatusCode.builder().resCode(0).resMsg("로그아웃 성공").build();
-            deleteById(Long.parseLong(username));
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
-    }
+//    public ResponseEntity<StatusCode> logout(String username) {
+//            statusCode = StatusCode.builder().resCode(0).resMsg("로그아웃 성공").build();
+//            deleteById(Long.parseLong(username));
+//        return new JsonResponse().send(HttpStatus.OK, statusCode);
+//    }
 
     public void saveUser(User user){
         userMapper.save(user.toEntity(bCryptPasswordEncoder));
