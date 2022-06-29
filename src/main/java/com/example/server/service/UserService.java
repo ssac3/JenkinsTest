@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -30,12 +32,23 @@ public class UserService {
     }
 
     public ResponseEntity<StatusCode> updatepw(String username, User user){
-        String pw_check = selectPw(username);
-        if (bCryptPasswordEncoder.matches(user.getPassword(), pw_check)){
-            String n_pw = bCryptPasswordEncoder.encode(user.getNPassword());
-            System.out.println(n_pw);
+        String pwCheck = selectPw(username);
+        String nPw = user.getNPassword();
+        if (bCryptPasswordEncoder.matches(user.getPassword(), pwCheck)){
+
+            String pwPattern = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{9,12}$";
+            Matcher matcher = Pattern.compile(pwPattern).matcher(nPw);
+            if(!matcher.matches()){
+                statusCode = StatusCode.builder().resCode(2)
+                        .resMsg("비밀번호는 8~32자이어야 하며, 대/소문자, 숫자, 특수기호를 모두 포함해야 합니다.")
+                        .build();
+            }
+
+//            else if()
+            String eNPw = bCryptPasswordEncoder.encode(nPw);
+            System.out.println(eNPw);
             userMapper.updateByUsername(User.builder().username(Long.parseLong(username))
-                    .password(n_pw).build());
+                    .password(eNPw).build());
             statusCode = StatusCode.builder().resCode(0).resMsg("비밀번호 수정 성공").build();
         }
         else{
