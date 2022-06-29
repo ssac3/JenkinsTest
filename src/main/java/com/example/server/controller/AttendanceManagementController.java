@@ -9,9 +9,7 @@ import com.example.server.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,10 +18,11 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+
 public class AttendanceManagementController {
     private final AttendanceService attendanceService;
 
-    @PostMapping("/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
+    @GetMapping("/user/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
     public ResponseEntity<StatusCode> getAllAttendance(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         String username = principalDetails.getUsername();
         return attendanceService.getAllAttendance(username);

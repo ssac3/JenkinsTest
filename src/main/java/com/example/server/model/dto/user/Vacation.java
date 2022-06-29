@@ -17,22 +17,22 @@ public class Vacation {
     Long id;
     @JsonProperty("aId")
     Long aId;
-    @JsonProperty("empId")
-    Long empId;
+    @JsonProperty("username")
+    Long username;
     String date;
-    String type;
+    String vacationType;
     String contents;
     @JsonProperty("approvalFlag")
     String approvalFlag;
 
     @Builder
-    public Vacation(Long id, Long aId, Long empId, String date, String contents, String type, String approvalFlag) {
+    public Vacation(Long id, Long aId, Long username, String date, String contents, String vacationType, String approvalFlag) {
         this.id = id;
         this.aId = aId;
-        this.empId = empId;
+        this.username = username;
         this.date = date;
         this.contents = contents;
-        this.type = type;
+        this.vacationType = vacationType;
         this.approvalFlag = approvalFlag;
     }
 }
