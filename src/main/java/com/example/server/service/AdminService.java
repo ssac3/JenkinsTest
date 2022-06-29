@@ -7,6 +7,7 @@ import com.example.server.model.dto.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor // 하는 이유 질문
 public class AdminService {
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminMapper adminMapper;
     private StatusCode statusCode;
 
@@ -24,11 +25,17 @@ public class AdminService {
     @Transactional
     public ResponseEntity<StatusCode> insertEmp(String userInfo, User user){
        //username 유효성겁사(중복)
+
+        System.out.println("userInfo = " + userInfo);
+        System.out.println("user정보"+user);
+        //System.out.println("password" + user.getPassword());
         if(userInfo != null && !userInfo.equals("")){
             // 사원 등록
             System.out.println("사원등록");
-            adminMapper.insertEmp(user);
+            adminMapper.insertEmp(user.toInsertEntity(bCryptPasswordEncoder));
+            System.out.println("사원등록중간");
             statusCode = StatusCode.builder().resCode(0).resMsg("사원등록을 성공했습니다").build();
+            System.out.println("사원등록성공");
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
             statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
