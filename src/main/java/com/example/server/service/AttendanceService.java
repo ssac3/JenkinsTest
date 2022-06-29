@@ -26,7 +26,6 @@ public class AttendanceService {
                     List<MonthJoin> monthJoin = attendanceMapper.getAllAttendance(Long.parseLong(username));
                     LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     Object data = monthJoin.stream().map(value -> {
-                        map.put("eNum", value.getUsername());
                         map.put("aId", value.getAId());
                         map.put("aStatus", value.getAStatus() );
                         map.put("aStartTime", value.getAStartTime() );
@@ -43,8 +42,14 @@ public class AttendanceService {
                         map.put("vContents", value.getVContents());
                         return map;
                     });
-                    return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").data(data).build());
-                }).orElseGet(() -> new JsonResponse().send(HttpStatus.BAD_REQUEST, StatusCode.builder().resCode(0).resMsg("근태 정보 조회 완료").build()));
+                    return new JsonResponse()
+                            .send(HttpStatus.OK, StatusCode
+                                    .builder().resCode(0).resMsg("근태 정보 조회 완료").data(data)
+                                    .build());
+                }).orElseGet(() -> new JsonResponse()
+                                    .send(HttpStatus.BAD_REQUEST, StatusCode
+                                            .builder().resCode(0).resMsg("근태 정보 조회 실패")
+                                            .build()));
     }
 
     public ResponseEntity<StatusCode> rearrangeAttendance(String username, Map<String,String> reqMap) {
@@ -53,7 +58,6 @@ public class AttendanceService {
         String rStartTime = reqMap.get("rStartTime");
         String rEndTime = reqMap.get("rEndTime");
         String contents = reqMap.get("contents");
-
         return Optional.of(new JsonResponse())
                 .map(v -> Optional.of(attendanceMapper.viewAttendance(id, Long.parseLong(username))))
                 .map(res -> {
