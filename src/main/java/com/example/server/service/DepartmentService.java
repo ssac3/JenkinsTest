@@ -7,6 +7,7 @@ import com.example.server.model.dto.manager.Department;
 import com.example.server.model.dto.manager.RearrangeView;
 import com.example.server.model.dto.manager.ResultAction;
 import com.example.server.model.dto.manager.VacationView;
+import com.example.server.model.dto.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +62,8 @@ public class DepartmentService {
     }
 
 
-    public ResponseEntity<StatusCode> findByVacationAll(String userInfo){
-        if(userInfo != null && !userInfo.equals("")){
-            List<VacationView> result = departmentMapper.findByVacationAll();
+    public ResponseEntity<StatusCode> findByVacationAll(Long id){
+            List<VacationView> result = departmentMapper.findByVacationAll(id);
             System.out.println(result.toArray().toString());
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
@@ -80,11 +80,6 @@ public class DepartmentService {
             });
 
             statusCode = StatusCode.builder().resCode(0).resMsg("휴가 신청 조회 성공").data(data).build();
-        }
-        else{
-            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
-            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
-        }
 
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
@@ -107,11 +102,8 @@ public class DepartmentService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> findByRearrangeAll(String userInfo){
-        System.out.println("userInfo = " + userInfo);
-
-        if(userInfo != null && !userInfo.equals("")) {
-            List<RearrangeView> result = departmentMapper.findByRearrangeAll();
+    public ResponseEntity<StatusCode> findByRearrangeAll(Long id){
+            List<RearrangeView> result = departmentMapper.findByRearrangeAll(id);
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
             Object data = result.stream().map(value -> {
@@ -130,10 +122,6 @@ public class DepartmentService {
             });
 
             statusCode = StatusCode.builder().resCode(0).resMsg("근태 조정 요청 조회 성공").data(data).build();
-        }else{
-            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
-            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
-        }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
@@ -149,6 +137,24 @@ public class DepartmentService {
             statusCode = StatusCode.builder().resCode(2).resMsg("알 수 없는 에러 발생").build();
             System.out.println("[ERR]" + result.getResMsg());
         }
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> findEmpAllByDepId(Long id){
+        List<User> result = departmentMapper.findEmpAllByDepId(id);
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+        Object data = result.stream().map(value -> {
+            map.put("username", value.getUsername());
+            map.put("dName", value.getDepartment());
+            map.put("name", value.getName());
+            map.put("email", value.getEmail());
+            map.put("gender", value.getGender());
+            map.put("position", value.getPosition());
+            map.put("createdAt", value.getCreatedAt());
+            return map;
+        });
+        statusCode = StatusCode.builder().resCode(0).resMsg("사원별 근태 조회 성공").data(data).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }

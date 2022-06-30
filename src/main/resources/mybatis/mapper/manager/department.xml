@@ -17,9 +17,10 @@
     </update>
 
     <select id="findByVacationAll" resultType="VacationView">
-        SELECT VACATION.id as vId, name, VACATION.username as username, date, vacation_type as type, contents, approval_flag as approvalFlag, rest_time as restTime
-        FROM EMPLOYEE INNER JOIN VACATION ON EMPLOYEE.username = VACATION.username
-        WHERE VACATION.approval_flag = '0';
+        SELECT VACATION.id as vId, VACATION.username, name, date, vacation_type as type, contents, rest_time as restTime, approval_flag as approvalFlag
+        FROM VACATION INNER JOIN EMPLOYEE
+        ON VACATION.username = EMPLOYEE.username
+        WHERE dep_id = #{id};
     </select>
 
     <select id="validVid" resultType="Integer">
@@ -36,7 +37,8 @@
         SELECT REARRANGE.id as rId, a_id as aId, A.username, name, img, contents, REARRANGE.start_time as rStartTime, REARRANGE.end_time as rEndTime, A.start_time as startTime, A.end_time as endTime, approval_flag as approvalFlag
         from REARRANGE
         INNER JOIN ATTENDANCE A on REARRANGE.a_id = A.id
-        INNER JOIN EMPLOYEE E on A.username = E.username;
+        INNER JOIN EMPLOYEE E on A.username = E.username
+        WHERE dep_id = #{id};
     </select>
 
     <update id="updateRearrangeByOne">
@@ -44,5 +46,11 @@
     </update>
     <select id="checkRearrangeUpdate" resultType="ResultAction">
         select @resCode, @resMsg as result;
+    </select>
+
+    <select id="findEmpAllByDepId" resultType="User">
+        SELECT username, D.name as department, E.name as name, email, gender, position, created_at as createdAt
+        FROM EMPLOYEE E INNER JOIN DEPARTMENT D ON E.dep_id = D.id
+        WHERE dep_id = #{id};
     </select>
 </mapper>

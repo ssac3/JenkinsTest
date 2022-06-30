@@ -5,9 +5,7 @@ import com.example.server.constants.StatusCode;
 import com.example.server.model.dto.manager.Department;
 import com.example.server.model.dto.manager.RearrangeUpdate;
 import com.example.server.model.dto.manager.VacationUpdate;
-import com.example.server.model.dto.manager.VacationView;
 import com.example.server.service.DepartmentService;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,9 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,8 +31,8 @@ public class DepartmentController {
     }
 
     @PostMapping("/vacView")
-    public ResponseEntity<StatusCode> findByVacationAll(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return departmentService.findByVacationAll(principalDetails.getUsername());
+    public ResponseEntity<StatusCode> findByVacationAll(@RequestBody Department department) {
+        return departmentService.findByVacationAll(department.getId());
     }
 
     @PostMapping("/vacUpdate")
@@ -46,12 +41,18 @@ public class DepartmentController {
     }
 
     @PostMapping("/rarView")
-    public ResponseEntity<StatusCode> findByRearrangeAll(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        return departmentService.findByRearrangeAll(principalDetails.getUsername());
+    public ResponseEntity<StatusCode> findByRearrangeAll(@RequestBody Department department){
+        System.out.println("department.getId() = " + department.getId());
+        return departmentService.findByRearrangeAll(department.getId());
     }
 
     @PostMapping("/rarUpdate")
     public ResponseEntity<StatusCode> updateRearrangeByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody RearrangeUpdate rearrangeUpdate){
         return departmentService.updateRearrangeByOne(principalDetails.getUsername(), rearrangeUpdate.getRId(), rearrangeUpdate.getAId(), rearrangeUpdate.getStartTime(), rearrangeUpdate.getEndTime(), rearrangeUpdate.getApprovalFlag());
+    }
+
+    @PostMapping("/eivView")
+    public ResponseEntity<StatusCode> findEmpAllByDepId(@RequestBody Department department){
+        return departmentService.findEmpAllByDepId(department.getId());
     }
 }
