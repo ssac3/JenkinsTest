@@ -4,6 +4,7 @@ import com.example.server.model.dto.manager.Department;
 import com.example.server.model.dto.manager.RearrangeView;
 import com.example.server.model.dto.manager.ResultAction;
 import com.example.server.model.dto.manager.VacationView;
+import com.example.server.model.dto.user.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
@@ -28,4 +29,6 @@ public interface DepartmentMapper {
     void updateRearrangeByOne(Long rId, Long aId, String startTime, String endTime, String approvalFlag);
 
     ResultAction checkRearrangeUpdate();
+
+    List<User> findEmpAllByDepId(Long id);
 }

@@ -47,4 +47,10 @@
     <select id="checkRearrangeUpdate" resultType="ResultAction">
         select @resCode, @resMsg as result;
     </select>
+
+    <select id="findEmpAllByDepId" resultType="User">
+        SELECT username, D.name as department, E.name as name, email, gender, position, created_at as createdAt
+        FROM EMPLOYEE E INNER JOIN DEPARTMENT D ON E.dep_id = D.id
+        WHERE dep_id = #{id};
+    </select>
 </mapper>
