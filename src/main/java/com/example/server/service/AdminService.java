@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -26,16 +27,10 @@ public class AdminService {
     public ResponseEntity<StatusCode> insertEmp(String userInfo, User user){
        //username 유효성겁사(중복)
 
-        System.out.println("userInfo = " + userInfo);
-        System.out.println("user정보"+user);
         //System.out.println("password" + user.getPassword());
         if(userInfo != null && !userInfo.equals("")){
-            // 사원 등록
-            System.out.println("사원등록");
             adminMapper.insertEmp(user.toInsertEntity(bCryptPasswordEncoder));
-            System.out.println("사원등록중간");
             statusCode = StatusCode.builder().resCode(0).resMsg("사원등록을 성공했습니다").build();
-            System.out.println("사원등록성공");
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
             statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
@@ -46,17 +41,29 @@ public class AdminService {
     // 사원리스트정보
     @Transactional
     public ResponseEntity<StatusCode> viewEmp(String userInfo, User user) {
-
+        System.out.println("user인포는??"+userInfo);
         if(userInfo != null && !userInfo.equals("")){
-            // 사원의 리스트 보여주기, User의 정보를 전부 다 받아와야한다.
             System.out.println("회원리스트보여주기");
             List<User> empList = adminMapper.viewEmp(user);
-            // 데이터 확인하기
-            for (User item: empList
-                 ) {
-                System.out.println(item.getCreatedAt());
-            }
-            statusCode = StatusCode.builder().resCode(0).resMsg("사원조회를 성공했습니다").build();
+            LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+            Object data = empList.stream().map(value -> {
+                map.put("username", value.getUsername());
+                map.put("name", value.getName());
+                map.put("email", value.getEmail());
+                map.put("gender", value.getGender());
+                map.put("position", value.getPosition());
+                map.put("workingStatus", value.getWorkingStatus());
+                map.put("img", value.getImg());
+                map.put("role", value.getRole());
+                map.put("qrPath", value.getQrPath());
+                map.put("depId", value.getDepId());
+                map.put("dName", value.getDepartment());
+                map.put("location", value.getLocation());
+                map.put("createdAt", value.getCreatedAt());
+                return map;
+            });
+            statusCode = StatusCode.builder().resCode(0).data(data).resMsg("사원조회를 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
             statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
