@@ -1,5 +1,7 @@
 package com.example.server.service;
 
+import com.example.server.config.jwt.JwtProperties;
+import com.example.server.config.jwt.JwtTokenProvider;
 import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.token.TokenMapper;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,12 +27,22 @@ public class UserService {
     private final TokenMapper tokenMapper;
     private StatusCode statusCode;
 
+    private final JwtTokenProvider jwtTokenProvider;
+
+
     public void deleteById(Long username){
         tokenMapper.deleteById(username);
     }
 
     public String selectPw(String username) {
         return userMapper.findByUsername(Long.parseLong(username)).getPassword();
+    }
+
+    public String check(HttpServletRequest request){
+        String jwtHeader = jwtTokenProvider.resolveJwtToken(request);
+        String accessToken = jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
+        String username = jwtTokenProvider.getVerifyToken(accessToken).getClaim("username").asString();
+        return username;
     }
 
     public ResponseEntity<StatusCode> updatepw(String username, User user){

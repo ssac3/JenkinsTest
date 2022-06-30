@@ -1,11 +1,13 @@
 package com.example.server.config;
 
 
+import com.example.server.config.handler.CustomLogoutSuccessHandler;
 import com.example.server.config.jwt.JwtAuthenticationFilter;
 import com.example.server.config.jwt.JwtAuthorizationFilter;
 import com.example.server.config.jwt.JwtTokenProvider;
 import com.example.server.model.dao.token.TokenMapper;
 import com.example.server.model.dao.user.UserMapper;
+import com.example.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +15,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.filter.CorsFilter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -23,9 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsConfig;
     private final UserMapper userRepository;
-
     private final TokenMapper tokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,8 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .httpBasic().disable()
             .logout()
             .logoutUrl("/logout")
+            .addLogoutHandler(customLogoutSuccessHandler)
             .deleteCookies("JSESSIONID")
-            .logoutSuccessUrl("/")
             .and()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenRepository, jwtTokenProvider))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenRepository, jwtTokenProvider))
