@@ -36,8 +36,8 @@ public class DepartmentController {
     }
 
     @PostMapping("/vacView")
-    public ResponseEntity<StatusCode> findByVacationAll(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return departmentService.findByVacationAll(principalDetails.getUsername());
+    public ResponseEntity<StatusCode> findByVacationAll(@RequestBody Department department) {
+        return departmentService.findByVacationAll(department.getId());
     }
 
     @PostMapping("/vacUpdate")
@@ -46,8 +46,9 @@ public class DepartmentController {
     }
 
     @PostMapping("/rarView")
-    public ResponseEntity<StatusCode> findByRearrangeAll(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        return departmentService.findByRearrangeAll(principalDetails.getUsername());
+    public ResponseEntity<StatusCode> findByRearrangeAll(@RequestBody Department department){
+        System.out.println("department.getId() = " + department.getId());
+        return departmentService.findByRearrangeAll(department.getId());
     }
 
     @PostMapping("/rarUpdate")

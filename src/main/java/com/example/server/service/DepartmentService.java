@@ -61,9 +61,8 @@ public class DepartmentService {
     }
 
 
-    public ResponseEntity<StatusCode> findByVacationAll(String userInfo){
-        if(userInfo != null && !userInfo.equals("")){
-            List<VacationView> result = departmentMapper.findByVacationAll();
+    public ResponseEntity<StatusCode> findByVacationAll(Long id){
+            List<VacationView> result = departmentMapper.findByVacationAll(id);
             System.out.println(result.toArray().toString());
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
@@ -80,11 +79,6 @@ public class DepartmentService {
             });
 
             statusCode = StatusCode.builder().resCode(0).resMsg("휴가 신청 조회 성공").data(data).build();
-        }
-        else{
-            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
-            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
-        }
 
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
@@ -107,11 +101,8 @@ public class DepartmentService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> findByRearrangeAll(String userInfo){
-        System.out.println("userInfo = " + userInfo);
-
-        if(userInfo != null && !userInfo.equals("")) {
-            List<RearrangeView> result = departmentMapper.findByRearrangeAll();
+    public ResponseEntity<StatusCode> findByRearrangeAll(Long id){
+            List<RearrangeView> result = departmentMapper.findByRearrangeAll(id);
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
             Object data = result.stream().map(value -> {
@@ -130,10 +121,6 @@ public class DepartmentService {
             });
 
             statusCode = StatusCode.builder().resCode(0).resMsg("근태 조정 요청 조회 성공").data(data).build();
-        }else{
-            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
-            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
-        }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 

@@ -18,12 +18,12 @@ public interface DepartmentMapper {
 
     void updateByOne(LocalDateTime startTime, LocalDateTime endTime, Long id);
 
-    List<VacationView> findByVacationAll();
+    List<VacationView> findByVacationAll(Long id);
 
     int validVid(Long vId);
     void updateVacationByOne(String approvalFlag, Long vId);
 
-    List<RearrangeView> findByRearrangeAll();
+    List<RearrangeView> findByRearrangeAll(Long id);
 
     void updateRearrangeByOne(Long rId, Long aId, String startTime, String endTime, String approvalFlag);
 
