@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -62,7 +64,19 @@ public class User {
     public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().username(username).name(name).depId(depId).img(img).email(email).gender(gender)
                 .password(bCryptPasswordEncoder.encode(password)).position(position).role(role)
-                .qrPath(qrPath).build();
+                .qrPath(qrPath).restTime(120L).build();
     }
 
+    public User toInsertEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
+
+        String fixDate = "2022-06-29";
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = transFormat.parse(fixDate);
+            return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(img).email(email).gender(gender)
+                    .position(position).role(role).qrPath(qrPath).workingStatus("0") .createdAt(date).build();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
