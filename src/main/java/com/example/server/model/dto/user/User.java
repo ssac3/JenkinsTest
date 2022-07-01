@@ -35,13 +35,15 @@ public class User {
     private Date createdAt;
     private Long restTime;
     private String workingStatus;
+    @JsonProperty("nPasswordCheck")
+    private String nPasswordCheck;
     @JsonProperty("nPassword")
     private String nPassword;
 
     @Builder
     public User(Long depId, String password, String name, Long username, String email, String img,
                 String gender, String position, String role, Date createdAt, String qrPath, Long restTime,
-                String workingStatus, String nPassword, String department, String manager, String location) {
+                String workingStatus, String nPassword, String department, String manager, String location, String nPasswordCheck) {
         this.depId = depId;
         this.password = password;
         this.name = name;
@@ -59,6 +61,7 @@ public class User {
         this.department = department;
         this.manager = manager;
         this.location = location;
+        this.nPasswordCheck = nPasswordCheck;
     }
 
     public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
