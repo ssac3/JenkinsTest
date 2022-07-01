@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface TokenMapper {
     Token findByUsername(Long username);
-    void deleteById(Long username);
+    int deleteById(Long username);
     void save(Token token);
 
 }
