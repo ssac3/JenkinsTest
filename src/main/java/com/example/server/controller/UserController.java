@@ -17,11 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/signUp")
-    public void saveUser(@RequestBody User user){
-        userService.saveUser(user);
-    }
-
     @GetMapping("/myView")
     public ResponseEntity<StatusCode> myView(@AuthenticationPrincipal PrincipalDetails principalDetails){
         return userService.myView(principalDetails.getUsername());
@@ -34,8 +29,4 @@ public class UserController {
         return userService.updatepw(principalDetails.getUsername(), user);
     }
 
-//    @PostMapping("/logoutUser")
-//    public ResponseEntity<StatusCode> logout(@AuthenticationPrincipal PrincipalDetails principalDetails){
-//        return userService.logout(principalDetails.getUsername());
-//    }
 }
