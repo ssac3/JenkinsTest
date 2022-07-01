@@ -1,10 +1,9 @@
 package com.example.server.model.dao.manager;
 
-import com.example.server.model.dto.manager.Department;
-import com.example.server.model.dto.manager.RearrangeView;
-import com.example.server.model.dto.manager.ResultAction;
-import com.example.server.model.dto.manager.VacationView;
+import com.example.server.model.dto.manager.*;
+import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.User;
+import com.example.server.model.dto.user.Vacation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
@@ -31,4 +30,7 @@ public interface DepartmentMapper {
     ResultAction checkRearrangeUpdate();
 
     List<User> findEmpAllByDepId(Long id);
+
+    List<EmplAtndcView> findEmplAtndcById(Long username, String sDate, String eDate);
+
 }

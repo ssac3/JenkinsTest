@@ -3,8 +3,10 @@ package com.example.server.controller;
 import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dto.manager.Department;
+import com.example.server.model.dto.manager.EmplAtndcView;
 import com.example.server.model.dto.manager.RearrangeUpdate;
 import com.example.server.model.dto.manager.VacationUpdate;
+import com.example.server.model.dto.user.Attendance;
 import com.example.server.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +56,10 @@ public class DepartmentController {
     @PostMapping("/eivView")
     public ResponseEntity<StatusCode> findEmpAllByDepId(@RequestBody Department department){
         return departmentService.findEmpAllByDepId(department.getId());
+    }
+
+    @PostMapping("/eadView")
+    public ResponseEntity<StatusCode> findEmplAtndcById(@RequestBody EmplAtndcView emplAtndcView) {
+        return departmentService.findEmplAtndcById(emplAtndcView.getUsername(), emplAtndcView.getSDate(), emplAtndcView.getEDate());
     }
 }
