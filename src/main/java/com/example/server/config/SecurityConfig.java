@@ -1,6 +1,6 @@
 package com.example.server.config;
 
-
+import com.example.server.config.handler.CustomLogoutSuccessHandler;
 import com.example.server.config.jwt.JwtAuthenticationFilter;
 import com.example.server.config.jwt.JwtAuthorizationFilter;
 import com.example.server.config.jwt.JwtTokenProvider;
@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -23,7 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsConfig;
     private final UserMapper userRepository;
-
     private final TokenMapper tokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -37,8 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .httpBasic().disable()
             .logout()
             .logoutUrl("/logout")
+            .logoutSuccessHandler(new CustomLogoutSuccessHandler(tokenRepository, jwtTokenProvider))
+            .invalidateHttpSession(true)
             .deleteCookies("JSESSIONID")
-            .logoutSuccessUrl("/")
             .and()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenRepository, jwtTokenProvider))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenRepository, jwtTokenProvider))
