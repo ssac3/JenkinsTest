@@ -3,11 +3,10 @@ package com.example.server.service;
 import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.manager.DepartmentMapper;
-import com.example.server.model.dto.manager.Department;
-import com.example.server.model.dto.manager.RearrangeView;
-import com.example.server.model.dto.manager.ResultAction;
-import com.example.server.model.dto.manager.VacationView;
+import com.example.server.model.dto.manager.*;
+import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.User;
+import com.example.server.model.dto.user.Vacation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -155,6 +154,26 @@ public class DepartmentService {
             return map;
         });
         statusCode = StatusCode.builder().resCode(0).resMsg("사원별 근태 조회 성공").data(data).build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> findEmplAtndcById(Long username, String sDate, String eDate){
+        List<EmplAtndcView> result = departmentMapper.findEmplAtndcById(username, sDate, eDate);
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+        Object data = result.stream().map(value -> {
+            map.put("date", value.getDate());
+            map.put("startTime", value.getStartTime());
+            map.put("endTime", value.getEndTime());
+            map.put("status", value.getStatus());
+            map.put("vType", value.getVType());
+            map.put("vContents", value.getVContents());
+            map.put("vApprovalFlag", value.getVApprovalFlag());
+            return map;
+        });
+
+        System.out.println("result = " + data);
+        statusCode = StatusCode.builder().resCode(0).resMsg("사원별 일별 근태 조회 성공").data(data).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }
