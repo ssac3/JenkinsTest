@@ -53,4 +53,12 @@
         FROM EMPLOYEE E INNER JOIN DEPARTMENT D ON E.dep_id = D.id
         WHERE dep_id = #{id};
     </select>
+
+    <select id="findEmplAtndcById" resultType="EmplAtndcView">
+        SELECT a.date as date, a.start_time as startTime, a.end_time as endTime, a.status as status, v.vacation_type as vType, v.contents as vContents, v.approval_flag as vApprovalFlag
+        FROM ATTENDANCE a LEFT JOIN VACATION v
+        ON a.username = v.username and a.date = v.date
+        WHERE a.username = #{username} AND a.date BETWEEN #{sDate} AND #{eDate}
+        ORDER BY date;
+    </select>
 </mapper>
