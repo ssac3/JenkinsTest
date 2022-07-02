@@ -13,5 +13,5 @@ public interface UserMapper {
     void updateByUsername(User user);
     void save(User user);
     User myView(Long username);
-
+    void updateImg(User user);
 }

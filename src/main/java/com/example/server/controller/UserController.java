@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -29,4 +29,8 @@ public class UserController {
         return userService.updatepw(principalDetails.getUsername(), user);
     }
 
+    @PostMapping("/myImgUpdate")
+    public ResponseEntity<StatusCode> insertUserImage(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestPart(value = "image") MultipartFile multipartFile) {
+        return userService.updateImg(principalDetails.getUsername(), multipartFile, "profile");
+    }
 }
