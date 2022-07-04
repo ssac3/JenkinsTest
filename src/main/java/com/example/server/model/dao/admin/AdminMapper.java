@@ -21,7 +21,7 @@ public interface AdminMapper {
     User viewEmpDetail(User user);
 
     //사원수정
-    void updateEmp(User user);
+    int updateEmp(User user);
 
     //사원삭제
     void deleteEmp(User user);

@@ -26,7 +26,6 @@ public class AdminController {
     //사원상세보기
     @GetMapping("/admin/empDetail")
     public ResponseEntity<StatusCode> viewEmpDetail(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
-        System.out.println("사원디테일");
         return adminService.viewEmpDetail(principalDetails.getUsername(), user);
     }
 

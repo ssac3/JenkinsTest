@@ -26,8 +26,6 @@ public class AdminService {
     @Transactional
     public ResponseEntity<StatusCode> insertEmp(String userInfo, User user){
        //username 유효성겁사(중복)
-
-        //System.out.println("password" + user.getPassword());
         if(userInfo != null && !userInfo.equals("")){
             adminMapper.insertEmp(user.toInsertEntity(bCryptPasswordEncoder));
             statusCode = StatusCode.builder().resCode(0).resMsg("사원등록을 성공했습니다").build();
@@ -43,7 +41,6 @@ public class AdminService {
     public ResponseEntity<StatusCode> viewEmp(String userInfo, User user) {
         System.out.println("user인포는??"+userInfo);
         if(userInfo != null && !userInfo.equals("")){
-            System.out.println("회원리스트보여주기");
             List<User> empList = adminMapper.viewEmp(user);
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
@@ -105,8 +102,10 @@ public class AdminService {
     // 사원수정
     public ResponseEntity<StatusCode> updateEmp(String userInfo, User user) {
         if(userInfo != null && !userInfo.equals("")){
+            System.out.println("user.getName() = " + user.getName());
             System.out.println("사원수정");
             adminMapper.updateEmp(user);
+            System.out.println("adminMapper.updateEmp(user) = " + adminMapper.updateEmp(user));
             statusCode = StatusCode.builder().resCode(0).resMsg("사원수정을 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");

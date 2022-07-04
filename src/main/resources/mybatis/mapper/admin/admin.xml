@@ -30,7 +30,7 @@
 
     <update id="updateEmp">
         UPDATE EMPLOYEE
-        SET name = #{name}, gender = #{gender}, position = #{position}, role = #{role}
+        SET (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath}
         WHERE username = #{username};
     </update>
 
