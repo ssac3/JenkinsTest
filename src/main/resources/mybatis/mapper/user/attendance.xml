@@ -2,33 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.server.model.dao.user.AttendanceMapper">
-    <select id="getAllAttendance" parameterType="Long" resultType="MonthJoin">
-        SELECT AR.a_id, AR.a_status, AR.a_start_time,
+    <select id="getAllAttendance" parameterType="Map" resultType="MonthJoin">
+        SELECT AR.a_id, AR.a_status, AR.a_date, AR.a_start_time,
                AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
                AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.username as 'v_username',V.date as 'v_date',
-                V.vacation_type as 'v_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+                V.vacation_type as 'vType', V.approval_flag as 'v_approval_flag', V.contents as 'v_contents'
         FROM VACATION V LEFT OUTER JOIN
              (
-                 SELECT A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
+                 SELECT A.id as 'a_id', A.status as 'a_status',A.date as 'a_date', A.start_time as 'a_start_time',
                          A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
                          R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
                  FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
-                 WHERE A.username = #{username} and date_format(A.start_time,'%Y-%c') = '2022-6'
+                 WHERE A.username = #{username} and date_Format(A.date,'%Y-%m') = #{month}
              ) AR
              ON AR.a_id = V.a_id
-        WHERE V.username = #{username} and substr(V.date,1,7) = '2022-06'
+        WHERE V.username = #{username} and V.approval_flag in (2,3) and date_Format(V.date,'%Y-%m') = #{month}
         UNION
-        SELECT AR.a_id, AR.a_status, AR.a_start_time,
+        SELECT AR.a_id, AR.a_status, AR.a_date, AR.a_start_time,
                AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
                AR.r_contents, AR.r_approval_flag, V.id as 'v_id', V.username as'v_username',V.date as 'v_date',
-                V.vacation_type as 'v_type', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+                V.vacation_type as 'vType', V.approval_flag as 'v_approval', V.contents as 'v_contents'
         FROM VACATION V RIGHT OUTER JOIN
              (
-                 SELECT A.id as 'a_id', A.status as 'a_status', A.start_time as 'a_start_time',
+                 SELECT A.id as 'a_id', A.status as 'a_status', A.date as 'a_date', A.start_time as 'a_start_time',
                          A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
                          R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
                  FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
-                 WHERE A.username = #{username} and date_format(A.start_time,'%Y-%c') = '2022-6'
+                 WHERE A.username = #{username} and date_Format(A.date,'%Y-%m') = #{month}
              ) AR
              ON AR.a_id = V.a_id;
     </select>
