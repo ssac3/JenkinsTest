@@ -42,7 +42,4 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
             response.getWriter().write(result);
         }
     }
-
-
-
 }

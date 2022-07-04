@@ -34,4 +34,8 @@
     <update id="updateByUsername" parameterType="User">
         UPDATE EMPLOYEE set password = #{password} where username = #{username};
     </update>
+
+    <update id="updateImg" parameterType="User">
+        UPDATE EMPLOYEE set img = #{img} where username = #{username};
+    </update>
 </mapper>
