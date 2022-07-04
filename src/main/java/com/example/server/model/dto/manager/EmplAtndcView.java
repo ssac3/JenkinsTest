@@ -12,10 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EmplAtndcView {
     private Long username;
-    @JsonProperty("sDate")
-    private String sDate;
-    @JsonProperty("eDate")
-    private String eDate;
+    @JsonProperty("findDate")
+    private String findDate;
     private String date;
     private String startTime;
     private String endTime;

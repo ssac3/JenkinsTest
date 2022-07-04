@@ -60,6 +60,6 @@ public class DepartmentController {
 
     @PostMapping("/eadView")
     public ResponseEntity<StatusCode> findEmplAtndcById(@RequestBody EmplAtndcView emplAtndcView) {
-        return departmentService.findEmplAtndcById(emplAtndcView.getUsername(), emplAtndcView.getSDate(), emplAtndcView.getEDate());
+        return departmentService.findEmplAtndcById(emplAtndcView.getUsername(), emplAtndcView.getFindDate());
     }
 }

@@ -157,8 +157,9 @@ public class DepartmentService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> findEmplAtndcById(Long username, String sDate, String eDate){
-        List<EmplAtndcView> result = departmentMapper.findEmplAtndcById(username, sDate, eDate);
+    public ResponseEntity<StatusCode> findEmplAtndcById(Long username, String findDate){
+        System.out.println("findDate = " + findDate);
+        List<EmplAtndcView> result = departmentMapper.findEmplAtndcById(username, findDate);
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
         Object data = result.stream().map(value -> {

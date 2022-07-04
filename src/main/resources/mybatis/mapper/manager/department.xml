@@ -55,10 +55,14 @@
     </select>
 
     <select id="findEmplAtndcById" resultType="EmplAtndcView">
-        SELECT a.date as date, a.start_time as startTime, a.end_time as endTime, a.status as status, v.vacation_type as vType, v.contents as vContents, v.approval_flag as vApprovalFlag
-        FROM ATTENDANCE a LEFT JOIN VACATION v
-        ON a.username = v.username and a.date = v.date
-        WHERE a.username = #{username} AND a.date BETWEEN #{sDate} AND #{eDate}
-        ORDER BY date;
+        SELECT a.date as date, a.start_time as startTime, a.end_time as endTime, a.status as status, v.date as vDate, v.vacation_type as vType, v.contents as vContents, v.approval_flag as vApprovalFlag
+        FROM ATTENDANCE a LEFT OUTER JOIN VACATION v
+        on a.id = v.a_id
+        WHERE a.username = #{username} and DATE_FORMAT(a.date, '%Y-%m') = #{findDate}
+        UNION
+        SELECT a.date as date, a.start_time as startTime, a.end_time as endTime, a.status as status, v.date as vDate, v.vacation_type as vType, v.contents as vContents, v.approval_flag as vApprovalFlag
+        FROM ATTENDANCE a RIGHT OUTER JOIN VACATION v
+        ON a.id = v.a_id
+        WHERE v.username = #{username} AND DATE_FORMAT(v.date, '%Y-%m') = #{findDate};
     </select>
 </mapper>
