@@ -20,15 +20,18 @@ import java.util.*;
 public class AttendanceService {
     private final AttendanceMapper attendanceMapper;
 
-    public ResponseEntity<StatusCode> getAllAttendance(String username) {
+    public ResponseEntity<StatusCode> getAllAttendance(String username, Map<String, String> reqMap) {
+        String month = reqMap.get("month");
+        System.out.println("Service.month:"+month);
         return Optional.of(new JsonResponse())
                 .map(v -> {
-                    List<MonthJoin> monthJoin = attendanceMapper.getAllAttendance(Long.parseLong(username));
+                    List<MonthJoin> monthJoin = attendanceMapper.getAllAttendance(Long.parseLong(username), month);
                     LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     Object data = monthJoin.stream().map(value -> {
                         map.put("aId", value.getAId());
                         map.put("aStatus", value.getAStatus() );
                         map.put("aStartTime", value.getAStartTime() );
+                        map.put("aDate", value.getADate());
                         map.put("aEndTime", value.getAEndTime() );
                         map.put("rId", value.getRId());
                         map.put("rStartTime", value.getRStartTime());
@@ -37,7 +40,7 @@ public class AttendanceService {
                         map.put("rApprovalFlag", value.getRApprovalFlag());
                         map.put("vId", value.getVId());
                         map.put("vDate", value.getVDate());
-                        map.put("vacationType", value.getVacationType());
+                        map.put("vType", value.getVType());
                         map.put("vApprovalFlag", value.getVApprovalFlag());
                         map.put("vContents", value.getVContents());
                         return map;

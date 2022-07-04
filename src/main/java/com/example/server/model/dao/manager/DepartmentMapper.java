@@ -31,6 +31,6 @@ public interface DepartmentMapper {
 
     List<User> findEmpAllByDepId(Long id);
 
-    List<EmplAtndcView> findEmplAtndcById(Long username, String sDate, String eDate);
+    List<EmplAtndcView> findEmplAtndcById(Long username, String findDate);
 
 }
