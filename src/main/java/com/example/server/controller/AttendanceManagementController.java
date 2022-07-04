@@ -22,10 +22,12 @@ import java.util.Map;
 public class AttendanceManagementController {
     private final AttendanceService attendanceService;
 
-    @GetMapping("/user/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
-    public ResponseEntity<StatusCode> getAllAttendance(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PostMapping("/user/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
+    public ResponseEntity<StatusCode> getAllAttendance(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                        @RequestBody Map<String, String> reqMap) {
+        System.out.println("Controller.month:" + reqMap);
         String username = principalDetails.getUsername();
-        return attendanceService.getAllAttendance(username);
+        return attendanceService.getAllAttendance(username, reqMap);
     }
 
     @PostMapping("/rearrangeAttendance")

@@ -16,6 +16,6 @@ import java.util.Optional;
 @Mapper
 public interface AttendanceMapper {
     Attendance viewAttendance(Long id, Long username);
-    List<MonthJoin> getAllAttendance(Long username);
+    List<MonthJoin> getAllAttendance(Long username, String month);
     int rearrangeAttendance(Long id, String rStartTime, String rEndTime, String contents);
 }
