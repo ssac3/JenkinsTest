@@ -158,7 +158,6 @@ public class DepartmentService {
     }
 
     public ResponseEntity<StatusCode> findEmplAtndcById(Long username, String findDate){
-        System.out.println("findDate = " + findDate);
         List<EmplAtndcView> result = departmentMapper.findEmplAtndcById(username, findDate);
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
@@ -167,13 +166,13 @@ public class DepartmentService {
             map.put("startTime", value.getStartTime());
             map.put("endTime", value.getEndTime());
             map.put("status", value.getStatus());
+            map.put("vDate", value.getVDate());
             map.put("vType", value.getVType());
             map.put("vContents", value.getVContents());
             map.put("vApprovalFlag", value.getVApprovalFlag());
             return map;
         });
 
-        System.out.println("result = " + data);
         statusCode = StatusCode.builder().resCode(0).resMsg("사원별 일별 근태 조회 성공").data(data).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }

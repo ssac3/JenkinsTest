@@ -18,6 +18,8 @@ public class EmplAtndcView {
     private String startTime;
     private String endTime;
     private String status;
+    @JsonProperty("vDate")
+    private String vDate;
     @JsonProperty("vType")
     private String vType;
     @JsonProperty("vContents")
