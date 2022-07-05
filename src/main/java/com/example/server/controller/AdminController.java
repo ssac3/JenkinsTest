@@ -23,12 +23,6 @@ public class AdminController {
         return adminService.viewEmp(principalDetails.getUsername(), user);
     }
 
-    //사원상세보기
-    @GetMapping("/admin/empDetail")
-    public ResponseEntity<StatusCode> viewEmpDetail(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
-        return adminService.viewEmpDetail(principalDetails.getUsername(), user);
-    }
-
     //사원등록
     @PostMapping("/admin/insertEmp")
     public ResponseEntity<StatusCode> insertEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
@@ -40,11 +34,9 @@ public class AdminController {
     public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user) {
         return adminService.deleteEmp(principalDetails.getUsername(), user);
     }
-
     //사원수정
     @PostMapping("/admin/updateEmp")
     public ResponseEntity<StatusCode> updateEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user){
-        System.out.println("사원수정테스트1");
         return adminService.updateEmp(principalDetails.getUsername(), user);
     }
 

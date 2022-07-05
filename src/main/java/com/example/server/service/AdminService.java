@@ -1,5 +1,6 @@
 package com.example.server.service;
 
+import com.amazonaws.services.dynamodbv2.xspec.S;
 import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.admin.AdminMapper;
@@ -39,7 +40,6 @@ public class AdminService {
     // 사원리스트정보
     @Transactional
     public ResponseEntity<StatusCode> viewEmp(String userInfo, User user) {
-        System.out.println("user인포는??"+userInfo);
         if(userInfo != null && !userInfo.equals("")){
             List<User> empList = adminMapper.viewEmp(user);
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -67,23 +67,6 @@ public class AdminService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
-    //사원디테일리스트
-    @Transactional
-    public ResponseEntity<StatusCode> viewEmpDetail(String userInfo, User user) {
-
-        if(userInfo != null && !userInfo.equals("")){
-            System.out.println("회원디테일리스트보여주기");
-            adminMapper.viewEmpDetail(user);
-            System.out.println(user);
-
-            statusCode = StatusCode.builder().resCode(0).resMsg("사원디테일조회를 성공했습니다").build();
-        }else {
-            System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
-            statusCode = StatusCode.builder().resCode(2).resMsg("유효하지 않는 사용자 정보입니다.").build();
-        }
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
-    }
     
     //사원삭제
     @Transactional
@@ -102,10 +85,22 @@ public class AdminService {
     // 사원수정
     public ResponseEntity<StatusCode> updateEmp(String userInfo, User user) {
         if(userInfo != null && !userInfo.equals("")){
-            System.out.println("user.getName() = " + user.getName());
-            System.out.println("사원수정");
-            adminMapper.updateEmp(user);
-            System.out.println("adminMapper.updateEmp(user) = " + adminMapper.updateEmp(user));
+            System.out.println("userInfo.getName() = " + userInfo);
+            System.out.println(user.toString());
+            adminMapper.updateEmp(User.builder().
+                    name(user.getName())
+                    .gender(user.getGender())
+//                    .img(user.getImg())
+                    .depId(user.getDepId())
+                    .position(user.getPosition())
+                    .role(user.getRole())
+                    .qrPath(user.getQrPath())
+                    .build()
+            );
+            System.out.println("UPDATE확인111"+user.getName());
+            System.out.println("UPDATE확인222"+user);
+            System.out.println("UPDATE확인333"+user.getGender());
+            System.out.println("UPDATE개수??   :    adminMapper.updateEmp(user) = " + adminMapper.updateEmp(user));
             statusCode = StatusCode.builder().resCode(0).resMsg("사원수정을 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
