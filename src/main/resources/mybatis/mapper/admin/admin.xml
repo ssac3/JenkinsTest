@@ -7,19 +7,12 @@
         SELECT username, E.name as name, email, gender, position, working_status as workingStatus, img, role, qr_path as qrPath, dep_id as depId, D.name as department, location, created_at as createdAt
         FROM EMPLOYEE E INNER JOIN DEPARTMENT D
        ON E.dep_id = D.id;
-
     </select>
 
-    <select id="viewEmpDetail" resultType="User">
-        select * from (select e.name, d.name as department, e.position, e.email, d.location, e.qr_path, e.img
-                       from (SELECT name, dep_id, position, email, qr_path, img from EMPLOYEE where username = #{username}) e
-                                JOIN DEPARTMENT d ON e.dep_id = d.id) a
-                          CROSS JOIN (select i.name as manager from EMPLOYEE i where dep_id IN (SELECT dep_id from EMPLOYEE where username = #{username}) and role = '1') b;
-    </select>
 
     <insert id="insertEmp"  parameterType="User" >
-        INSERT INTO EMPLOYEE (username, dep_id,  name, password, email, img, gender, position, role, qr_path , working_status)
-        values (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath}, #{workingStatus});
+        INSERT INTO EMPLOYEE (username, dep_id,  name, password, email, img, gender, position, role, qr_path )
+        values (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath});
     </insert>
 
     <update id="deleteEmp">
@@ -28,10 +21,9 @@
         WHERE username = #{username};
     </update>
 
-    <update id="updateEmp">
+    <update id="updateEmp" parameterType="User">
         UPDATE EMPLOYEE
-        SET (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath}
+        SET name = #{name}, gender = #{gender}, img = #{img}, dep_id = #{depId}, position = #{position}, role = #{role}, qr_path = #{qrPath}
         WHERE username = #{username};
     </update>
-
 </mapper>

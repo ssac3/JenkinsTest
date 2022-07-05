@@ -17,9 +17,6 @@ public interface AdminMapper {
     // 사원조회
     List<User> viewEmp(User user);
 
-    //사원디테일
-    User viewEmpDetail(User user);
-
     //사원수정
     int updateEmp(User user);
 
