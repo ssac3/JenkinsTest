@@ -2,10 +2,7 @@ package com.example.server.controller;
 
 import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.StatusCode;
-import com.example.server.model.dto.manager.Department;
-import com.example.server.model.dto.manager.EmplAtndcView;
-import com.example.server.model.dto.manager.RearrangeUpdate;
-import com.example.server.model.dto.manager.VacationUpdate;
+import com.example.server.model.dto.manager.*;
 import com.example.server.model.dto.user.Attendance;
 import com.example.server.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,5 +60,10 @@ public class DepartmentController {
     @PostMapping("/eadView")
     public ResponseEntity<StatusCode> findEmplAtndcById(@RequestBody EmplAtndcView emplAtndcView) {
         return departmentService.findEmplAtndcById(emplAtndcView.getUsername(), emplAtndcView.getFindDate());
+    }
+
+    @PostMapping("/eamView")
+    public ResponseEntity<StatusCode> findEmplAtndStatsById(@RequestBody Map<String, Long> reqMap) {
+        return departmentService.findEmplAtndStatsById(reqMap.get("username"), reqMap.get("year"));
     }
 }

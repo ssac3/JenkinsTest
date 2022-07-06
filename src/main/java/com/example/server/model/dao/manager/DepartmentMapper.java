@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -32,5 +33,7 @@ public interface DepartmentMapper {
     List<User> findEmpAllByDepId(Long id);
 
     List<EmplAtndcView> findEmplAtndcById(Long username, String findDate);
+
+    List<Month> findEmplAtndStatsById(Long username, Long year);
 
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//TEST_AMDTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.model.dao.scheduler.SchedulerMapper">
+    <select id="getEmptyAtndEmpl" parameterType="String" resultType="Vacation">
+        SELECT id, a_id, username, date, contents, vacation_type, approval_flag FROM VACATION WHERE username IN
+                                                                                                  (SELECT username FROM EMPLOYEE WHERE username NOT IN(SELECT username FROM ATTENDANCE WHERE date = '2022-07-05')) and date = '2022-07-05';
+    </select>
+    <select id="getCronVac" resultType="Vacation">
+        SELECT id, a_id, username, date, contents, vacation_type, approval_flag FROM VACATION WHERE approval_flag = '1' and date = '2022-06-24';
+    </select>
+    <insert id="addCronAttendance" parameterType="java.util.List">
+        INSERT INTO ATTENDANCE(username, date, start_time, end_time status)
+        VALUES
+        <foreach item = "item" index = "index" collection="list">
+            (#{item.username}, #{item.date}, null, null, #{item.approval});
+        </foreach>
+    </insert>
+    <update id="updateCronVacation">
+        UPDATE VACATION SET aId =
+    </update>
+</mapper>

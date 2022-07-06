@@ -18,11 +18,11 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping("/user")
 public class AttendanceManagementController {
     private final AttendanceService attendanceService;
 
-    @PostMapping("/user/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
+    @PostMapping("/getAllAttendance")   //달력 내 표출될 정보를 불러오기 위한 API
     public ResponseEntity<StatusCode> getAllAttendance(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                         @RequestBody Map<String, String> reqMap) {
         System.out.println("Controller.month:" + reqMap);
@@ -36,6 +36,4 @@ public class AttendanceManagementController {
         String username = principalDetails.getUsername();
         return attendanceService.rearrangeAttendance(username, reqMap);
     }
-
-
 }
