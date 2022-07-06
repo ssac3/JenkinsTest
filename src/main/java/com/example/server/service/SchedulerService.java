@@ -31,11 +31,7 @@ public class SchedulerService {
         //해당 일자의 휴가 리스트 가져오기 -> 리스트에 있는사람들 휴가 리스트 뽑아올 수 있을까?
         List<Vacation> todayVacation = schedulerMapper.getCronVac(date);
 
-        for (User item : emptyUser) {
-            System.out.println(item.getUsername());
-        }
-        System.out.println("=======================");
-        for (Vacation vacation : todayVacation) {
+       for (Vacation vacation : todayVacation) {
             System.out.println(vacation.getDate());
         }
         System.out.println("=======================");
