@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.server.model.dao.commute.CommuteMapper">
+    <select id="findByUsername" resultType="Long">
+        select count(*) from EMPLOYEE where username = #{username};
+    </select>
+    
+    <select id="checkInOut" parameterType="Long" resultType="Long">
+        select count(*) from ATTENDANCE where username = #{username} and date = CURDATE();
+    </select>
+
+    <insert id="clockIn" parameterType="Map">
+        INSERT INTO ATTENDANCE (username, start_time) value (#{username}, #{currentTime});
+    </insert>
+
+    <select id="checkOut" resultType="String">
+        select end_time from ATTENDANCE where username = #{username} and date = CURDATE();
+    </select>
+
+    <update id="clockOut" parameterType="Map">
+        UPDATE ATTENDANCE set end_time = #{currentTime} where username = #{username} and date = CURDATE();
+    </update>
+
+    <insert id="clockOutInsert" parameterType="Map">
+        INSERT INTO ATTENDANCE (username, end_time) value (#{username}, #{currentTime});
+    </insert>
+    
+    <select id="checkDepTime" resultType="Map">
+        select start_time, end_time
+        from DEPARTMENT
+        where id IN (select dep_id from EMPLOYEE where username = #{username})
+    </select>
+
+    <select id="checkAtdTime" resultType="Map">
+        select start_time
+        from ATTENDANCE
+        where username = #{username} and date = CURDATE();
+    </select>
+
+    <update id="determine">
+        UPDATE ATTENDANCE set status = #{status} where username = #{username} and date = CURDATE();
+    </update>
+
+    <select id="checkVacation" resultType="Map">
+        select vacation_type, count(vacation_type) from VACATION where username = #{username} and date = #{date} and approval_flag = '1';
+    </select>
+</mapper>
