@@ -2,10 +2,14 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <settings>
+        <setting name="callSettersOnNulls" value="true"/>
+    </settings>
     <mappers>
         <mapper resource="admin.xml"/>
         <mapper resource="user.xml"/>
         <mapper resource="token.xml"/>
         <mapper resource="department.xml"/>
+        <mapper resource="commute.xml"/>
     </mappers>
 </configuration>
