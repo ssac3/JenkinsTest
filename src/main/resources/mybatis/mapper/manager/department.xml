@@ -65,4 +65,16 @@
         ON a.id = v.a_id
         WHERE v.username = #{username} AND DATE_FORMAT(v.date, '%Y-%m') = #{findDate};
     </select>
+
+    <select id="findEmplAtndStatsById" resultType="Month">
+        SELECT date_format(date, '%m') as 'month'
+         ,count(case when status = '0' then 1 end) as 'ok_count'
+         ,count(case when status = '1' then 1 end) as 'late_count'
+         ,count(case when status = '2' then 1 end) as 'absence_count'
+         ,E.rest_time as 'vacation_time'
+        FROM ATTENDANCE A
+                 JOIN EMPLOYEE E on A.username = E.username
+        WHERE A.username = #{username} and date_format(date, '%Y') = #{year}
+        GROUP BY month;
+    </select>
 </mapper>

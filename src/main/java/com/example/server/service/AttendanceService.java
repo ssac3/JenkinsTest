@@ -1,18 +1,15 @@
 package com.example.server.service;
 
-import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.user.AttendanceMapper;
-import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.MonthJoin;
-import com.example.server.model.dto.user.Reaarange;
-import com.example.server.model.dto.user.Vacation;
+import com.example.server.model.dto.user.Rearrange;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import javax.servlet.http.HttpServletRequest;
+
 import java.util.*;
 
 @Service
@@ -55,21 +52,25 @@ public class AttendanceService {
                                             .build()));
     }
 
-    public ResponseEntity<StatusCode> rearrangeAttendance(String username, Map<String,String> reqMap) {
-        Long id = Long.parseLong(reqMap.get("id"));
-        Long aId = id;
-        String rStartTime = reqMap.get("rStartTime");
-        String rEndTime = reqMap.get("rEndTime");
-        String contents = reqMap.get("contents");
+    public ResponseEntity<StatusCode> rearrangeAttendance(String username, Rearrange rearrange) {
+        System.out.println(rearrange.toString());
+//        System.out.println(reqMap.get("id"));
+//        Long id = Long.parseLong(reqMap.get("id"));
+////        Long aId = id;
+//        String rStartTime = reqMap.get("rStartTime");
+//        String rEndTime = reqMap.get("rEndTime");
+//        String contents = reqMap.get("contents");
         return Optional.of(new JsonResponse())
-                .map(v -> Optional.of(attendanceMapper.viewAttendance(id, Long.parseLong(username))))
-                .map(res -> {
-                    int result = attendanceMapper.rearrangeAttendance(id, rStartTime, rEndTime, contents);
-                    if (result > 0){
-                        return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("이상 근태 조정요청이 완료되었습니다.").build());
-                    }
-                    else return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(2).resMsg("이상 근태 조정 요청 실패").build());
-                }).orElseGet(() -> new JsonResponse().send(HttpStatus.BAD_REQUEST, StatusCode.builder().resCode(2).resMsg("이상 근태 조회 실패").build()));
+                .map(v -> Objects.isNull(attendanceMapper.viewAttendance(rearrange.getAId(), Long.parseLong(username))))
+                .filter(res -> !res) //null 여부 확인
+                . map(v -> Objects.isNull(attendanceMapper.viewRearrange(rearrange)))
+                .filter(res -> res)
+                .map(v -> {
+                    int result = attendanceMapper.rearrangeAttendance(rearrange);
+                    if(result > 0) { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("이상 근태 조정요청이 완료되었습니다.").build());}
+                    else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(2).resMsg("이상 근태 조정 요청 실패").build()); }
+                })
+                .orElseGet(() -> new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(3).resMsg("조정 가능한 근태 정보가 업습니다.").build()));
 
     }
 }
