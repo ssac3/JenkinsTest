@@ -73,6 +73,6 @@ public class User {
 
     public User toInsertEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(img).email(email).gender(gender)
-                .position(position).role(role).qrPath(qrPath) .build();
+                .position(position).role(role).qrPath(qrPath).build();
     }
 }
