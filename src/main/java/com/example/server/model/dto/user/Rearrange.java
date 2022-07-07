@@ -1,18 +1,15 @@
 package com.example.server.model.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.Date;
+import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class Reaarange {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Rearrange {
     Long id;
     @JsonProperty("aId")
     Long aId;
@@ -23,6 +20,4 @@ public class Reaarange {
     String contents;
     @JsonProperty("approvalFlag")
     String approvalFlag;
-
-
 }

@@ -3,21 +3,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//TEST_AMDTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.server.model.dao.scheduler.SchedulerMapper">
-    <select id="getEmptyAtndEmpl" parameterType="String" resultType="Vacation">
-        SELECT id, a_id, username, date, contents, vacation_type, approval_flag FROM VACATION WHERE username IN
-                                                                                                  (SELECT username FROM EMPLOYEE WHERE username NOT IN(SELECT username FROM ATTENDANCE WHERE date = '2022-07-05')) and date = '2022-07-05';
+    <select id="getEmptyAtndEmpl" parameterType="String" resultType="Long">
+        SELECT username FROM EMPLOYEE WHERE username NOT IN(SELECT username FROM ATTENDANCE WHERE date = '2022-07-05');
     </select>
-    <select id="getCronVac" resultType="Vacation">
-        SELECT id, a_id, username, date, contents, vacation_type, approval_flag FROM VACATION WHERE approval_flag = '1' and date = '2022-06-24';
+    <select id="getCronVac" parameterType="String" resultType="Long">
+        SELECT username
+        FROM VACATION
+        WHERE date = #{date}
     </select>
-    <insert id="addCronAttendance" parameterType="java.util.List">
-        INSERT INTO ATTENDANCE(username, date, start_time, end_time status)
-        VALUES
-        <foreach item = "item" index = "index" collection="list">
-            (#{item.username}, #{item.date}, null, null, #{item.approval});
+    <update id="addCronAttendance" parameterType="java.util.HashMap">
+        INSERT INTO ATTENDANCE(ATTENDANCE.username, ATTENDANCE.date, ATTENDANCE.start_time, ATTENDANCE.end_time, ATTENDANCE.status) VALUES
+        <foreach collection="lists" item = "item" index="index" separator=",">
+             (${item}, #{aDate}, null, null, #{aStatus})
         </foreach>
-    </insert>
-    <update id="updateCronVacation">
-        UPDATE VACATION SET aId =
     </update>
+    <select id="getCronAtdnId" resultType="ATTENDANCE">
+        SELECT id, username, date FROM ATTENDANCE WHERE date = #{date} and status = '0';
+    </select>
+
+    <update id="updateCronVacaionAId" parameterType="java.util.List">
+        <foreach collection="vacAtdn" item="item" index="index">
+            UPDATE VACATION SET a_Id = ${item.id} WHERE VACATION.date = #{item.date} and username = #{item.username} and a_Id is null;
+        </foreach>
+
+    </update>
+
+
+
 </mapper>

@@ -34,10 +34,14 @@
     </select>
 
     <select id="viewAttendance" parameterType="Map" resultType="Attendance">
-        SELECT * FROM ATTENDANCE WHERE username = #{username} AND id = #{id} AND status != 0;
+        SELECT id, username, date, start_time, end_time, status FROM ATTENDANCE  WHERE username = #{username} AND id = #{aId} AND status != '0';
     </select>
 
-    <insert id="rearrangeAttendance" parameterType="Map">
-        INSERT INTO REARRANGE(a_id, start_time, end_time, contents) VALUES (#{id}, #{rStartTime}, #{rEndTime}, #{contents});
+    <select id="viewRearrange" parameterType="Map" resultType="Rearrange">
+        SELECT id, a_id, start_time, end_time, contents, approval_flag FROM REARRANGE WHERE a_id = #{aId};
+    </select>
+
+    <insert id="rearrangeAttendance" parameterType="Rearrange">
+        INSERT INTO REARRANGE(a_id, start_time, end_time, contents) VALUES (#{aId}, #{startTime}, #{endTime}, #{contents});
     </insert>
 </mapper>

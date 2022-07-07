@@ -3,19 +3,17 @@ package com.example.server.model.dao.user;
 import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.MonthJoin;
 
-import com.example.server.model.dto.user.Reaarange;
-import com.example.server.model.dto.user.Vacation;
-import com.example.server.service.AttendanceService;
+import com.example.server.model.dto.user.Rearrange;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Mapper
 public interface AttendanceMapper {
-    Attendance viewAttendance(Long id, Long username);
+    Attendance viewAttendance(Long aId, Long username);
     List<MonthJoin> getAllAttendance(Long username, String month);
-    int rearrangeAttendance(Long id, String rStartTime, String rEndTime, String contents);
+    int rearrangeAttendance(Rearrange rearrange);
+    Rearrange viewRearrange(Rearrange rearrange);
 }
