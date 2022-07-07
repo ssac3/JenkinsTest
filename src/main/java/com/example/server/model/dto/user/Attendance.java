@@ -1,19 +1,18 @@
 package com.example.server.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Attendance {
     Long id;
     Long username;
+    String date;
     @JsonProperty("startTime")
     String startTime;
     @JsonProperty("endTime")
@@ -21,9 +20,10 @@ public class Attendance {
     String status;
 
     @Builder
-    public Attendance(Long id, Long username, String startTime, String endTime, String status) {
+    public Attendance(Long id, Long username, String date, String startTime, String endTime, String status) {
         this.id = id;
         this.username = username;
+        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
