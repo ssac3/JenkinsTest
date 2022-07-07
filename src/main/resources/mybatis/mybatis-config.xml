@@ -7,5 +7,8 @@
         <mapper resource="user.xml"/>
         <mapper resource="token.xml"/>
         <mapper resource="department.xml"/>
+        <mapper resource="attendance.xml" />
+        <mapper resource="vacation.xml"/>
+        <mapper resource="scheduler.xml"/>
     </mappers>
 </configuration>
