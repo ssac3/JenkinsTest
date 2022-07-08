@@ -14,5 +14,6 @@
         <mapper resource="vacation.xml"/>
         <mapper resource="scheduler.xml"/>
         <mapper resource="commute.xml"/>
+        <mapper resource="statistics.xml"/>
     </mappers>
 </configuration>
