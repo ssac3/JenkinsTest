@@ -77,4 +77,97 @@
         WHERE A.username = #{username} and date_format(date, '%Y') = #{year}
         GROUP BY month;
     </select>
+
+    <select id="findEavByUsername" resultType="EavView">
+        select okCount,
+        failCount,
+        rCount,
+        lastRCount,
+        allVac,
+        eveningVac,
+        afternoonVac,
+        lastAllVac,
+        lastEveningVac,
+        lastAfternoonVac,
+        rest_time as restTime,
+        start_time as startTime,
+        end_time as endTime
+        from (
+            select F.username, okCount, failCount, rCount, lastRCount, allVac, eveningVac, afternoonVac, lastAllVac, lastEveningVac, lastAfternoonVac,  rest_time, dep_id
+            from (
+                select E.username as username, okCount, failCount, rCount, lastRCount, allVac, eveningVac, afternoonVac, lastAllVac, lastEveningVac, lastAfternoonVac
+                from (
+                    select C.username as username, okCount, failCount, rCount, lastRCount
+                    from (
+                        select username,
+                        count(case when status = '0' then 1 end) as 'okCount',
+                        count(case when status = '1' or status = '2' then 1 end) as 'failCount'
+                        from ATTENDANCE
+                        where username = #{username} and date_format(date, '%Y-%m') = #{findDate}
+                    ) C
+                    LEFT JOIN (
+                    select A.username as username, rCount, lastRCount
+                    from (
+                        select IFNULL(A.username, #{username}) as username, count(L.r_id) as rCount
+                        from LOG_REARRANGE L join ATTENDANCE A
+                        on A.id = L.r_id
+                        where username = #{username}
+                        and date_format(L.created_at, '%Y-%m') = #{findDate}
+                        and r_approval_flag = 0
+                    ) A
+                    LEFT JOIN (
+                        select IFNULL(A.username, #{username}) as username, count(L.r_id) as lastRCount
+                        from LOG_REARRANGE L join ATTENDANCE A
+                        on A.id = L.r_id
+                        where username = #{username}
+                        and date_format(L.created_at, '%Y-%m') = #{lastDate}
+                        and r_approval_flag = 0
+                    ) B
+                    ON A.username = B.username
+                    ) D
+                    ON C.username = D.username
+                ) E
+                LEFT JOIN
+                (
+                select
+                    A.username as username,
+                    IFNULL(allVac, 0) as allVac,
+                    IFNULL(eveningVac, 0) as eveningVac,
+                    IFNULL(afternoonVac, 0) as afternoonVac,
+                    IFNULL(lastAllVac, 0) as lastAllVac,
+                    IFNULL(lastEveningVac,0) as lastEveningVac,
+                    IFNULL(lastAfternoonVac, 0) as lastAfternoonVac
+                from (
+                    select username,
+                    count(case when v_type = '0' then 1 end) as 'allVac',
+                    count(case when v_type = '1' then 1 end) as 'eveningVac',
+                    count(case when v_type = '2' then 1 end) as 'afternoonVac'
+                    from LOG_VACATION
+                    where
+                    username = #{username}
+                    and v_approval_flag = 1
+                    and date_format(v_date, '%Y-%m') = #{findDate}
+                ) A
+
+                LEFT JOIN (
+                select username,
+                count(case when v_type = '0' then 1 end) as 'lastAllVac',
+                count(case when v_type = '1' then 1 end) as 'lastEveningVac',
+                count(case when v_type = '2' then 1 end) as 'lastAfternoonVac'
+                from LOG_VACATION
+                where
+                username = #{username}
+                and v_approval_flag = 1
+                and date_format(v_date, '%Y-%m') = #{lastDate}
+                ) B
+                ON A.username = B.username
+                ) D
+                ON E.username = D.username
+            ) F
+            LEFT JOIN EMPLOYEE G
+            ON F.username = G.username
+        ) K
+        JOIN DEPARTMENT D
+        ON D.id = K.dep_id;
+    </select>
 </mapper>

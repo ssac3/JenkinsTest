@@ -36,4 +36,6 @@ public interface DepartmentMapper {
 
     List<Month> findEmplAtndStatsById(Long username, Long year);
 
+    EavView findEavByUsername(Long username, String findDate, String lastDate);
+
 }
