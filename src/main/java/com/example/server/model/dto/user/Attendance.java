@@ -8,6 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 public class Attendance {
     Long id;
