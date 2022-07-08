@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 // User랑 Admin DTO랑 유사 -> User 사용
 public interface AdminMapper {
+    // 사원번호생성
 
     //사원등록
     void insertEmp(User user);

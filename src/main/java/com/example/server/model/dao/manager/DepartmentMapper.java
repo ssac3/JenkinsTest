@@ -1,13 +1,10 @@
 package com.example.server.model.dao.manager;
 
 import com.example.server.model.dto.manager.*;
-import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.User;
-import com.example.server.model.dto.user.Vacation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +34,8 @@ public interface DepartmentMapper {
     List<EmplAtndcView> findEmplAtndcById(Long username, String findDate);
 
     List<Month> findEmplAtndStatsById(Long username, Long year);
+
+    EavView findEavByUsername(Long username, String findDate, String lastDate);
 
     List<Map> findOverTimeByDepId(Long depId, String findDate);
 

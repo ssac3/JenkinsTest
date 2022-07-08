@@ -3,13 +3,9 @@ package com.example.server.model.dto.user;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -70,9 +66,11 @@ public class User {
                 .password(bCryptPasswordEncoder.encode(password)).position(position).role(role)
                 .qrPath(qrPath).restTime(120L).build();
     }
-
-    public User toInsertEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
-        return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(img).email(email).gender(gender)
-                .position(position).role(role).qrPath(qrPath) .build();
+    // 이거 사용, insert
+    public User toInsertEntity(BCryptPasswordEncoder bCryptPasswordEncoder, String insertUrl){
+//        return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(img).email(email).gender(gender)
+//                .position(position).role(role).qrPath(qrPath).build();
+        return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(insertUrl).email(email).gender(gender)
+                .position(position).role(role).qrPath(qrPath).build();
     }
 }

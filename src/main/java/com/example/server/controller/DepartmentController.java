@@ -67,6 +67,12 @@ public class DepartmentController {
         return departmentService.findEmplAtndStatsById(reqMap.get("username"), reqMap.get("year"));
     }
 
+    @PostMapping("/eavView")
+    public ResponseEntity<StatusCode> findEavByUsername(@RequestBody Map<String, String> reqMap) {
+        System.out.println("reqMap = " + reqMap);
+        return departmentService.findEavByUsername(Long.parseLong(reqMap.get("username")), reqMap.get("findDate"));
+    }
+
     @PostMapping("/eovView")
     public ResponseEntity<StatusCode> findEmlAtndOverTimeByDepId(@RequestBody Map<String, String> reqMap) {
         return departmentService.findEmplAtndOverTimeByDepId(reqMap.get("depId"), reqMap.get("findDate"));
