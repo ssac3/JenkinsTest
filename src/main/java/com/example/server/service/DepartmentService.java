@@ -263,7 +263,7 @@ public class DepartmentService {
 
         Map<String, Object> result = new HashMap<>();
         result.put("overTime", overTime);
-        result.put("lastOverTime", preOverTime);
+        result.put("lastOverTime", Long.parseLong(preOverTime));
 
         statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
         System.out.println("result = " + statusCode.getData());
