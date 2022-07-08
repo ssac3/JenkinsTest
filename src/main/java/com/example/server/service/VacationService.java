@@ -26,19 +26,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VacationService {
     private final VacationMapper vacationMapper;
-
-//    public ResponseEntity<StatusCode> regVacation(String username, Vacation vacation) {
-//        vacation.setUsername(Long.parseLong(username));
-//
-//        return Optional.of(new JsonResponse())
-//                .map(v -> Objects.isNull(vacationMapper.viewVacation(vacation)))
-//                .filter(res -> res)
-//                .map(v -> {
-//                    vacationMapper.regVacation(vacation);
-//                    return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("휴가 등록 완료").build());
-//                })
-//                .orElseGet(() -> new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(2).resMsg("이미 등록된 휴가입니다.").build()));
-//    }
     @Transactional
     public ResponseEntity<StatusCode> regVacation(String username, Vacation vacation) {
         vacation.setUsername(Long.parseLong(username));
@@ -77,12 +64,12 @@ public class VacationService {
                             int cancelres = vacationMapper.cancelVacation(vDTO);
                             if(cancelres > 0) { //휴가 취소 ? true / false
                                 int rest = vacationMapper.returnRestTime(Long.parseLong(username), time);
-                                if(rest > 0){ return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(3).resMsg("승인된 휴가 취소").build());}
+                                if(rest > 0){ return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("승인된 휴가 취소").build());}
                                 else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(4).resMsg("승인된 휴가 취소 실패").build());}
                             }
                         } else {
                             int cancelres = vacationMapper.cancelVacation(vDTO);
-                            if (cancelres > 0) { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(5).resMsg("미승인된 휴가 취소").build());}
+                            if (cancelres > 0) { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("미승인된 휴가 취소").build());}
                             else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(6).resMsg("미승인된 휴가 취소").build());}
                         }
                     } else {new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(8).resMsg("이미 취소된 휴가입니다. 실패").build());}

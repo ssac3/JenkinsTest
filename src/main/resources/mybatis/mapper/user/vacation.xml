@@ -8,7 +8,7 @@
 
     <select id="viewVacation" parameterType="Vacation" resultType="Vacation">
         SELECT id, a_id, username, date, contents, vacation_type, approval_flag
-        FROM VACATION WHERE username = #{username} and date = #{date}
+        FROM VACATION WHERE username = #{username} and date = #{date} and id = #{id}
     </select>
 
     <delete id="cancelVacation" parameterType="Vacation">
