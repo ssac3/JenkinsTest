@@ -74,7 +74,17 @@ public class DepartmentController {
     }
 
     @PostMapping("/eovView")
-    public ResponseEntity<StatusCode> findEmlAtndOverTimeByDepId(@RequestBody Map<String, String> reqMap) {
-        return departmentService.findEmplAtndOverTimeByDepId(reqMap.get("depId"), reqMap.get("findDate"));
+    public ResponseEntity<StatusCode> findEovByDepId(@RequestBody Map<String, String> reqMap) {
+        return departmentService.findEovByDepId(reqMap.get("depId"), reqMap.get("findDate"));
+    }
+
+    @PostMapping("/epView")
+    public ResponseEntity<StatusCode> findEpByDepId(@RequestBody Map<String,Long> reqMap) {
+        return departmentService.findEpByDepId(reqMap.get("depId"));
+    }
+
+    @PostMapping("/evtView")
+    public ResponseEntity<StatusCode> findEvtByDepId(@RequestBody Map<String,Long> reqMap) {
+        return departmentService.findEvtByDepId(reqMap.get("depId"));
     }
 }
