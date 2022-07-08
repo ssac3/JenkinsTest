@@ -192,4 +192,16 @@
             (select end_time from ATTENDANCE where username IN (select username from  EMPLOYEE where dep_id = #{depId}) and date_format(date, '%Y-%m') = #{findDate}) A,
             (select end_time from DEPARTMENT where id = #{depId}) D
     </select>
+
+    <select id="findPositionByDepId" resultType="Map">
+        select position, count(position) as count
+        from EMPLOYEE where username IN (select username from  EMPLOYEE where dep_id = #{depId})
+        group by position
+    </select>
+
+    <select id="findCountByDepId" resultType="Long">
+        select count(E.username) from (select username from  EMPLOYEE where dep_id = #{depId}) E
+        JOIN (select username from VACATION where date = #{date} and approval_flag = 1) V
+        on E.username = V.username;
+    </select>
 </mapper>
