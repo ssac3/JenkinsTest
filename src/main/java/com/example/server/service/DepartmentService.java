@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -189,6 +191,25 @@ public class DepartmentService {
         });
 
         statusCode = StatusCode.builder().resCode(0).data(data).resMsg("성공").build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+
+    public ResponseEntity<StatusCode> findEmplAtndOverTimeByDepId(String depId, String findDate){
+        String month = findDate + "-01";
+        LocalDate date = LocalDate.parse(month);
+        LocalDate preDate = date.minusMonths(1);
+        String preFindDate = preDate.toString().substring(0,7);
+
+        List<Map> overTime = departmentMapper.findOverTimeByDepId(Long.parseLong(depId), findDate);
+        String preOverTime = departmentMapper.preFindOverTimeByDepId(Long.parseLong(depId), preFindDate);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("overTime", overTime);
+        result.put("lastOverTime", preOverTime);
+
+        statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
+        System.out.println("result = " + statusCode.getData());
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }

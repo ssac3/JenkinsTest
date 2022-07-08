@@ -6,6 +6,8 @@ import com.example.server.model.dto.user.User;
 import com.example.server.model.dto.user.Vacation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -35,5 +37,9 @@ public interface DepartmentMapper {
     List<EmplAtndcView> findEmplAtndcById(Long username, String findDate);
 
     List<Month> findEmplAtndStatsById(Long username, Long year);
+
+    List<Map> findOverTimeByDepId(Long depId, String findDate);
+
+    String preFindOverTimeByDepId(Long depId, String findDate);
 
 }

@@ -77,4 +77,26 @@
         WHERE A.username = #{username} and date_format(date, '%Y') = #{year}
         GROUP BY month;
     </select>
+
+    <select id="findOverTimeByDepId" resultType="Map">
+        Select E.name,O.overTime
+        from
+            (select username, sum(diff) as overTime
+             from
+                 (select A.username, TIMESTAMPDIFF(MINUTE, D.end_time, A.end_time) as 'diff'
+                  from
+                      (select username, end_time from ATTENDANCE where username IN (select username from  EMPLOYEE where dep_id = #{depId})
+                                                                   and date_format(date, '%Y-%m') = #{findDate}) A,
+                      (select end_time from DEPARTMENT where id = #{depId}) D
+                 ) ADDIFF
+             group by username) O
+        JOIN EMPLOYEE E ON O.username = E.username
+    </select>
+
+    <select id="preFindOverTimeByDepId" resultType="String">
+        select sum(TIMESTAMPDIFF(MINUTE, D.end_time, A.end_time)) as preOverTime
+        from
+            (select end_time from ATTENDANCE where username IN (select username from  EMPLOYEE where dep_id = #{depId}) and date_format(date, '%Y-%m') = #{findDate}) A,
+            (select end_time from DEPARTMENT where id = #{depId}) D
+    </select>
 </mapper>
