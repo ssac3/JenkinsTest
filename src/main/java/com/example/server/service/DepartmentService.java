@@ -11,8 +11,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.*;
 
 @Service
@@ -188,7 +194,61 @@ public class DepartmentService {
             return map;
         });
 
-        statusCode = StatusCode.builder().resCode(0).data(data).resMsg("성공").build();
+        statusCode = StatusCode.builder().resCode(0).data(data).resMsg("사원별 월별 근태 조회 성공").build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> findEavByUsername(Long username, String findDate){
+        System.out.println("username = " + username);
+        System.out.println("findDate = " + findDate);
+        String lastDate;
+        Long eveningWorkTime; // 오전 근무시간
+        Long afternoonWorkTime; // 오후 근무시간
+        LocalTime launchStart = LocalTime.of(12,00,00);
+        LocalTime launchEnd =LocalTime.of(13,00,00);
+        Long usedRecent; // 금월 휴가 사용 시간(분 단위)
+        Long usedLast; // 전월 휴가 사용 시간(분 단위)
+        LinkedHashMap<String, Long> map = new LinkedHashMap<>();
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+            Calendar cal = Calendar.getInstance();
+            Date dt = format.parse(findDate);
+            cal.setTime(dt);
+            cal.add(Calendar.MONTH, -1);
+            lastDate = format.format(cal.getTime());
+
+            EavView result = departmentMapper.findEavByUsername(username, findDate, lastDate);
+            System.out.println("result = " + result);
+
+            LocalTime start_time = result.getStartTime().toLocalTime();
+            LocalTime end_time = result.getEndTime().toLocalTime();
+            eveningWorkTime = Duration.between(start_time, launchStart).getSeconds() / 60;
+            afternoonWorkTime = Duration.between(launchEnd, end_time).getSeconds() / 60;
+
+            usedRecent = (result.getEveningVac() * eveningWorkTime)
+                + (result.getAfternoonVac() * afternoonWorkTime)
+                + (eveningWorkTime + afternoonWorkTime) * result.getAllVac();
+
+            usedLast = (result.getLastEveningVac() * eveningWorkTime)
+                + (result.getLastAfternoonVac() * afternoonWorkTime)
+                + (eveningWorkTime + afternoonWorkTime) * result.getLastAllVac();
+
+            System.out.println("usedRecent = " + usedRecent);
+            System.out.println("usedLast = " + usedLast);
+
+            map.put("okCount", result.getOkCount());
+            map.put("failCount", result.getFailCount());
+            map.put("rCount", result.getRCount());
+            map.put("lastRCount", result.getLastRCount());
+            map.put("vTime", usedRecent);
+            map.put("lastVTime", usedLast);
+            map.put("restTime", result.getRestTime());
+
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        statusCode = StatusCode.builder().resCode(0).data(map).resMsg("사원별 근태 현황 조회").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }
