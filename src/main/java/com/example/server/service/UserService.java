@@ -34,8 +34,6 @@ public class UserService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-
-
     public String selectPw(String username) {
         return userMapper.findByUsername(Long.parseLong(username)).getPassword();
     }
@@ -83,8 +81,7 @@ public class UserService {
 
     public ResponseEntity<StatusCode> updateImg(String username, MultipartFile multipartFile, String dirName){
 
-         if(userMapper.findByUsername(Long.parseLong(username)).getImg().equals("") ||
-                userMapper.findByUsername(Long.parseLong(username)).getImg().isEmpty()){
+         if(userMapper.findByUsername(Long.parseLong(username)).getImg().equals("") || userMapper.findByUsername(Long.parseLong(username)).getImg().isEmpty()){
             String awsUrl = upload(multipartFile, dirName, username);
             String insertUrl = awsUrl + "/" +username + "_" + multipartFile.getOriginalFilename();
             userMapper.updateImg(User.builder().username(Long.parseLong(username)).img(insertUrl).build());

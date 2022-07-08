@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.server.model.dao.admin.AdminMapper">
+
     <select id="viewEmp" resultType="User">
         SELECT username, E.name as name, email, gender, position, working_status as workingStatus, img, role, qr_path as qrPath, dep_id as depId, D.name as department, location, created_at as createdAt
         FROM EMPLOYEE E INNER JOIN DEPARTMENT D
