@@ -4,9 +4,7 @@ import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.manager.DepartmentMapper;
 import com.example.server.model.dto.manager.*;
-import com.example.server.model.dto.user.Attendance;
 import com.example.server.model.dto.user.User;
-import com.example.server.model.dto.user.Vacation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +13,11 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
 import java.util.*;
 
 @Service
@@ -249,6 +248,25 @@ public class DepartmentService {
             throw new RuntimeException(e);
         }
         statusCode = StatusCode.builder().resCode(0).data(map).resMsg("사원별 근태 현황 조회").build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+
+    public ResponseEntity<StatusCode> findEmplAtndOverTimeByDepId(String depId, String findDate){
+        String month = findDate + "-01";
+        LocalDate date = LocalDate.parse(month);
+        LocalDate preDate = date.minusMonths(1);
+        String preFindDate = preDate.toString().substring(0,7);
+
+        List<Map> overTime = departmentMapper.findOverTimeByDepId(Long.parseLong(depId), findDate);
+        String preOverTime = departmentMapper.preFindOverTimeByDepId(Long.parseLong(depId), preFindDate);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("overTime", overTime);
+        result.put("lastOverTime", preOverTime);
+
+        statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
+        System.out.println("result = " + statusCode.getData());
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }

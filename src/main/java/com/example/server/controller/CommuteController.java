@@ -13,7 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommuteController {
     private final CommuteService commuteService;
-    @PostMapping("/commuteRecord")
+    @PostMapping("/scanner")
     public ResponseEntity<StatusCode> commuteRecord(@RequestBody Map<String,String> username){
         return commuteService.commute(username.get("username"));
     }
