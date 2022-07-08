@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.server.model.dao.scheduler.SchedulerMapper">
     <select id="getEmptyAtndEmpl" parameterType="String" resultType="Long">
-        SELECT username FROM EMPLOYEE WHERE username NOT IN(SELECT username FROM ATTENDANCE WHERE date = '2022-07-05');
+        SELECT username FROM EMPLOYEE WHERE username NOT IN(SELECT username FROM ATTENDANCE WHERE date = #{date});
     </select>
     <select id="getCronVac" parameterType="String" resultType="Long">
         SELECT username
