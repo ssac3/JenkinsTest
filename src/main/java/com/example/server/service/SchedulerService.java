@@ -28,10 +28,17 @@ public class SchedulerService {
     @Scheduled(fixedRate = 990000000)
     public void vacationScheduler() {
         String date = nowDate.toString();
+        System.out.println(date);
         //근태 정보가 없는 username 중 휴가가 없는 username
         List<Long> emptyUser = schedulerMapper.getEmptyAtndEmpl(date);
         //해당 일자의 휴가 리스트 가져오기 -> 리스트에 있는사람들 휴가 리스트 뽑아올 수 있을까?
         List<Long> yVacation = schedulerMapper.getCronVac(date);
+
+        for (Long item : emptyUser) {
+            System.out.println(item.toString());
+
+        }
+
         emptyUser.removeAll(yVacation);
         Map<String, Object>data = new HashMap<>();
         String aStatus;
@@ -44,13 +51,14 @@ public class SchedulerService {
 
             result = schedulerMapper.addCronAttendance(data);
             System.out.println(result);
-
-            aStatus = "0";
-            data.put("lists", yVacation);
-            data.put("aStatus", aStatus);
-            data.put("aDate", date);
-            result = schedulerMapper.addCronAttendance(data);
-            System.out.println(result);
+            if(yVacation.size() > 0) {
+                aStatus = "0";
+                data.put("lists", yVacation);
+                data.put("aStatus", aStatus);
+                data.put("aDate", date);
+                result = schedulerMapper.addCronAttendance(data);
+                System.out.println(result);
+            }
         }
 
         List<Attendance> vacAtdn = schedulerMapper.getCronAtdnId(date);
@@ -78,9 +86,7 @@ public class SchedulerService {
 //
 //
 //        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//        for (Long vacation : yVacation) {
-//            System.out.println(vacation);
-//        }
+//
 //        System.out.println("=======================");
 //        System.out.println(data.get("list"));
 //        System.out.println(emptyUser);
