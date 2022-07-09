@@ -68,9 +68,8 @@ public class User {
     }
     // 이거 사용, insert
     public User toInsertEntity(BCryptPasswordEncoder bCryptPasswordEncoder, String insertUrl){
-//        return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(img).email(email).gender(gender)
-//                .position(position).role(role).qrPath(qrPath).build();
         return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(insertUrl).email(email).gender(gender)
                 .position(position).role(role).qrPath(qrPath).build();
     }
+
 }

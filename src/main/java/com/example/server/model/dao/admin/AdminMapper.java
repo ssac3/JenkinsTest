@@ -15,6 +15,9 @@ public interface AdminMapper {
     //사원등록
     void insertEmp(User user);
 
+    // 사원번호 생성
+    void mkUsername();
+
     // 사원조회
     List<User> viewEmp(User user);
 
