@@ -31,4 +31,8 @@
         SET name = #{name}, gender = #{gender}, img = #{img}, dep_id = #{depId}, position = #{position}, role = #{role}, qr_path = #{qrPath}
         WHERE username = #{username};
     </update>
+
+    <select id="selectUsername" resultType="String">
+        select username from EMPLOYEE;
+    </select>
 </mapper>
