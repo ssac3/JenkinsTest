@@ -16,7 +16,7 @@
                  WHERE A.username = #{username} and date_Format(A.date,'%Y-%m') = #{month}
              ) AR
              ON AR.a_id = V.a_id
-        WHERE V.username = #{username} and date_Format(V.date,'%Y-%m') = #{month}
+        WHERE V.username = #{username} and date_Format(V.date,'%Y-%m') = #{month} and V.approval_flag != '3'
         UNION
         SELECT AR.a_id, AR.a_status, AR.a_date, AR.a_start_time,
                AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
