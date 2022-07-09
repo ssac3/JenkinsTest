@@ -22,7 +22,7 @@ public class AdminController {
     private final AdminService adminService;
 
     // 사원리스트
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<StatusCode> viewEmp(@AuthenticationPrincipal PrincipalDetails principalDetails, User user){
         System.out.println("admin접근");
         return adminService.viewEmp(principalDetails.getUsername(), user);
@@ -30,15 +30,11 @@ public class AdminController {
 
     // 사원번호 생성
     @GetMapping("/mkUsername")
-    public ResponseEntity<StatusCode> mkUsername(){
+    public ResponseEntity<StatusCode> mkUsername() throws IOException, WriterException {
         return adminService.mkUsername();
     }
     // QR 생성
 
-    @PostMapping("/makeQR")
-    public ResponseEntity<StatusCode> makeQR(@RequestBody Map<String, Long> reqMap) throws IOException, WriterException {
-        return adminService.makeQR(reqMap.get("username"),"QR");
-    }
 
     //사원등록
     @PostMapping("/insertEmp")

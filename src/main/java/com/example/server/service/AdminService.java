@@ -10,7 +10,6 @@ import com.example.server.model.dao.admin.AdminMapper;
 import com.example.server.model.dto.user.User;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -29,14 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -46,6 +40,7 @@ public class AdminService {
     private final AdminMapper adminMapper;
     private StatusCode statusCode;
     private final AmazonS3Client amazonS3Client;
+    private final UserService userService;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -58,7 +53,7 @@ public class AdminService {
         System.out.println("user.getUsername() = " + user.getUsername());
         String fileUrl = dirName +"/"+ user.getUsername() +"_"+multipartFile.getOriginalFilename();
         System.out.println("fileUrl = " + fileUrl);
-        String uploadImageUrl = putS3(multipartFile, fileUrl, dirName); //s3 upload
+        String uploadImageUrl = userService.putS3(multipartFile, fileUrl, dirName); //s3 upload
         // upload method end
         String awsUrl = uploadImageUrl;
         String insertUrl = awsUrl + "/" +user.getUsername() + "_" + multipartFile.getOriginalFilename();
@@ -67,32 +62,76 @@ public class AdminService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
+    public String check(ArrayList<String> select, String now){
+        while (true){
+            String auto = String.valueOf((int)((Math.random() * (9999 - 1000)) + 1000));
+            if (!select.contains(now + auto)) {
+                String result = now + auto;
+                return result;
+            }
+        }
+    }
+    
     // 사번생성
     @Transactional
-    public ResponseEntity<StatusCode> mkUsername(){
+    public ResponseEntity<StatusCode> mkUsername() throws IOException, WriterException {
 
         ArrayList<String> select = adminMapper.selectUsername();
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
-        String auto = String.valueOf((int)((Math.random() * (9999 - 1000)) + 1000));
-        String autono = now + auto;
+        String username = check(select, now);
+        String url = makeQR(Long.parseLong(username),"QR");
 
+        Map<String, String> result = new HashMap<>();
 
-        for (String el : select) {
-            if (autono.equals(el)) {
-                autono = now + String.valueOf((Math.random() * (9999 - 1000)) + 1000);
-            }
-        }
-        System.out.println("int : "+auto);
-        // 화면용
-        String autoNo = String.valueOf(auto);
-        //Long.parseLong(auto); DB에 보낼용
-        String mkUsername = now + autoNo;
-        System.out.println(mkUsername);
-        // 여기까지가 사원번호 생성해주는 코드
+        result.put("username", username);
+        result.put("qrPath", url);
 
         statusCode = StatusCode.builder()
-                .resCode(0).resMsg("사번생성을 성공했습니다").data(mkUsername).build();
+                .resCode(0).resMsg("사번생성을 성공했습니다").data(result).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public String makeQR(Long username, String dirName) throws IOException, WriterException {
+        String codeInformation = username.toString();
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+
+        int width=200;
+        int height=200;
+
+        BitMatrix bitMatrix = qrCodeWriter.encode(codeInformation, BarcodeFormat.QR_CODE,width, height);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+        BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+        File saveFile=new File(codeInformation);
+        ImageIO.write(bufferedImage, "png", saveFile);
+        String awsUrl = upload(saveFile, dirName, codeInformation);
+        String insertUrl = awsUrl + "/" +username + ".png";
+        System.out.println("insertUrl = " + insertUrl);
+        System.out.println("saveFile = " + saveFile.getName());
+
+        return insertUrl;
+    }
+
+
+    public String upload(File file, String dirName, String username){
+        String fileUrl = dirName +"/"+ username +".png"; // S3에 저장될 파일 이름
+        System.out.println("fileUrl = " + fileUrl);
+        String uploadImageUrl = putQrS3(file, fileUrl, dirName); //s3 upload
+        return uploadImageUrl;
+    }
+
+
+    public String putQrS3(File file, String fileName, String dirName){
+        try {
+            amazonS3Client.putObject(new PutObjectRequest(this.bucket, fileName,file));
+            System.out.println(String.format("[%s] upload complete", fileName));
+        }catch (AmazonS3Exception e){
+            e.getMessage();
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return amazonS3Client.getUrl(bucket, dirName).toString();
     }
 
     // 사원리스트정보
@@ -188,51 +227,6 @@ public class AdminService {
             e.printStackTrace();
         }
 
-        return amazonS3Client.getUrl(bucket, dirName).toString();
-    }
-
-    //QR 코드 생성
-
-    public ResponseEntity<StatusCode> makeQR(Long username, String dirName) throws IOException, WriterException {
-        String codeInformation = username.toString();
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-
-        int width=200;
-        int height=200;
-
-        BitMatrix bitMatrix = qrCodeWriter.encode(codeInformation, BarcodeFormat.QR_CODE,width, height);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-        BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-        File saveFile=new File(codeInformation);
-        ImageIO.write(bufferedImage, "png", saveFile);
-        String awsUrl = upload(saveFile, dirName, codeInformation);
-        String insertUrl = awsUrl + "/" +username;
-        System.out.println("insertUrl = " + insertUrl);
-        System.out.println("saveFile = " + saveFile.getName());
-        statusCode = StatusCode.builder().resCode(0).resMsg("QR코드 생성 성공").data(insertUrl).build();
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
-    }
-
-
-    public String upload(File file, String dirName, String username){
-        String fileUrl = dirName +"/"+ username +".png"; // S3에 저장될 파일 이름
-        System.out.println("fileUrl = " + fileUrl);
-        String uploadImageUrl = putQrS3(file, fileUrl, dirName); //s3 upload
-        return uploadImageUrl;
-    }
-
-
-    public String putQrS3(File file, String fileName, String dirName){
-        try {
-            amazonS3Client.putObject(new PutObjectRequest(this.bucket, fileName,file));
-            System.out.println(String.format("[%s] upload complete", fileName));
-        }catch (AmazonS3Exception e){
-            e.getMessage();
-            e.printStackTrace();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         return amazonS3Client.getUrl(bucket, dirName).toString();
     }
 }
