@@ -41,4 +41,7 @@ public interface DepartmentMapper {
 
     String preFindOverTimeByDepId(Long depId, String findDate);
 
+    List<Map> findPositionByDepId(Long depId);
+
+    Long findCountByDepId(Long depId, String date);
 }

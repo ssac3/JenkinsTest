@@ -252,7 +252,7 @@ public class DepartmentService {
     }
 
 
-    public ResponseEntity<StatusCode> findEmplAtndOverTimeByDepId(String depId, String findDate){
+    public ResponseEntity<StatusCode> findEovByDepId(String depId, String findDate){
         String month = findDate + "-01";
         LocalDate date = LocalDate.parse(month);
         LocalDate preDate = date.minusMonths(1);
@@ -267,6 +267,23 @@ public class DepartmentService {
 
         statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
         System.out.println("result = " + statusCode.getData());
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> findEpByDepId(Long depId) {
+        System.out.println("depId = " + depId);
+        List<Map> result = departmentMapper.findPositionByDepId(depId);
+        System.out.println("result = " + result);
+
+        statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+    public ResponseEntity<StatusCode> findEvtByDepId(Long depId) {
+        String date = LocalDate.now().toString();
+        Long result = departmentMapper.findCountByDepId(depId, date);
+
+        statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }
