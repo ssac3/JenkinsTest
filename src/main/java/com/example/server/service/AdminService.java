@@ -29,14 +29,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
 @Service
-@RequiredArgsConstructor // 하는 이유 질문
+@RequiredArgsConstructor
 public class AdminService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AdminMapper adminMapper;
@@ -66,16 +69,26 @@ public class AdminService {
     // 사번생성
     @Transactional
     public ResponseEntity<StatusCode> mkUsername(){
+
+        ArrayList<String> select = adminMapper.selectUsername();
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
-        int auto = (int)((Math.random() * (9999 - 1000)) + 1000);
+        String auto = String.valueOf((int)((Math.random() * (9999 - 1000)) + 1000));
+        String autono = now + auto;
+
+
+        for (String el : select) {
+            if (autono.equals(el)) {
+                autono = now + String.valueOf((Math.random() * (9999 - 1000)) + 1000);
+            }
+        }
         System.out.println("int : "+auto);
         // 화면용
-        String autoNo = Integer.toString(auto);
-        System.out.println("String" + autoNo);
+        String autoNo = String.valueOf(auto);
         //Long.parseLong(auto); DB에 보낼용
         String mkUsername = now + autoNo;
         System.out.println(mkUsername);
         // 여기까지가 사원번호 생성해주는 코드
+
         statusCode = StatusCode.builder()
                 .resCode(0).resMsg("사번생성을 성공했습니다").data(mkUsername).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
