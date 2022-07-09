@@ -34,6 +34,8 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'com.google.zxing', name: 'javase', version: '3.4.1'
+    implementation group: 'com.google.zxing', name: 'core', version: '3.4.1' //zxing
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
