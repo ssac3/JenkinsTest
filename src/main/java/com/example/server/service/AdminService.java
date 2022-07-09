@@ -1,7 +1,10 @@
 package com.example.server.service;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.server.constants.JsonResponse;
@@ -21,14 +24,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
@@ -80,25 +83,6 @@ public class AdminService {
                 .resCode(0).resMsg("사번생성을 성공했습니다").data(mkUsername).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
-    // QR생성
-    @GetMapping("/admin/mkQR")
-    public ResponseEntity<StatusCode> mkQR(User user) throws UnsupportedEncodingException {
-        QRCodeWriter writer = new QRCodeWriter();
-        String url = null;
-        url = String.valueOf(user.getUsername());
-        url = new String(url.getBytes("UTF-8"), "ISO-8859-1");
-        try {
-            BitMatrix matrix = writer.encode(url, BarcodeFormat.QR_CODE, 500, 500);
-            BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix);
-            System.out.println(qrImage);
-//            ImageIO.write(qrImage, "png", new File());
-        } catch (WriterException e) {
-            throw new RuntimeException(e);
-        }
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
-    }
-
 
     // 사원리스트정보
     @Transactional
@@ -195,5 +179,52 @@ public class AdminService {
 
         return amazonS3Client.getUrl(bucket, dirName).toString();
     }
+
+    //QR 코드 생성
+
+    public ResponseEntity<StatusCode> makeQR(Long username, String dirName) throws IOException, WriterException {
+        String codeInformation = username.toString();
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+
+        int width=200;
+        int height=200;
+
+        BitMatrix bitMatrix = qrCodeWriter.encode(codeInformation, BarcodeFormat.QR_CODE,width, height);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+        BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+        File saveFile=new File(codeInformation);
+        ImageIO.write(bufferedImage, "png", saveFile);
+        String awsUrl = upload(saveFile, dirName, codeInformation);
+        String insertUrl = awsUrl + "/" +username;
+        System.out.println("insertUrl = " + insertUrl);
+        System.out.println("saveFile = " + saveFile.getName());
+        statusCode = StatusCode.builder().resCode(0).resMsg("QR코드 생성 성공").data(insertUrl).build();
+        return new JsonResponse().send(HttpStatus.OK, statusCode);
+    }
+
+
+    public String upload(File file, String dirName, String username){
+        String fileUrl = dirName +"/"+ username +".png"; // S3에 저장될 파일 이름
+        System.out.println("fileUrl = " + fileUrl);
+        String uploadImageUrl = putQrS3(file, fileUrl, dirName); //s3 upload
+        return uploadImageUrl;
+    }
+
+
+    public String putQrS3(File file, String fileName, String dirName){
+        try {
+            amazonS3Client.putObject(new PutObjectRequest(this.bucket, fileName,file));
+            System.out.println(String.format("[%s] upload complete", fileName));
+        }catch (AmazonS3Exception e){
+            e.getMessage();
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return amazonS3Client.getUrl(bucket, dirName).toString();
+    }
+
+
 }
 
