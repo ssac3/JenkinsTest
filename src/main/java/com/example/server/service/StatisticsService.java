@@ -34,15 +34,17 @@ public class StatisticsService {
         Long restTime = Long.parseLong(String.valueOf(timeMap.get("vacation_time")));
         timeMap.remove("vacation_time");
         
-        int totalWorkTime = Integer.parseInt(String.valueOf(sumData.get("totalWorkTime"))) / 60;
-        double totalUseVac = Double.parseDouble(String.valueOf(sumData.get("totalUseVac"))) / 3600;
+        int totalWorkTime = Integer.parseInt(String.valueOf(sumData.get("totalWorkTime"))) ;
+        double totalUseVac = Double.parseDouble(String.valueOf(sumData.get("totalUseVac"))) / 60;
+        Long overtime = Long.parseLong(String.valueOf(sumData.get("overtime"))) / 60;
         Object timeMapObject = timeMap;
         Map<String, Object> data = new HashMap<String, Object>();
-
+        System.out.println();
         data.put("startList",statsList);
         data.put("timeMap",timeMapObject);
         data.put("restTime", restTime);
         data.put("totalWorkTIme", totalWorkTime );
+        data.put("overtime", overtime);
         data.put("totalUseVac", totalUseVac);
         statusCode = StatusCode.builder().data(data).resCode(0).resMsg("조회 성공").build();
 
