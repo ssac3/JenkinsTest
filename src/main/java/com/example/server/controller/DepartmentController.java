@@ -78,13 +78,8 @@ public class DepartmentController {
         return departmentService.findEovByDepId(reqMap.get("depId"), reqMap.get("findDate"));
     }
 
-    @PostMapping("/epView")
+    @PostMapping("/empView")
     public ResponseEntity<StatusCode> findEpByDepId(@RequestBody Map<String,Long> reqMap) {
         return departmentService.findEpByDepId(reqMap.get("depId"));
-    }
-
-    @PostMapping("/evtView")
-    public ResponseEntity<StatusCode> findEvtByDepId(@RequestBody Map<String,Long> reqMap) {
-        return departmentService.findEvtByDepId(reqMap.get("depId"));
     }
 }
