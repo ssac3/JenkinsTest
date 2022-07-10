@@ -19,26 +19,44 @@
     </select>
 
     <select id="viewSumTime" resultType="Map">
-        SELECT IFNULL(SUM(workTime),0) as 'totalWorkTime', SUM(IF(V.approval_flag = '1', CASE
-                                                                WHEN V.vacation_type = '0' THEN 28800
-                                                                WHEN V.vacation_type = '1' THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
-                                                                WHEN V.vacation_type = '2' THEN TIME_TO_SEC(timediff(AED.dEndTime  , '13:00:00')) END , 0
-            )) as ' totalUseVac'
-        FROM
-            (
-                SELECT AE.id, AE.date, AE.start_time, AE.end_time, workTime, D.start_time as 'dStartTime', D.end_time as 'dEndTime'
-                FROM
-                    (
-                        SELECT A.id, A.date, A.start_time, A.end_time, timestampdiff(MINUTE, A.start_time, A.end_time) AS 'workTime', E.dep_id
-                        FROM ATTENDANCE A
-                                 JOIN EMPLOYEE E on A.username = E.username
-                        WHERE A.username = #{username}
-                          and date_format(A.date, '%Y-%m') = #{date}
-                    ) AE
-                        JOIN DEPARTMENT D
-                             ON D.id = AE.dep_id
-            ) AED
-                LEFT OUTER JOIN VACATION V
-                                ON AED.id = V.a_id;
+        SELECT IFNULL(SUM(workTime), 0) as 'totalWorkTime', SUM(IF(V.approval_flag = '1', CASE
+                                                                                              WHEN V.vacation_type = '0'
+                                                                                                  THEN 28800
+                                                                                              WHEN V.vacation_type = '1'
+                                                                                                  THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
+                                                                                              WHEN V.vacation_type = '2'
+                                                                                                  THEN TIME_TO_SEC(timediff(AED.dEndTime, '13:00:00')) END,
+                                                                   0
+            )) as ' totalUseVac', SUM(IF(AED.aStats != '2', CASE
+                                                                WHEN V.vacation_type = '0'
+                                                                    THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
+                                                                WHEN V.vacation_type = '1'
+                                                                    THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
+                                                                WHEN V.vacation_type = '2'
+                                                                    THEN 0
+                                                                ELSE IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
+            END, 0)
+            ) as 'overtime'
+
+        FROM (SELECT AE.id,
+                     AE.date,
+                     AE.start_time,
+                     AE.end_time,
+                     workTime,
+                     D.start_time as 'dStartTime', D.end_time as 'dEndTime', aStats
+              FROM (SELECT A.id,
+                           A.date,
+                           A.start_time,
+                           A.end_time,
+                           timestampdiff(MINUTE, A.start_time, A.end_time) AS 'workTime', E.dep_id,
+                           A.status as 'aStats'
+                    FROM ATTENDANCE A
+                             JOIN EMPLOYEE E on A.username = E.username
+                    WHERE A.username = #{username}
+                      and date_format(A.date, '%Y-%m') = #{date}) AE
+                       JOIN DEPARTMENT D
+                            ON D.id = AE.dep_id) AED
+                 LEFT OUTER JOIN VACATION V
+                                 ON AED.id = V.a_id;
     </select>
 </mapper>

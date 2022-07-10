@@ -27,24 +27,21 @@ public class StatisticsService {
     private StatusCode statusCode;
     public ResponseEntity<StatusCode> getMonthStatistics(String username, Attendance atdn) {
         atdn.setUsername(Long.parseLong(username));
-        System.out.println(atdn.toString());
         List<Attendance> statsList = statisticsMapper.viewMonthAtdn(atdn);
-        System.out.println(statsList);
         Map<String, Long> timeMap = statisticsMapper.viewMonthAtdnCnt(atdn);
-        System.out.println(timeMap);
         Map<String, Long> sumData = statisticsMapper.viewSumTime(atdn);
-        System.out.println(sumData);
-        System.out.println(sumData.get("totalWorkTime"));
-        System.out.println(sumData.get("totalUseVac"));
 
+        Long restTime = Long.parseLong(String.valueOf(timeMap.get("vacation_time")));
+        timeMap.remove("vacation_time");
+        
         int totalWorkTime = Integer.parseInt(String.valueOf(sumData.get("totalWorkTime"))) / 60;
         double totalUseVac = Double.parseDouble(String.valueOf(sumData.get("totalUseVac"))) / 3600;
-
-
-
+        Object timeMapObject = timeMap;
         Map<String, Object> data = new HashMap<String, Object>();
+
         data.put("startList",statsList);
-        data.put("timeMap",timeMap);
+        data.put("timeMap",timeMapObject);
+        data.put("restTime", restTime);
         data.put("totalWorkTIme", totalWorkTime );
         data.put("totalUseVac", totalUseVac);
         statusCode = StatusCode.builder().data(data).resCode(0).resMsg("조회 성공").build();
