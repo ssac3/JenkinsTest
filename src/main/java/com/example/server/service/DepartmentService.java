@@ -271,37 +271,14 @@ public class DepartmentService {
     }
 
     public ResponseEntity<StatusCode> findEpByDepId(Long depId) {
-        System.out.println("depId = " + depId);
-        List<Map> result = departmentMapper.findPositionByDepId(depId);
-        System.out.println("result = " + result);
-
-        statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
-    }
-
-    public ResponseEntity<StatusCode> findEvtByDepId(Long depId) {
         String date = LocalDate.now().toString();
-        Long result = departmentMapper.findCountByDepId(depId, date);
+        Long vacCount = departmentMapper.findCountByDepId(depId, date);
+        List<Map> posCount = departmentMapper.findPositionByDepId(depId);
 
+        Map<String, Object> result = new HashMap<>();
+        result.put("vacCount", vacCount);
+        result.put("posCount", posCount);
         statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }
-//        return Optional.of(new JsonResponse())
-//                .map(v -> Optional.of()
-//                .filter(res -> res != null)
-//                .map(v -> {
-//                    System.out.println(v);
-//                    return new JsonResponse().send(HttpStatus.OK,StatusCode
-//                            .builder()
-//                            .resCode(0).data(v).resMsg("성공")
-//                            .build());
-//                })
-//                .orElseGet(() -> new JsonResponse()
-//                                    .send(HttpStatus.BAD_REQUEST, StatusCode
-//                                            .builder()
-//                                            .resCode(2)
-//                                            .resMsg("통신 실패")
-//                                            .build()));
-//    }
-//}
