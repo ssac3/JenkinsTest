@@ -199,9 +199,17 @@
         group by position
     </select>
 
-    <select id="findCountByDepId" resultType="Long">
-        select count(E.username) from (select username from  EMPLOYEE where dep_id = #{depId}) E
-        JOIN (select username from VACATION where date = #{date} and approval_flag = 1) V
-        on E.username = V.username;
+    <select id="findCountByDepId" resultType="Map">
+    SELECT count(aId) as aCount, count(vId) as vCount
+        FROM (
+            SELECT A.id as 'aId', V.id as 'vId' FROM ATTENDANCE A
+            LEFT OUTER JOIN VACATION V on A.id = V.a_id
+            WHERE A.date = #{date}
+            UNION
+            SELECT A.id as'aId', V.id as 'vId' FROM ATTENDANCE A
+            RIGHT OUTER JOIN VACATION V on A.id = V.a_id
+            WHERE V.date = #{date} and vacation_type = '0' and approval_flag = '1'
+    ) ab;
+
     </select>
 </mapper>

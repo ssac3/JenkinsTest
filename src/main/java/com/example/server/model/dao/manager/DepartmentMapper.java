@@ -43,5 +43,5 @@ public interface DepartmentMapper {
 
     List<Map> findPositionByDepId(Long depId);
 
-    Long findCountByDepId(Long depId, String date);
+    Map<String, Long> findCountByDepId(Long depId, String date);
 }
