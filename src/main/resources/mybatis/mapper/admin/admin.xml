@@ -20,10 +20,12 @@
         values (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath});
     </insert>
 
-    <update id="deleteEmp">
-        UPDATE EMPLOYEE
-        SET working_status = 1
-        WHERE username = #{username};
+    <update id="deleteEmp" parameterType="java.util.List">
+        <foreach collection="user" item="item" index="index" separator=",">
+            UPDATE EMPLOYEE
+            SET working_status = '1'
+            WHERE username = #{item};
+        </foreach>
     </update>
 
     <update id="updateEmp" parameterType="User">
