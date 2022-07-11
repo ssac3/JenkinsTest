@@ -27,7 +27,7 @@ public interface AdminMapper {
     int updateEmp(User user);
 
     //사원삭제
-    void deleteEmp(User user);
+    void deleteEmp(List<Long> user);
 
 
 

@@ -167,10 +167,11 @@ public class AdminService {
 
     //사원삭제
     @Transactional
-    public ResponseEntity<StatusCode> deleteEmp(String userInfo, User user) {
+    public ResponseEntity<StatusCode> deleteEmp(String userInfo, Map<String, List<Long>> user) {
         if(userInfo != null && !userInfo.equals("")){
             System.out.println("사원삭제");
-            adminMapper.deleteEmp(user);
+            System.out.println(user.get("leave"));
+            adminMapper.deleteEmp(user.get("leave"));
             statusCode = StatusCode.builder().resCode(0).resMsg("사원삭제를 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");

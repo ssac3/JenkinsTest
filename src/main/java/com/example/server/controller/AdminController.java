@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -46,8 +47,10 @@ public class AdminController {
 
     //사원삭제
     @PostMapping("/deleteEmp")
-    public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody User user) {
-        return adminService.deleteEmp(principalDetails.getUsername(), user);
+    public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Map<String,List<Long>> reqMap) {
+        System.out.println("사원삭제");
+        System.out.println(reqMap);
+        return adminService.deleteEmp(principalDetails.getUsername(), reqMap);
     }
     //사원수정
     @PostMapping("/updateEmp")
