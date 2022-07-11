@@ -272,11 +272,11 @@ public class DepartmentService {
 
     public ResponseEntity<StatusCode> findEpByDepId(Long depId) {
         String date = LocalDate.now().toString();
-        Long vacCount = departmentMapper.findCountByDepId(depId, date);
+        Map<String, Long> count = departmentMapper.findCountByDepId(depId, date);
         List<Map> posCount = departmentMapper.findPositionByDepId(depId);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("vacCount", vacCount);
+        result.put("count", count);
         result.put("posCount", posCount);
         statusCode = StatusCode.builder().resCode(0).data(result).resMsg("조회 성공").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
