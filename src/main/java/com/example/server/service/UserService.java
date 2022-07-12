@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +36,6 @@ public class UserService {
     public String selectPw(String username) {
         return userMapper.findByUsername(Long.parseLong(username)).getPassword();
     }
-
     public ResponseEntity<StatusCode> updatepw(String username, User user){
         String pwCheck = selectPw(username);
         String nPw = user.getNPassword();
@@ -70,7 +68,6 @@ public class UserService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
     public ResponseEntity<StatusCode> myView(String username){
         System.out.println(username);
         statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공")
@@ -78,7 +75,6 @@ public class UserService {
         System.out.println(statusCode.getData().toString());
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
     public ResponseEntity<StatusCode> updateImg(String username, MultipartFile multipartFile, String dirName){
 
          if(userMapper.findByUsername(Long.parseLong(username)).getImg().equals("") || userMapper.findByUsername(Long.parseLong(username)).getImg().isEmpty()){
@@ -97,14 +93,12 @@ public class UserService {
         statusCode = StatusCode.builder().resCode(0).resMsg("이미지 업데이트 성공").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
     public String upload(MultipartFile multipartFile, String dirName, String username){
         String fileUrl = dirName +"/"+ username +"_"+multipartFile.getOriginalFilename(); // S3에 저장될 파일 이름
         System.out.println("fileUrl = " + fileUrl);
         String uploadImageUrl = putS3(multipartFile, fileUrl, dirName); //s3 upload
         return uploadImageUrl;
     }
-
     public String putS3(MultipartFile multipartFile, String fileName, String dirName){
         try {
             String contentType = multipartFile.getContentType();
@@ -124,7 +118,6 @@ public class UserService {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         return amazonS3Client.getUrl(bucket, dirName).toString();
     }
         public void remove(String fileName) {

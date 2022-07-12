@@ -9,11 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -126,8 +124,6 @@ public class DepartmentService {
         statusCode = StatusCode.builder().resCode(0).resMsg("근태 조정 요청 조회 성공").data(data).build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
-
     public ResponseEntity<StatusCode> updateRearrangeByOne(String userInfo, Long rId, Long aId, String startTime, String endTime, String approvalFlag) {
         departmentMapper.updateRearrangeByOne(rId, aId, startTime, endTime, approvalFlag);
         ResultAction result = departmentMapper.checkRearrangeUpdate();

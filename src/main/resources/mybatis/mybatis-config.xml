@@ -12,7 +12,6 @@
         <mapper resource="department.xml"/>
         <mapper resource="attendance.xml" />
         <mapper resource="vacation.xml"/>
-        <mapper resource="scheduler.xml"/>
         <mapper resource="commute.xml"/>
         <mapper resource="statistics.xml"/>
     </mappers>

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -18,35 +17,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SchedulerService {
     private final SchedulerMapper schedulerMapper;
-    int check = LocalDate.now().getDayOfWeek().getValue();
 
-//    @Scheduled(cron = "0 2 21 * * MON-FRI")
-    @Scheduled(fixedRate = 990000000)
+    LocalDate nowDate = LocalDate.now().minusDays(1);
+    @Scheduled(cron = "0 10 00 * * MON-FRI")
     public void vacationScheduler() {
 
-        if(check == 6 || check == 7){
-            System.out.println("좋은 주말입니다.");
-        }else {
-            LocalDate nowDate = LocalDate.now().minusDays(1) ;
-            String date = nowDate.toString();
-            System.out.println(date);
-            //근태 정보가 없는 username 중 휴가가 없는 username
-            List<Long> emptyUser = schedulerMapper.getEmptyAtndEmpl(date);
-            //해당 일자의 휴가 리스트 가져오기 -> 리스트에 있는사람들 휴가 리스트 뽑아올 수 있을까?
-            List<Long> yVacation = schedulerMapper.getCronVac(date);
-
-            for (Long item : emptyUser) {
-                System.out.println(item.toString());
-
-            }
-
-            emptyUser.removeAll(yVacation);
-            Map<String, Object>data = new HashMap<>();
-            String aStatus;
-            int result = 0;
-            if(emptyUser.size() > 0) {
-                aStatus = "2";
-                data.put("lists", emptyUser);
+        for (Long item : emptyUser) {
+            System.out.println(item.toString());
+        }
+        emptyUser.removeAll(yVacation);
+        Map<String, Object>data = new HashMap<>();
+        String aStatus;
+        int result = 0;
+        if(emptyUser.size() > 0) {
+            aStatus = "2";
+            data.put("lists", emptyUser);
+            data.put("aStatus", aStatus);
+            data.put("aDate", date);
+            result = schedulerMapper.addCronAttendance(data);
+            System.out.println(result);
+            if(yVacation.size() > 0) {
+                aStatus = "0";
+                data.put("lists", yVacation);
                 data.put("aStatus", aStatus);
                 data.put("aDate", date);
 
@@ -61,50 +53,13 @@ public class SchedulerService {
                     System.out.println(result);
                 }
             }
-
-            List<Attendance> vacAtdn = schedulerMapper.getCronAtdnId(date);
-
-            for (Attendance item:
-                    vacAtdn) {
-                System.out.println(item.toString());
-            }
-            result = schedulerMapper.updateCronVacaionAId(vacAtdn);
-            System.out.println(result);
         }
-
-
-
-
-//        lists.addAll(emptyUser);
-//        lists.removeAll(yVacation);
-
-
-//        Map<String, Object>data2 = new HashMap<>();
-//        data2.put("yVacation", yVacation);
-//        data2.put("status", "0");
-//        data2.put("date", "2022-07-05");
-
-//        String approvalFlag = "2";
-//
-//
-//
-//        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//
-//        System.out.println("=======================");
-//        System.out.println(data.get("list"));
-//        System.out.println(emptyUser);
-//
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
-//
-//        System.out.println("=======================");
-//        System.out.println(data.get("lists"));
-//        System.out.println(data);
-//
-//
-////        int result2 = schedulerMapper.addCronAttendance(data2);
-//        System.out.println(result);
-////        System.out.println(result2);
-
+        List<Attendance> vacAtdn = schedulerMapper.getCronAtdnId(date);
+        for (Attendance item:
+              vacAtdn) {
+            System.out.println(item.toString());
+        }
+        result = schedulerMapper.updateCronVacaionAId(vacAtdn);
+        System.out.println(result);
     }
-
 }
