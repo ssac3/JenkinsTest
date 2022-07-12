@@ -19,9 +19,9 @@ public interface AdminMapper {
     //사원등록
     void insertEmp(User user);
 
-
     // 사원조회
     List<User> viewEmp(User user);
+
 
     //사원수정
     int updateEmp(User user);

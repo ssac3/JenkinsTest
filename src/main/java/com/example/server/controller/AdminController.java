@@ -31,8 +31,6 @@ public class AdminController {
     public ResponseEntity<StatusCode> mkUsername() throws IOException, WriterException {
         return adminService.mkUsername();
     }
-    // QR 생성
-
 
     //사원등록
     @PostMapping("/insertEmp")
