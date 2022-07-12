@@ -11,7 +11,7 @@
                (select I.name from EMPLOYEE I where I.dep_id = E.dep_id and I.role = '1') as manager
         FROM EMPLOYEE E INNER JOIN DEPARTMENT D ON E.dep_id = D.id
         where working_status = '0'
-        order by createdAt DESC;
+        order by createdAt DESC, name ASC ;
     </select>
 
     <insert id="mkUsername"  parameterType="User" >
