@@ -41,15 +41,10 @@ public class AdminService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // 사원번호 생성
-
     //사원등록
     @Transactional
     public ResponseEntity<StatusCode> insertEmp(MultipartFile multipartFile, String dirName, User user){
-        System.out.println("multipartFile = " + multipartFile);
-        System.out.println("user.getUsername() = " + user.getUsername());
         String fileUrl = dirName +"/"+ user.getUsername() +"_"+multipartFile.getOriginalFilename();
-        System.out.println("fileUrl = " + fileUrl);
         String uploadImageUrl = userService.putS3(multipartFile, fileUrl, dirName); //s3 upload
         // upload method end
         String awsUrl = uploadImageUrl;
@@ -58,7 +53,6 @@ public class AdminService {
         statusCode = StatusCode.builder().resCode(0).resMsg("사원등록을 성공했습니다").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
     public String check(ArrayList<String> select, String now){
         while (true){
             String auto = String.valueOf((int)((Math.random() * (9999 - 1000)) + 1000));
@@ -72,7 +66,6 @@ public class AdminService {
     // 사번생성
     @Transactional
     public ResponseEntity<StatusCode> mkUsername() throws IOException, WriterException {
-
         ArrayList<String> select = adminMapper.selectUsername();
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
         String username = check(select, now);
@@ -161,14 +154,16 @@ public class AdminService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
-    //사원삭제
+    // 사원삭제
     @Transactional
-    public ResponseEntity<StatusCode> deleteEmp(String userInfo, Map<String, List<Long>> user) {
+    public ResponseEntity<StatusCode> deleteEmp(String userInfo, Map<String, List<String>> user) {
         if(userInfo != null && !userInfo.equals("")){
-            System.out.println("사원삭제");
-            System.out.println(user.get("leave"));
-            adminMapper.deleteEmp(user.get("leave"));
+            List<String> username = user.get("leave");
+            for (int i = 0; i < username.size(); i++) {
+                adminMapper.deleteEmp(Long.valueOf(username.get(i)));
+            }
+            // viewEmp를 백에서 다시 해준 다음
+            // data에 담아서 resCode뒤에 연결해준다.
             statusCode = StatusCode.builder().resCode(0).resMsg("사원삭제를 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");
@@ -176,7 +171,6 @@ public class AdminService {
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
-
     // 사원수정
     public ResponseEntity<StatusCode> updateEmp(String userInfo, User user) {
         if(userInfo != null && !userInfo.equals("")){
@@ -190,11 +184,9 @@ public class AdminService {
                     .position(user.getPosition())
                     .role(user.getRole())
                     .qrPath(user.getQrPath())
+                    .workingStatus(user.getWorkingStatus())
                     .build()
             );
-            System.out.println("UPDATE확인111"+user.getName());
-            System.out.println("UPDATE확인222"+user);
-            System.out.println("UPDATE확인333"+user.getGender());
             System.out.println("UPDATE개수??   :    adminMapper.updateEmp(user) = " + adminMapper.updateEmp(user));
             statusCode = StatusCode.builder().resCode(0).resMsg("사원수정을 성공했습니다").build();
         }else {
