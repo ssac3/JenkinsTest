@@ -54,12 +54,6 @@ public class AttendanceService {
 
     public ResponseEntity<StatusCode> rearrangeAttendance(String username, Rearrange rearrange) {
         System.out.println(rearrange.toString());
-//        System.out.println(reqMap.get("id"));
-//        Long id = Long.parseLong(reqMap.get("id"));
-////        Long aId = id;
-//        String rStartTime = reqMap.get("rStartTime");
-//        String rEndTime = reqMap.get("rEndTime");
-//        String contents = reqMap.get("contents");
         return Optional.of(new JsonResponse())
                 .map(v -> Objects.isNull(attendanceMapper.viewAttendance(rearrange.getAId(), Long.parseLong(username))))
                 .filter(res -> !res) //null 여부 확인

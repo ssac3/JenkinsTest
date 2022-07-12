@@ -22,13 +22,10 @@ public class CommuteService {
     public boolean vacType(Long username,String currentDate ,String type){
         return commuteMapper.checkVacation(username,currentDate).get("vacation_type").equals(type);
     }
-
-
     public ResponseEntity<StatusCode> commute(String name){
         Long username = Long.parseLong(name);
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
-
 
         if (commuteMapper.findByUsername(username) > 0){
             LocalTime lunchTimeIn = LocalTime.of(13, 01);
