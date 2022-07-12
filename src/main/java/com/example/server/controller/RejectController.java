@@ -1,6 +1,5 @@
 package com.example.server.controller;
 
-
 import com.example.server.config.auth.PrincipalDetails;
 import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/login")
 public class RejectController {
-
     @GetMapping("/getRole")
     public ResponseEntity<StatusCode> getRole(@AuthenticationPrincipal PrincipalDetails principalDetails){
         System.out.println(principalDetails);

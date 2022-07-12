@@ -1,27 +1,19 @@
 package com.example.server.service;
-
-import com.amazonaws.services.apigateway.model.Op;
 import com.example.server.constants.JsonResponse;
 import com.example.server.constants.StatusCode;
 import com.example.server.model.dao.user.VacationMapper;
-import com.example.server.model.dto.user.MonthJoin;
 import com.example.server.model.dto.user.Vacation;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.sql.Time;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class VacationService {
@@ -75,9 +67,7 @@ public class VacationService {
                     } else {new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(8).resMsg("이미 취소된 휴가입니다. 실패").build());}
                     return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(9).resMsg("취소할 휴가 조회 실패").build());
                 }).orElseGet(() ->new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(10).resMsg("취소할 휴가 조회 실패").build()));
-
     }
-
     public ResponseEntity<StatusCode> viewVacation(String username, Vacation vacation) {
         vacation.setUsername(Long.parseLong(username));
         return Optional.of(new JsonResponse())

@@ -2,18 +2,11 @@ package com.example.server.service;
 
 import com.example.server.model.dao.scheduler.SchedulerMapper;
 import com.example.server.model.dto.user.Attendance;
-import com.example.server.model.dto.user.User;
-import com.example.server.model.dto.user.Vacation;
-import com.mchange.v1.util.ListUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +17,8 @@ import java.util.Map;
 public class SchedulerService {
     private final SchedulerMapper schedulerMapper;
     LocalDate nowDate = LocalDate.now().minusDays(1) ;
-//    @Scheduled(cron = "0 2 21 * * MON-FRI")
-    @Scheduled(fixedRate = 990000000)
+//
+    @Scheduled(cron = "0 10 00 * * MON-FRI")
     public void vacationScheduler() {
         String date = nowDate.toString();
         System.out.println(date);
@@ -36,9 +29,7 @@ public class SchedulerService {
 
         for (Long item : emptyUser) {
             System.out.println(item.toString());
-
         }
-
         emptyUser.removeAll(yVacation);
         Map<String, Object>data = new HashMap<>();
         String aStatus;
@@ -48,7 +39,6 @@ public class SchedulerService {
             data.put("lists", emptyUser);
             data.put("aStatus", aStatus);
             data.put("aDate", date);
-
             result = schedulerMapper.addCronAttendance(data);
             System.out.println(result);
             if(yVacation.size() > 0) {
@@ -60,48 +50,12 @@ public class SchedulerService {
                 System.out.println(result);
             }
         }
-
         List<Attendance> vacAtdn = schedulerMapper.getCronAtdnId(date);
-
         for (Attendance item:
               vacAtdn) {
             System.out.println(item.toString());
         }
         result = schedulerMapper.updateCronVacaionAId(vacAtdn);
         System.out.println(result);
-
-
-
-//        lists.addAll(emptyUser);
-//        lists.removeAll(yVacation);
-
-
-//        Map<String, Object>data2 = new HashMap<>();
-//        data2.put("yVacation", yVacation);
-//        data2.put("status", "0");
-//        data2.put("date", "2022-07-05");
-
-//        String approvalFlag = "2";
-//
-//
-//
-//        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//
-//        System.out.println("=======================");
-//        System.out.println(data.get("list"));
-//        System.out.println(emptyUser);
-//
-//        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
-//
-//        System.out.println("=======================");
-//        System.out.println(data.get("lists"));
-//        System.out.println(data);
-//
-//
-////        int result2 = schedulerMapper.addCronAttendance(data2);
-//        System.out.println(result);
-////        System.out.println(result2);
-
     }
-
 }
