@@ -16,13 +16,6 @@
                          from EMPLOYEE
                          where username = #{username}) e
                          JOIN DEPARTMENT d ON e.dep_id = d.id) a
-                 CROSS JOIN (
-            select i.name as manager
-            from EMPLOYEE i
-            where dep_id IN (
-                SELECT dep_id
-                from EMPLOYEE
-                where username = #{username}) and role = '1') b
     </select>
 
     <insert id="save" parameterType="User">

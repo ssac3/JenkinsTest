@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper {
     User findByUsername(Long username);
     void updateByUsername(User user);
-    void save(User user);
     User myView(Long username);
     void updateImg(User user);
 }
