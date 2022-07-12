@@ -194,8 +194,6 @@ public class DepartmentService {
     }
 
     public ResponseEntity<StatusCode> findEavByUsername(Long username, String findDate){
-        System.out.println("username = " + username);
-        System.out.println("findDate = " + findDate);
         String lastDate;
         Long eveningWorkTime; // 오전 근무시간
         Long afternoonWorkTime; // 오후 근무시간
@@ -214,36 +212,38 @@ public class DepartmentService {
 
             EavView result = departmentMapper.findEavByUsername(username, findDate, lastDate);
             System.out.println("result = " + result);
+            if(result != null) {
+                LocalTime start_time = result.getStartTime().toLocalTime();
+                LocalTime end_time = result.getEndTime().toLocalTime();
+                eveningWorkTime = Duration.between(start_time, launchStart).getSeconds() / 60;
+                afternoonWorkTime = Duration.between(launchEnd, end_time).getSeconds() / 60;
 
-            LocalTime start_time = result.getStartTime().toLocalTime();
-            LocalTime end_time = result.getEndTime().toLocalTime();
-            eveningWorkTime = Duration.between(start_time, launchStart).getSeconds() / 60;
-            afternoonWorkTime = Duration.between(launchEnd, end_time).getSeconds() / 60;
+                usedRecent = (result.getEveningVac() * eveningWorkTime)
+                    + (result.getAfternoonVac() * afternoonWorkTime)
+                    + (eveningWorkTime + afternoonWorkTime) * result.getAllVac();
 
-            usedRecent = (result.getEveningVac() * eveningWorkTime)
-                + (result.getAfternoonVac() * afternoonWorkTime)
-                + (eveningWorkTime + afternoonWorkTime) * result.getAllVac();
+                usedLast = (result.getLastEveningVac() * eveningWorkTime)
+                    + (result.getLastAfternoonVac() * afternoonWorkTime)
+                    + (eveningWorkTime + afternoonWorkTime) * result.getLastAllVac();
 
-            usedLast = (result.getLastEveningVac() * eveningWorkTime)
-                + (result.getLastAfternoonVac() * afternoonWorkTime)
-                + (eveningWorkTime + afternoonWorkTime) * result.getLastAllVac();
+                System.out.println("usedRecent = " + usedRecent);
+                System.out.println("usedLast = " + usedLast);
 
-            System.out.println("usedRecent = " + usedRecent);
-            System.out.println("usedLast = " + usedLast);
-
-            map.put("okCount", result.getOkCount());
-            map.put("failCount", result.getFailCount());
-            map.put("rCount", result.getRCount());
-            map.put("lastRCount", result.getLastRCount());
-            map.put("vTime", usedRecent);
-            map.put("lastVTime", usedLast);
-            map.put("restTime", result.getRestTime());
-
-
+                map.put("okCount", result.getOkCount());
+                map.put("failCount", result.getFailCount());
+                map.put("rCount", result.getRCount());
+                map.put("lastRCount", result.getLastRCount());
+                map.put("vTime", usedRecent);
+                map.put("lastVTime", usedLast);
+                map.put("restTime", result.getRestTime());
+                statusCode = StatusCode.builder().resCode(0).data(map).resMsg("사원별 근태 현황 조회").build();
+            }
+            else {
+                statusCode = StatusCode.builder().resCode(2).data(map).resMsg("해당 사원의 월별 근태 정보가 존재하지 않습니다.").build();
+            }
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        statusCode = StatusCode.builder().resCode(0).data(map).resMsg("사원별 근태 현황 조회").build();
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
