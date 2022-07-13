@@ -35,8 +35,8 @@ public class DepartmentController {
     }
 
     @PostMapping("/vacUpdate")
-    public ResponseEntity<StatusCode> updateVacationByOne(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody VacationUpdate vacationUpdate){
-        return departmentService.updateVacationByOne(principalDetails.getUsername(), vacationUpdate.getVId(), vacationUpdate.getApprovalFlag());
+    public ResponseEntity<StatusCode> updateVacationByOne(@RequestBody VacationUpdate vacationUpdate){
+        return departmentService.updateVacationByOne(vacationUpdate.getVId(), vacationUpdate.getApprovalFlag());
     }
 
     @PostMapping("/rarView")

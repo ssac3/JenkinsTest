@@ -23,6 +23,10 @@ public interface DepartmentMapper {
     int validVid(Long vId);
     void updateVacationByOne(String approvalFlag, Long vId);
 
+    VacationUpdate findByVid(Long vId);
+
+    void updateRestTimeByUsername(Long username, Long restTime);
+
     List<RearrangeView> findByRearrangeAll(Long id);
 
     void updateRearrangeByOne(Long rId, Long aId, String startTime, String endTime, String approvalFlag);

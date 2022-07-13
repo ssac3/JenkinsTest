@@ -19,32 +19,32 @@
     </select>
 
     <select id="viewSumTime" resultType="Map">
-        SELECT SUM(IF(AED.aStats != '2', CASE
-                                             WHEN V.vacation_type = '0'
-                                                 THEN 0
-                                             WHEN V.vacation_type = '1'
-                                                 THEN TIME_TO_SEC(TIMEDIFF('13:00:00', AED.dEndTime))
-                                             WHEN V.vacation_type = '2'
-                                                 THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
-                                             ELSE 28800
-            END, 0)) as 'totalWorkTime', SUM(IF(V.approval_flag = '1', CASE
+        SELECT IFNULL(SUM(IF(AED.aStats != '2', CASE
+                                                    WHEN V.vacation_type = '0'
+                                                        THEN 0
+                                                    WHEN V.vacation_type = '1'
+                                                        THEN TIME_TO_SEC(TIMEDIFF('13:00:00', AED.dEndTime))
+                                                    WHEN V.vacation_type = '2'
+                                                        THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
+                                                    ELSE 28800
+            END, 0)),0) as 'totalWorkTime',  IFNULL(SUM(IF(V.approval_flag = '1', CASE
+                                                                                       WHEN V.vacation_type = '0'
+                                                                                           THEN 28800
+                                                                                       WHEN V.vacation_type = '1'
+                                                                                           THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
+                                                                                       WHEN V.vacation_type = '2'
+                                                                                           THEN TIME_TO_SEC(timediff(AED.dEndTime, '13:00:00')) END,
+                                                            0
+            )), 0) as ' totalUseVac', IFNULL(SUM(IF(AED.aStats != '2', CASE
                                                                            WHEN V.vacation_type = '0'
-                                                                               THEN 28800
+                                                                               THEN 0
                                                                            WHEN V.vacation_type = '1'
-                                                                               THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
+                                                                               THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
                                                                            WHEN V.vacation_type = '2'
-                                                                               THEN TIME_TO_SEC(timediff(AED.dEndTime, '13:00:00')) END,
-                                                0
-            )) as ' totalUseVac', SUM(IF(AED.aStats != '2', CASE
-                                                                WHEN V.vacation_type = '0'
-                                                                    THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
-                                                                WHEN V.vacation_type = '1'
-                                                                    THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
-                                                                WHEN V.vacation_type = '2'
-                                                                    THEN 0
-                                                                ELSE IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
+                                                                               THEN 0
+                                                                           ELSE IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
             END, 0)
-            ) as 'overtime'
+            ),0) as 'overtime'
 
         FROM (
                  SELECT AE.id,
@@ -61,7 +61,7 @@
                                  A.status as 'aStats'
                           FROM ATTENDANCE A
                                    JOIN EMPLOYEE E on A.username = E.username
-                          WHERE A.username = #{username}
+                          WHERE A.username = #{usernaem}
                             and date_format(A.date, '%Y-%m') = #{date}
                       ) AE
                           JOIN DEPARTMENT D

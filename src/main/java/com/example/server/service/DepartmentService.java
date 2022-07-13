@@ -84,20 +84,39 @@ public class DepartmentService {
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 
-    public ResponseEntity<StatusCode> updateVacationByOne(String userInfo, Long vId, String approvalFlag) {
-        System.out.println("userInfo = " + userInfo);
+    public ResponseEntity<StatusCode> updateVacationByOne(Long vId, String approvalFlag) {
+        int checkValidId = departmentMapper.validVid(vId);
+        System.out.println("checkValidId = " + checkValidId);
+        if (checkValidId == 0) {
+            statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 휴가 ID 입니다.").build();
+        } else {
+            System.out.println("vId = " + vId);
+            System.out.println("approvalFlag = " + approvalFlag);
+            departmentMapper.updateVacationByOne(approvalFlag, vId);
+            VacationUpdate vacation = departmentMapper.findByVid(vId);
+            System.out.println("vacation = " + vacation);
+            Long time;
+            if(vacation.getApprovalFlag().equals("1")) { // 승인할 경우
+                LocalTime startTime = vacation.getStartTime().toLocalTime();
+                LocalTime launchStart = LocalTime.of(12,00,00);
+                LocalTime launchEnd = LocalTime.of(13,00,00);
+                LocalTime endTime = vacation.getEndTime().toLocalTime();
+                Long restTime = vacation.getRestTime();
 
-        if (userInfo != null && !userInfo.equals("")) {
-            int checkValidId = departmentMapper.validVid(vId);
-            System.out.println("checkValidId = " + checkValidId);
-            if (checkValidId == 0) {
-                statusCode = StatusCode.builder().resCode(1).resMsg("존재하지 않는 휴가 ID 입니다.").build();
-            } else {
-                System.out.println("vId = " + vId);
-                System.out.println("approvalFlag = " + approvalFlag);
-                departmentMapper.updateVacationByOne(approvalFlag, vId);
-                statusCode = StatusCode.builder().resCode(0).resMsg("휴가 수정 완료").build();
+                if(vacation.getVType().equals("0")) { // 전일 휴가
+                    time = (Duration.between(startTime, launchStart).getSeconds() + Duration.between(launchEnd, endTime).getSeconds()) / 3600;
+                }
+                else if(vacation.getVType().equals("1")) { // 오전 휴가
+                    time = Duration.between(startTime, launchStart).getSeconds() / 60;
+                } else {
+                    time = Duration.between(launchEnd, endTime).getSeconds() / 60;
+                }
+                System.out.println("time = " + time);
+                restTime -= time;
+                System.out.println("restTime = " + restTime);
+                departmentMapper.updateRestTimeByUsername(vacation.getUsername(), restTime);
             }
+            statusCode = StatusCode.builder().resCode(0).resMsg("휴가 수정 완료").build();
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
