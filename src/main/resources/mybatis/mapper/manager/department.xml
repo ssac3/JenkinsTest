@@ -33,6 +33,19 @@
         WHERE id = #{vId};
     </update>
 
+    <select id="findByVid" resultType="VacationUpdate">
+        select E.username as username, vacation_type as vType, approval_flag as approvalFlag, rest_time as restTime, start_time, end_time
+        from VACATION V join EMPLOYEE E on V.username = E.username
+        join DEPARTMENT d on d.id = E.dep_id
+        where V.id = #{vId};
+    </select>
+
+    <update id="updateRestTimeByUsername">
+        UPDATE EMPLOYEE
+        SET rest_time = #{restTime}
+        WHERE username = #{username}
+    </update>
+
     <select id="findByRearrangeAll" resultType="RearrangeView">
         SELECT REARRANGE.id as rId, a_id as aId, A.username, name, img, contents, REARRANGE.start_time as rStartTime, REARRANGE.end_time as rEndTime, A.start_time as startTime, A.end_time as endTime, approval_flag as approvalFlag
         from REARRANGE
