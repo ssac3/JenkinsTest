@@ -145,6 +145,7 @@ public class AdminService {
                 map.put("dName", value.getDepartment());
                 map.put("location", value.getLocation());
                 map.put("createdAt", value.getCreatedAt());
+                map.put("manager", value.getManager());
                 return map;
             });
             statusCode = StatusCode.builder().resCode(0).data(data).resMsg("사원조회를 성공했습니다").build();
@@ -162,8 +163,6 @@ public class AdminService {
             for (int i = 0; i < username.size(); i++) {
                 adminMapper.deleteEmp(Long.valueOf(username.get(i)));
             }
-            // viewEmp를 백에서 다시 해준 다음
-            // data에 담아서 resCode뒤에 연결해준다.
             statusCode = StatusCode.builder().resCode(0).resMsg("사원삭제를 성공했습니다").build();
         }else {
             System.out.println("[ERR] 유효하지 않는 사용자 정보입니다.");

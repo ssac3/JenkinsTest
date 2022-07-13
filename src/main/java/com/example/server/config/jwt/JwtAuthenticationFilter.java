@@ -61,9 +61,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         tokenRepository.save(token);
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, refreshToken);
-        System.out.println("principalDetails.getUser().getRole() = " + principalDetails.getUser().getRole());
-        StatusCode statusCode;
         String getRole = principalDetails.getUser().getRole();
+        StatusCode statusCode;
         Long depId = principalDetails.getUser().getDepId();
         if(getRole.equals("0")) {
             System.out.println("[ADMIN]");
