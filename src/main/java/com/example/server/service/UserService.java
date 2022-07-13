@@ -49,7 +49,7 @@ public class UserService {
                         .resMsg("비밀번호는 8~32자이어야 하며, 대/소문자, 숫자, 특수기호를 모두 포함해야 합니다.")
                         .build();
             }
-            else if(user.getNPasswordCheck() != nPw) {
+            else if(!user.getNPasswordCheck().equals(nPw)) {
                 statusCode = StatusCode.builder().resCode(3)
                         .resMsg("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.")
                         .build();
