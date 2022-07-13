@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class StatisticsService {
+public class StatisticsService extends ArithmeticException {
     private final StatisticsMapper statisticsMapper;
     private StatusCode statusCode;
     public ResponseEntity<StatusCode> getMonthStatistics(String username, Attendance atdn) {
@@ -24,11 +24,13 @@ public class StatisticsService {
         Map<String, Long> sumData = statisticsMapper.viewSumTime(atdn);
         Long restTime = Long.parseLong(String.valueOf(timeMap.get("vacation_time")));
         timeMap.remove("vacation_time");
-        
+        System.out.println(statsList);
+
         int totalWorkTime = Integer.parseInt(String.valueOf(sumData.get("totalWorkTime"))) / 60 ;
         double totalUseVac = Double.parseDouble(String.valueOf(sumData.get("totalUseVac"))) / 60;
         Long overtime = Long.parseLong(String.valueOf(sumData.get("overtime"))) / 60;
         Object timeMapObject = timeMap;
+        System.out.println(overtime);
         Map<String, Object> data = new HashMap<String, Object>();
         System.out.println();
         data.put("startList",statsList);
