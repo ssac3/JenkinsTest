@@ -191,7 +191,7 @@
              from (select A.username, A.end_time, V.vacation_type
                    from ATTENDANCE A
                             LEFT OUTER JOIN VACATION V on A.id = V.a_id
-                   where A.username IN (select username from  EMPLOYEE where dep_id = #{depId}) and date_format(A.date, '%Y-%m') = #{findDate} and A.status != 2) AV,
+                   where A.username IN (select username from  EMPLOYEE where dep_id = #{depId} and working_status = 0) and date_format(A.date, '%Y-%m') = #{findDate} and A.status != 2) AV,
                   (select end_time from DEPARTMENT where id = #{depId}) D
              group by AV.username
             ) AVD
@@ -204,13 +204,13 @@
         from (select A.username, A.end_time, V.vacation_type
               from ATTENDANCE A
                        LEFT OUTER JOIN VACATION V on A.id = V.a_id
-              where A.username IN (select username from  EMPLOYEE where dep_id = #{depId}) and date_format(A.date, '%Y-%m') = #{findDate} and A.status != 2) AV,
+              where A.username IN (select username from  EMPLOYEE where dep_id = #{depId} and working_status = 0) and date_format(A.date, '%Y-%m') = #{findDate} and A.status != 2) AV,
              (select end_time from DEPARTMENT where id = #{depId}) D
     </select>
 
     <select id="findPositionByDepId" resultType="Map">
         select position, count(position) as count
-        from EMPLOYEE where username IN (select username from  EMPLOYEE where dep_id = #{depId})
+        from EMPLOYEE where username IN (select username from  EMPLOYEE where dep_id = #{depId} and working_status = 0)
         group by position
     </select>
 
