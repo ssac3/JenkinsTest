@@ -61,7 +61,7 @@
                                  A.status as 'aStats'
                           FROM ATTENDANCE A
                                    JOIN EMPLOYEE E on A.username = E.username
-                          WHERE A.username = #{usernaem}
+                          WHERE A.username = #{username}
                             and date_format(A.date, '%Y-%m') = #{date}
                       ) AE
                           JOIN DEPARTMENT D
