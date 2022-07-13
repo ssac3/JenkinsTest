@@ -51,8 +51,8 @@ public class VacationService {
                                     time = Duration.between(startTime, lunchTime).getSeconds() / 3600;
                                 }
                                 else{   //휴가 여부 true -> 휴가 취소 상태 false -> 휴가 승인 여부 true -> 전일휴가 false ->  오후휴가
-                                    time = Duration.between(lunchTime.plusHours(1), endTime).getSeconds() /3600;}
-                            } else {time = 8L;}
+                                    time = Duration.between(lunchTime.plusHours(1), endTime).getSeconds() /60;}
+                            } else {time = 480L;}
                             int cancelres = vacationMapper.cancelVacation(vDTO);
                             if(cancelres > 0) { //휴가 취소 ? true / false
                                 int rest = vacationMapper.returnRestTime(Long.parseLong(username), time);
