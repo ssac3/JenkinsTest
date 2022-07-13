@@ -5,9 +5,13 @@
 <mapper namespace="com.example.server.model.dao.admin.AdminMapper">
 
     <select id="viewEmp" resultType="User">
-        SELECT username, E.name as name, email, gender, position, working_status as workingStatus, img, role, qr_path as qrPath, dep_id as depId, D.name as department, location, created_at as createdAt
-        FROM EMPLOYEE E INNER JOIN DEPARTMENT D
-       ON E.dep_id = D.id;
+        SELECT E.username, E.name as name, E.email, E.gender, E.position, E.working_status as workingStatus,
+               E.img, E.role, E.qr_path as qrPath, E.dep_id as depId, D.name as department,
+               D.location, E.created_at as createdAt,
+               (select I.name from EMPLOYEE I where I.dep_id = E.dep_id and I.role = '1') as manager
+        FROM EMPLOYEE E INNER JOIN DEPARTMENT D ON E.dep_id = D.id
+        where working_status = '0'
+        order by createdAt DESC, name ASC ;
     </select>
 
     <insert id="mkUsername"  parameterType="User" >
@@ -20,12 +24,11 @@
         values (#{username}, #{depId}, #{name}, #{password}, #{email}, #{img}, #{gender}, #{position}, #{role}, #{qrPath});
     </insert>
 
-    <update id="deleteEmp" parameterType="java.util.List">
-        <foreach collection="user" item="item" index="index" separator=",">
+<!--    <update id="deleteEmp" parameterType="java.util.List">-->
+    <update id="deleteEmp" parameterType="Long">
             UPDATE EMPLOYEE
             SET working_status = '1'
-            WHERE username = #{item};
-        </foreach>
+            WHERE username = #{username};
     </update>
 
     <update id="updateEmp" parameterType="User">

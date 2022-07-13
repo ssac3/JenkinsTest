@@ -31,8 +31,6 @@ public class AdminController {
     public ResponseEntity<StatusCode> mkUsername() throws IOException, WriterException {
         return adminService.mkUsername();
     }
-    // QR 생성
-
 
     //사원등록
     @PostMapping("/insertEmp")
@@ -42,12 +40,10 @@ public class AdminController {
         return adminService.insertEmp(multipartFile, "profile", user);
     }
 
-    //사원삭제
+    // 사원삭제
     @PostMapping("/deleteEmp")
-    public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Map<String,List<Long>> reqMap) {
-        System.out.println("사원삭제");
-        System.out.println(reqMap);
-        return adminService.deleteEmp(principalDetails.getUsername(), reqMap);
+    public ResponseEntity<StatusCode> deleteEmp (@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody Map<String,List<String>> user) {
+        return adminService.deleteEmp(principalDetails.getUsername(), user);
     }
     //사원수정
     @PostMapping("/updateEmp")

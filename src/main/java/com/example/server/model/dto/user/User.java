@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -61,6 +62,8 @@ public class User {
         this.nPasswordCheck = nPasswordCheck;
     }
 
+
+
     public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder){
         return User.builder().username(username).name(name).depId(depId).img(img).email(email).gender(gender)
                 .password(bCryptPasswordEncoder.encode(password)).position(position).role(role)
@@ -69,7 +72,7 @@ public class User {
     // 이거 사용, insert
     public User toInsertEntity(BCryptPasswordEncoder bCryptPasswordEncoder, String insertUrl){
         return User.builder().username(username).password(bCryptPasswordEncoder.encode(password)).name(name).depId(depId).img(insertUrl).email(email).gender(gender)
-                .position(position).role(role).qrPath(qrPath).build();
+                .position(position).role(role).qrPath(qrPath).workingStatus(workingStatus).build();
     }
 
 }

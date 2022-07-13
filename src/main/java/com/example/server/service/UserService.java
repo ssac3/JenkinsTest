@@ -72,7 +72,6 @@ public class UserService {
         System.out.println(username);
         statusCode = StatusCode.builder().resCode(0).resMsg("회원 정보 조회 성공")
                 .data(userMapper.myView(Long.parseLong(username))).build();
-        System.out.println(statusCode.getData().toString());
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
     public ResponseEntity<StatusCode> updateImg(String username, MultipartFile multipartFile, String dirName){
