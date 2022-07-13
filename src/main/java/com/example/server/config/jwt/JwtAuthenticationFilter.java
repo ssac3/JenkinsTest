@@ -62,17 +62,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, refreshToken);
         String getRole = principalDetails.getUser().getRole();
+        String getName = principalDetails.getUser().getName();
         StatusCode statusCode;
         Long depId = principalDetails.getUser().getDepId();
         if(getRole.equals("0")) {
             System.out.println("[ADMIN]");
-            statusCode =  StatusCode.builder().resCode(0).data(User.builder().role(getRole).build()).resMsg("로그인 성공").build();
+            statusCode =  StatusCode.builder().resCode(0).data(User.builder().role(getRole).name(getName).build()).resMsg("로그인 성공").build();
         } else if(getRole.equals("1")) {
             System.out.println("[MANAGER]");
-            statusCode = StatusCode.builder().resCode(0).data(User.builder().depId(depId).role(getRole).build()).resMsg("로그인 성공").build();
+            statusCode = StatusCode.builder().resCode(0).data(User.builder().depId(depId).role(getRole).name(getName).build()).resMsg("로그인 성공").build();
         } else {
             System.out.println("[USER]");
-            statusCode = StatusCode.builder().resCode(0).data(User.builder().role(getRole).build()).resMsg("로그인 성공").build();
+            statusCode = StatusCode.builder().resCode(0).data(User.builder().role(getRole).name(getName).build()).resMsg("로그인 성공").build();
         }
         ObjectMapper om = new ObjectMapper();
         String result = om.writeValueAsString(statusCode);
