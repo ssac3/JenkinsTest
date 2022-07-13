@@ -26,7 +26,7 @@ public class SchedulerService {
         List<Long> emptyUser = schedulerMapper.getEmptyAtndEmpl(date);
         //해당 일자의 휴가 리스트 가져오기 -> 리스트에 있는사람들 휴가 리스트 뽑아올 수 있을까?
         List<Long> yVacation = schedulerMapper.getCronVac(date);
-
+        System.out.println(emptyUser);
         for (Long item : emptyUser) {
             System.out.println(item.toString());
         }
@@ -34,7 +34,9 @@ public class SchedulerService {
         Map<String, Object>data = new HashMap<>();
         String aStatus;
         int result = 0;
+        System.out.println(emptyUser.size());
         if(emptyUser.size() > 0) {
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             aStatus = "2";
             data.put("lists", emptyUser);
             data.put("aStatus", aStatus);
