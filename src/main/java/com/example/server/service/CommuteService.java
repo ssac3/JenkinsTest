@@ -23,57 +23,97 @@ public class CommuteService {
         return commuteMapper.checkVacation(username,currentDate).get("vacation_type").equals(type);
     }
     public ResponseEntity<StatusCode> commute(String name){
-        Long username = Long.parseLong(name);
-        LocalDate nowDate = LocalDate.now();
-        LocalTime nowTime = LocalTime.now();
 
-        if (commuteMapper.findByUsername(username) > 0){
-            LocalTime lunchTimeIn = LocalTime.of(13, 01);
-            LocalTime lunchTimeOut = LocalTime.of(12, 00);
-            Map<String, Time> dep = commuteMapper.checkDepTime(username);
-            LocalTime depStart = dep.get("start_time").toLocalTime();
-            LocalTime depEnd = dep.get("end_time").toLocalTime();
-            String currentDate = nowDate.toString();
-            String currentTime = nowTime.toString();
 
-            boolean vacCheck = commuteMapper.checkVacation(username,currentDate).get("count") == null;
-            if (!vacCheck){
-                if (vacType(username,currentDate,"1")){
-                    if (nowTime.compareTo(depEnd) < 0) {
-                        if(commuteMapper.checkInOut(username) > 0){
-                            statusCode = StatusCode.builder().resCode(4).resMsg("출근 처리된 사원입니다.").build();
+        try {
+            Long username = Long.parseLong(name);
+            LocalDate nowDate = LocalDate.now();
+            LocalTime nowTime = LocalTime.now();
+
+            if (commuteMapper.findByUsername(username) > 0){
+                LocalTime lunchTimeIn = LocalTime.of(13, 01);
+                LocalTime lunchTimeOut = LocalTime.of(12, 00);
+                Map<String, Time> dep = commuteMapper.checkDepTime(username);
+                LocalTime depStart = dep.get("start_time").toLocalTime();
+                LocalTime depEnd = dep.get("end_time").toLocalTime();
+                String currentDate = nowDate.toString();
+                String currentTime = nowTime.toString();
+
+                boolean vacCheck = commuteMapper.checkVacation(username,currentDate).get("count") == null;
+                if (!vacCheck){
+                    if (vacType(username,currentDate,"1")){
+                        if (nowTime.compareTo(depEnd) < 0) {
+                            if(commuteMapper.checkInOut(username) > 0){
+                                statusCode = StatusCode.builder().resCode(4).resMsg("출근 처리된 사원입니다.").build();
+                            }
+                            else{
+                                commuteMapper.clockIn(username, Time.valueOf(nowTime));
+                                statusCode = StatusCode.builder().resCode(0).resMsg("(" + currentTime + ")출근입니다.").build();
+                            }
+                        }
+                        else {
+                            if(commuteMapper.checkInOut(username) > 0){
+                                if(commuteMapper.checkOut(username) == null) {
+                                    commuteMapper.clockOut(username, Time.valueOf(nowTime));
+                                    statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
+                                    if(commuteMapper.checkAtdTime(username)
+                                            .get("start_time").toLocalTime().compareTo(lunchTimeIn) <= 0) {
+                                        commuteMapper.determine("0",username);
+                                    }
+                                    else {
+                                        commuteMapper.determine("1", username);
+                                    }
+                                }
+                                else{
+                                    statusCode = StatusCode.builder().resCode(5).resMsg("퇴근 처리된 사원입니다.").build();
+                                }
+
+                            }
+                            else{
+                                commuteMapper.clockOutInsert(username, Time.valueOf(nowTime));
+                                statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
+                            }
+                        }
+                    }
+                    else if (vacType(username,currentDate,"2")){
+                        if (nowTime.compareTo(lunchTimeOut) < 0){
+                            if (commuteMapper.checkInOut(username) > 0) {
+                                statusCode = StatusCode.builder().resCode(4).resMsg("출근 처리된 사원입니다.").build();
+                            }
+                            else {
+                                commuteMapper.clockIn(username, Time.valueOf(nowTime));
+                                statusCode = StatusCode.builder().resCode(0).resMsg("(" + currentTime + ")출근입니다.").build();
+                            }
                         }
                         else{
-                            commuteMapper.clockIn(username, Time.valueOf(nowTime));
-                            statusCode = StatusCode.builder().resCode(0).resMsg("(" + currentTime + ")출근입니다.").build();
+                            if (commuteMapper.checkInOut(username) > 0) {
+                                if (commuteMapper.checkOut(username) == null) {
+                                    commuteMapper.clockOut(username, Time.valueOf(nowTime));
+                                    statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
+                                    if(commuteMapper.checkAtdTime(username)
+                                            .get("start_time").toLocalTime().compareTo(depStart.plusMinutes(1)) <= 0) {
+                                        commuteMapper.determine("0",username);
+                                    }
+                                    else {
+                                        commuteMapper.determine("1", username);
+                                    }
+                                }
+                                else{
+                                    statusCode = StatusCode.builder().resCode(5).resMsg("퇴근 처리된 사원입니다.").build();
+                                }
+                            }
+                            else {
+                                commuteMapper.clockOutInsert(username, Time.valueOf(nowTime));
+                                statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
+                            }
                         }
                     }
                     else {
-                        if(commuteMapper.checkInOut(username) > 0){
-                            if(commuteMapper.checkOut(username) == null) {
-                                commuteMapper.clockOut(username, Time.valueOf(nowTime));
-                                statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
-                                if(commuteMapper.checkAtdTime(username)
-                                        .get("start_time").toLocalTime().compareTo(lunchTimeIn) <= 0) {
-                                    commuteMapper.determine("0",username);
-                                }
-                                else {
-                                    commuteMapper.determine("1", username);
-                                }
-                            }
-                            else{
-                                statusCode = StatusCode.builder().resCode(5).resMsg("퇴근 처리된 사원입니다.").build();
-                            }
-
-                        }
-                        else{
-                            commuteMapper.clockOutInsert(username, Time.valueOf(nowTime));
-                            statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
-                        }
+                        statusCode = StatusCode.builder().resCode(2).resMsg("전일 휴가입니다.").build();
                     }
                 }
-                else if (vacType(username,currentDate,"2")){
-                    if (nowTime.compareTo(lunchTimeOut) < 0){
+                else{
+                    if(nowTime.compareTo(depEnd) < 0){
                         if (commuteMapper.checkInOut(username) > 0) {
                             statusCode = StatusCode.builder().resCode(4).resMsg("출근 처리된 사원입니다.").build();
                         }
@@ -84,7 +124,7 @@ public class CommuteService {
                     }
                     else{
                         if (commuteMapper.checkInOut(username) > 0) {
-                            if (commuteMapper.checkOut(username) == null) {
+                            if(commuteMapper.checkOut(username) == null){
                                 commuteMapper.clockOut(username, Time.valueOf(nowTime));
                                 statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
                                 if(commuteMapper.checkAtdTime(username)
@@ -99,53 +139,20 @@ public class CommuteService {
                                 statusCode = StatusCode.builder().resCode(5).resMsg("퇴근 처리된 사원입니다.").build();
                             }
                         }
-                        else {
+                        else{
                             commuteMapper.clockOutInsert(username, Time.valueOf(nowTime));
                             statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
                         }
                     }
                 }
-                else {
-                    statusCode = StatusCode.builder().resCode(2).resMsg("전일 휴가입니다.").build();
-                }
             }
-            else{
-                if(nowTime.compareTo(depEnd) < 0){
-                    if (commuteMapper.checkInOut(username) > 0) {
-                        statusCode = StatusCode.builder().resCode(4).resMsg("출근 처리된 사원입니다.").build();
-                    }
-                    else {
-                        commuteMapper.clockIn(username, Time.valueOf(nowTime));
-                        statusCode = StatusCode.builder().resCode(0).resMsg("(" + currentTime + ")출근입니다.").build();
-                    }
-                }
-                else{
-                    if (commuteMapper.checkInOut(username) > 0) {
-                        if(commuteMapper.checkOut(username) == null){
-                            commuteMapper.clockOut(username, Time.valueOf(nowTime));
-                            statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
-                            if(commuteMapper.checkAtdTime(username)
-                                    .get("start_time").toLocalTime().compareTo(depStart.plusMinutes(1)) <= 0) {
-                                commuteMapper.determine("0",username);
-                            }
-                            else {
-                                commuteMapper.determine("1", username);
-                            }
-                        }
-                        else{
-                            statusCode = StatusCode.builder().resCode(5).resMsg("퇴근 처리된 사원입니다.").build();
-                        }
-                    }
-                    else{
-                        commuteMapper.clockOutInsert(username, Time.valueOf(nowTime));
-                        statusCode = StatusCode.builder().resCode(1).resMsg("(" + currentTime + ")퇴근입니다.").build();
-                    }
-                }
+            else {
+                statusCode = StatusCode.builder().resCode(3).resMsg("등록된 사원이 아닙니다.").build();
             }
+            return new JsonResponse().send(HttpStatus.OK, statusCode);
+        } catch (NumberFormatException n) {
+            statusCode = StatusCode.builder().resCode(6).resMsg("잘못된 QR 코드입니다.").build();
+            return new JsonResponse().send(HttpStatus.OK, statusCode);
         }
-        else {
-            statusCode = StatusCode.builder().resCode(3).resMsg("등록된 사원이 아닙니다.").build();
-        }
-        return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
 }
