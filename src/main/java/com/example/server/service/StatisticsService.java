@@ -25,7 +25,6 @@ public class StatisticsService extends ArithmeticException {
         Long restTime = Long.parseLong(String.valueOf(timeMap.get("vacation_time")));
         timeMap.remove("vacation_time");
         System.out.println(statsList);
-
         int totalWorkTime = Integer.parseInt(String.valueOf(sumData.get("totalWorkTime"))) / 60 ;
         double totalUseVac = Double.parseDouble(String.valueOf(sumData.get("totalUseVac"))) / 60;
         Long overtime = Long.parseLong(String.valueOf(sumData.get("overtime"))) / 60;

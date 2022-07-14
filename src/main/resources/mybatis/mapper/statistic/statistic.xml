@@ -19,56 +19,130 @@
     </select>
 
     <select id="viewSumTime" resultType="Map">
-        SELECT IFNULL(SUM(IF(AED.aStats != '2', CASE
-                                                    WHEN V.vacation_type = '0'
-                                                        THEN 0
-                                                    WHEN V.vacation_type = '1'
-                                                        THEN TIME_TO_SEC(TIMEDIFF('13:00:00', AED.dEndTime))
-                                                    WHEN V.vacation_type = '2'
-                                                        THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
-                                                    ELSE 28800
-            END, 0)),0) as 'totalWorkTime',  IFNULL(SUM(IF(V.approval_flag = '1', CASE
-                                                                                       WHEN V.vacation_type = '0'
-                                                                                           THEN 28800
-                                                                                       WHEN V.vacation_type = '1'
-                                                                                           THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))
-                                                                                       WHEN V.vacation_type = '2'
-                                                                                           THEN TIME_TO_SEC(timediff(AED.dEndTime, '13:00:00')) END,
-                                                            0
-            )), 0) as ' totalUseVac', IFNULL(SUM(IF(AED.aStats != '2', CASE
-                                                                           WHEN V.vacation_type = '0'
-                                                                               THEN 0
-                                                                           WHEN V.vacation_type = '1'
-                                                                               THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
-                                                                           WHEN V.vacation_type = '2'
-                                                                               THEN 0
-                                                                           ELSE IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)
+        SELECT IFNULL(SUM(IF(aStats != '2', CASE
+                                                WHEN vType = '0'
+                                                    THEN 0
+                                                WHEN AVED.vType = '1'
+                                                    THEN TIME_TO_SEC(TIMEDIFF('13:00:00', AVED.dEndTime))
+                                                WHEN AVED.vType = '2'
+                                                    THEN TIME_TO_SEC(TIMEDIFF(AVED.dStartTime, '12:00:00'))
+                                                ELSE 28800
+            END, 0)),0) as 'totalWorkTime',  IFNULL(SUM(IF(vFlag = '1', CASE
+                                                                            WHEN vType = '0'
+                                                                                THEN 28800
+                                                                            WHEN vType = '1'
+                                                                                THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AVED.dStartTime, '12:00:00')), 0)
+                                                                            WHEN vType = '2'
+                                                                                THEN IFNULL(TIME_TO_SEC(timediff(AVED.dEndTime, '13:00:00')), 0)  END
+            , 0)), 0) as ' totalUseVac', IFNULL(SUM(IF(AVED.aStats != '2', CASE
+                                                                               WHEN vType = '0'
+                                                                                   THEN 0
+                                                                               WHEN vType = '1'
+                                                                                   THEN IFNULL(TIME_TO_SEC(TIMEDIFF(endTime, AVED.dEndTime)), 0)
+                                                                               WHEN vType = '2'
+                                                                                   THEN 0
+                                                                               ELSE IFNULL(TIME_TO_SEC(TIMEDIFF(endTime, AVED.dEndTime)), 0)
             END, 0)
             ),0) as 'overtime'
-
-        FROM (
-                 SELECT AE.id,
-                        AE.date,
-                        AE.start_time,
-                        AE.end_time,
-                        D.start_time as 'dStartTime', D.end_time as 'dEndTime', aStats
-                 FROM (
-                          SELECT A.id,
-                                 A.date,
-                                 A.start_time,
-                                 A.end_time,
-                                 E.dep_id,
-                                 A.status as 'aStats'
-                          FROM ATTENDANCE A
-                                   JOIN EMPLOYEE E on A.username = E.username
-                          WHERE A.username = #{username}
-                            and date_format(A.date, '%Y-%m') = #{date}
-                      ) AE
-                          JOIN DEPARTMENT D
-                               ON D.id = AE.dep_id
-             ) AED
-                 LEFT OUTER JOIN VACATION V
-                                 ON AED.id = V.a_id;
+        FROM
+            (SELECT aStats, start_time as 'startTime', end_time as 'endTime', dStartTime, dEndTime, V.id as 'vId', V.approval_flag as 'vFlag', V.vacation_type as 'vType'
+             FROM (SELECT AE.id,
+                          AE.date,
+                          AE.start_time,
+                          AE.end_time,
+                          D.start_time as 'dStartTime',
+                           D.end_time   as 'dEndTime',
+                           aStats
+                   FROM (SELECT A.id,
+                                A.date,
+                                A.start_time,
+                                A.end_time,
+                                E.dep_id,
+                                A.status as 'aStats'
+                         FROM ATTENDANCE A
+                                  JOIN EMPLOYEE E on A.username = E.username
+                         WHERE A.username = #{username}
+                           and date_format(A.date, '%Y-%m') = '2022-07') AE
+                            JOIN DEPARTMENT D
+                                 ON D.id = AE.dep_id) AED
+                      LEFT OUTER JOIN VACATION V
+                                      ON AED.id = V.a_id
+             UNION
+             SELECT aStats, start_time as 'startTime', end_time as 'endTime', dStartTime, dEndTime, V.id as 'vId', V.approval_flag as 'vFlag', V.vacation_type as 'vType'
+             FROM (SELECT AE.id,
+                          AE.date,
+                          AE.start_time,
+                          AE.end_time,
+                          D.start_time as 'dStartTime',
+                           D.end_time   as 'dEndTime',
+                           aStats
+                   FROM (SELECT A.id,
+                                A.date,
+                                A.start_time,
+                                A.end_time,
+                                E.dep_id,
+                                A.status as 'aStats'
+                         FROM ATTENDANCE A
+                                  JOIN EMPLOYEE E on A.username = E.username
+                         WHERE A.username = #{username} and date_format(A.date, '%Y-%m') = #{date}) AE
+                            JOIN DEPARTMENT D
+                                 ON D.id = AE.dep_id) AED
+                      RIGHT OUTER JOIN VACATION V
+                                       ON AED.id = V.a_id
+             WHERE date_format(V.date, '%Y-%m') = #{date}
+            ) AVED
 
     </select>
+<!--    <select id="viewSumTime" resultType="Map">-->
+<!--        SELECT IFNULL(SUM(IF(AED.aStats != '2', CASE-->
+<!--                                                    WHEN V.vacation_type = '0'-->
+<!--                                                        THEN 0-->
+<!--                                                    WHEN V.vacation_type = '1'-->
+<!--                                                        THEN TIME_TO_SEC(TIMEDIFF('13:00:00', AED.dEndTime))-->
+<!--                                                    WHEN V.vacation_type = '2'-->
+<!--                                                        THEN TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00'))-->
+<!--                                                    ELSE 28800-->
+<!--            END, 0)),0) as 'totalWorkTime',  IFNULL(SUM(IF(V.approval_flag = '1', CASE-->
+<!--                                                                                       WHEN V.vacation_type = '0'-->
+<!--                                                                                           THEN 28800-->
+<!--                                                                                       WHEN V.vacation_type = '1'-->
+<!--                                                                                           THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.dStartTime, '12:00:00')), 0)-->
+<!--                                                                                       WHEN V.vacation_type = '2'-->
+<!--                                                                                           THEN IFNULL(TIME_TO_SEC(timediff(AED.dEndTime, '13:00:00')), 0)  END-->
+<!--            , 0)), 0) as ' totalUseVac', IFNULL(SUM(IF(AED.aStats != '2', CASE-->
+<!--                                                                           WHEN V.vacation_type = '0'-->
+<!--                                                                               THEN 0-->
+<!--                                                                           WHEN V.vacation_type = '1'-->
+<!--                                                                               THEN IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)-->
+<!--                                                                           WHEN V.vacation_type = '2'-->
+<!--                                                                               THEN 0-->
+<!--                                                                           ELSE IFNULL(TIME_TO_SEC(TIMEDIFF(AED.end_time, AED.dEndTime)), 0)-->
+<!--            END, 0)-->
+<!--            ),0) as 'overtime'-->
+
+<!--        FROM (-->
+<!--                 SELECT AE.id,-->
+<!--                        AE.date,-->
+<!--                        AE.start_time,-->
+<!--                        AE.end_time,-->
+<!--                        D.start_time as 'dStartTime', D.end_time as 'dEndTime', aStats-->
+<!--                 FROM (-->
+<!--                          SELECT A.id,-->
+<!--                                 A.date,-->
+<!--                                 A.start_time,-->
+<!--                                 A.end_time,-->
+<!--                                 E.dep_id,-->
+<!--                                 A.status as 'aStats'-->
+<!--                          FROM ATTENDANCE A-->
+<!--                                   JOIN EMPLOYEE E on A.username = E.username-->
+<!--                          WHERE A.username = #{username}-->
+<!--                            and date_format(A.date, '%Y-%m') = #{date}-->
+<!--                      ) AE-->
+<!--                          JOIN DEPARTMENT D-->
+<!--                               ON D.id = AE.dep_id-->
+<!--             ) AED-->
+<!--                 LEFT OUTER JOIN VACATION V-->
+<!--                                 ON AED.id = V.a_id;-->
+
+<!--    </select>-->
 </mapper>
