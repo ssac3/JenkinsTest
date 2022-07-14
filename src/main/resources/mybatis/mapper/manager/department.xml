@@ -215,16 +215,37 @@
     </select>
 
     <select id="findCountByDepId" resultType="Map">
-    SELECT count(aId) as aCount, count(vId) as vCount
-        FROM (
-            SELECT A.id as 'aId', V.id as 'vId' FROM ATTENDANCE A
-            LEFT OUTER JOIN VACATION V on A.id = V.a_id
-            WHERE A.date = #{date}
-            UNION
-            SELECT A.id as'aId', V.id as 'vId' FROM ATTENDANCE A
-            RIGHT OUTER JOIN VACATION V on A.id = V.a_id
-            WHERE V.date = #{date} and vacation_type = '0' and approval_flag = '1'
-    ) ab;
-
+        SELECT count(aId), count(vId) FROM
+            (
+                SELECT aId, V.id as 'vId'
+                FROM VACATION V
+                         RIGHT OUTER JOIN
+                     (SELECT A.id as 'aId', A.username
+                      FROM ATTENDANCE A
+                               JOIN
+                           (SELECT E.username, D.id as 'depId'
+                            FROM EMPLOYEE E
+                                     JOIN DEPARTMENT D on E.dep_id = D.id) ED
+                           ON A.username = ED.username
+                      WHERE A.date = #{date}
+                        and depId = #{depId}) AED
+                     ON V.a_id = AED.aId
+                UNION
+                SELECT AED.id,V.id as 'vId'
+                FROM VACATION V
+                         LEFT OUTER JOIN
+                     (SELECT A.id, A.username
+                      FROM ATTENDANCE A
+                               JOIN
+                           (SELECT E.username, D.id as 'depId'
+                            FROM EMPLOYEE E
+                                     JOIN DEPARTMENT D on E.dep_id = D.id) ED
+                           ON A.username = ED.username
+                      WHERE A.date =#{date}
+                        and depId = #{depId}) AED
+                     ON V.a_id = AED.id
+                WHERE V.date = #{date}
+            )VAED
     </select>
 </mapper>
+
