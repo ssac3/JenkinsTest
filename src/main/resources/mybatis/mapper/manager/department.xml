@@ -234,7 +234,7 @@
     </select>
 
     <select id="findCountByDepId" resultType="Map">
-        SELECT count(aId), count(vId) FROM
+        SELECT count(aId) as aCount, count(vId) as vCount FROM
             (
                 SELECT aId, V.id as 'vId'
                 FROM VACATION V
