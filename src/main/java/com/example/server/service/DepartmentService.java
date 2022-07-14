@@ -116,7 +116,7 @@ public class DepartmentService {
                 System.out.println("restTime = " + restTime);
                 departmentMapper.updateRestTimeByUsername(vacation.getUsername(), restTime);
             }
-            statusCode = StatusCode.builder().resCode(0).resMsg("휴가 수정 완료").build();
+            statusCode = StatusCode.builder().resCode(0).resMsg("정상적으로 해당 휴가를 수정했습니다.").build();
         }
         return new JsonResponse().send(HttpStatus.OK, statusCode);
     }
@@ -176,14 +176,14 @@ public class DepartmentService {
     }
 
     public ResponseEntity<StatusCode> findEmplAtndcById(Long username, String findDate) {
-        List<EmplAtndcView> result = departmentMapper.findEmplAtndcById(username, findDate);
+        List<MonthAtndc> result = departmentMapper.findEmplAtndcById(username, findDate);
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
         Object data = result.stream().map(value -> {
-            map.put("date", value.getDate());
-            map.put("startTime", value.getStartTime());
-            map.put("endTime", value.getEndTime());
-            map.put("status", value.getStatus());
+            map.put("date", value.getADate());
+            map.put("startTime", value.getAStartTime());
+            map.put("endTime", value.getAEndTime());
+            map.put("status", value.getAStatus());
             map.put("vDate", value.getVDate());
             map.put("vType", value.getVType());
             map.put("vContents", value.getVContents());
