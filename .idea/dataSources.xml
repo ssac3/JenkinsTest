@@ -8,12 +8,5 @@
       <jdbc-url>jdbc:mariadb://teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="TEST_AM@teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com" uuid="d1a48dc1-607c-48a3-9cb4-fd6a232da2ed">
-      <driver-ref>mariadb</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://teamssac3.cvmsqg9zdlaq.ap-northeast-2.rds.amazonaws.com:3306/TEST_AM?allowMultiQueries=true&amp;noAccessToProcedureBodies=true</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
   </component>
 </project>
