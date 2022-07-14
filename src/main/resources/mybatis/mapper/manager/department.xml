@@ -64,19 +64,38 @@
     <select id="findEmpAllByDepId" resultType="User">
         SELECT username, D.name as department, E.name as name, email, gender, position, created_at as createdAt
         FROM EMPLOYEE E INNER JOIN DEPARTMENT D ON E.dep_id = D.id
-        WHERE dep_id = #{id};
+        WHERE dep_id = #{id} and E.working_status = 0;
     </select>
 
-    <select id="findEmplAtndcById" resultType="EmplAtndcView">
-        SELECT a.date as date, a.start_time as startTime, a.end_time as endTime, a.status as status, v.date as vDate, v.vacation_type as vType, v.contents as vContents, v.approval_flag as vApprovalFlag
-        FROM ATTENDANCE a LEFT OUTER JOIN VACATION v
-        on a.id = v.a_id
-        WHERE a.username = #{username} and DATE_FORMAT(a.date, '%Y-%m') = #{findDate}
+    <select id="findEmplAtndcById" resultType="MonthAtndc">
+        SELECT AR.a_id, AR.a_status, AR.a_date, AR.a_start_time,
+               AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
+               AR.r_contents, AR.r_approval_flag, V.id as 'v_id',V.username as 'v_username',V.date as 'v_date',
+                V.vacation_type as 'vType', V.approval_flag as 'v_approval_flag', V.contents as 'v_contents'
+        FROM VACATION V LEFT OUTER JOIN
+             (
+                 SELECT A.id as 'a_id', A.status as 'a_status',A.date as 'a_date', A.start_time as 'a_start_time',
+                         A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
+                         R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+                 FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
+                 WHERE A.username = #{username} and date_Format(A.date,'%Y-%m') = #{findDate}
+             ) AR
+             ON AR.a_id = V.a_id
+        WHERE V.username = #{username} and date_Format(V.date,'%Y-%m') = #{findDate} and V.approval_flag != '3'
         UNION
-        SELECT a.date as date, a.start_time as startTime, a.end_time as endTime, a.status as status, v.date as vDate, v.vacation_type as vType, v.contents as vContents, v.approval_flag as vApprovalFlag
-        FROM ATTENDANCE a RIGHT OUTER JOIN VACATION v
-        ON a.id = v.a_id
-        WHERE v.username = #{username} AND DATE_FORMAT(v.date, '%Y-%m') = #{findDate};
+        SELECT AR.a_id, AR.a_status, AR.a_date, AR.a_start_time,
+               AR.a_end_time, AR.r_id, AR.r_start_time, AR.r_end_time,
+               AR.r_contents, AR.r_approval_flag, V.id as 'v_id', V.username as'v_username',V.date as 'v_date',
+                V.vacation_type as 'vType', V.approval_flag as 'v_approval', V.contents as 'v_contents'
+        FROM VACATION V RIGHT OUTER JOIN
+             (
+                 SELECT A.id as 'a_id', A.status as 'a_status', A.date as 'a_date', A.start_time as 'a_start_time',
+                         A.end_time as 'a_end_time', R.id as 'r_id', R.start_time as 'r_start_time', R.end_time as 'r_end_time',
+                         R.contents as 'r_contents', R.approval_flag as 'r_approval_flag'
+                 FROM ATTENDANCE A LEFT OUTER JOIN REARRANGE R ON A.id = R.a_id
+                 WHERE A.username = #{username} and date_Format(A.date,'%Y-%m') = #{findDate}
+             ) AR
+             ON AR.a_id = V.a_id;
     </select>
 
     <select id="findEmplAtndStatsById" resultType="Month">
@@ -86,7 +105,7 @@
          ,count(case when status = '2' then 1 end) as 'absence_count'
          ,E.rest_time as 'vacation_time'
         FROM ATTENDANCE A
-                 JOIN EMPLOYEE E on A.username = E.username
+        JOIN EMPLOYEE E on A.username = E.username
         WHERE A.username = #{username} and date_format(date, '%Y') = #{year}
         GROUP BY month;
     </select>
