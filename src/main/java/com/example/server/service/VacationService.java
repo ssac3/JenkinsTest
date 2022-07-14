@@ -57,16 +57,16 @@ public class VacationService {
                             if(cancelres > 0) { //휴가 취소 ? true / false
                                 int rest = vacationMapper.returnRestTime(Long.parseLong(username), time);
                                 if(rest > 0){ return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("승인된 휴가 취소").build());}
-                                else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(4).resMsg("승인된 휴가 취소 실패").build());}
+                                else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(2).resMsg("승인된 휴가 취소 실패").build());}
                             }
                         } else {
                             int cancelres = vacationMapper.cancelVacation(vDTO);
                             if (cancelres > 0) { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(0).resMsg("미승인된 휴가 취소").build());}
-                            else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(6).resMsg("미승인된 휴가 취소").build());}
+                            else { return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(3).resMsg("미승인된 휴가 취소 실패").build());}
                         }
-                    } else {new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(8).resMsg("이미 취소된 휴가입니다. 실패").build());}
-                    return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(9).resMsg("취소할 휴가 조회 실패").build());
-                }).orElseGet(() ->new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(10).resMsg("취소할 휴가 조회 실패").build()));
+                    } else {new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(4).resMsg("이미 취소된 휴가입니다. 실패").build());}
+                    return new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(5).resMsg("취소할 휴가 조회 실패").build());
+                }).orElseGet(() ->new JsonResponse().send(HttpStatus.OK, StatusCode.builder().resCode(6).resMsg("취소할 휴가 조회 실패").build()));
     }
     public ResponseEntity<StatusCode> viewVacation(String username, Vacation vacation) {
         vacation.setUsername(Long.parseLong(username));
