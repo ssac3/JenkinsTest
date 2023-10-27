@@ -13,7 +13,8 @@
 |mybatis| DB에 질의할 쿼리문(mapper.xml)과 mybatis config file 디렉토리 |
 
 ## 데이터베이스 설계
-![ATTENDANCE_MANAGEMENT](https://github.com/ssac3/server/assets/74586766/5a80f4fd-c2d2-4d61-ac0d-b999d8df0562)
+![ATTENDANCE_MANAGEMENT](https://github.com/ssac3/server/assets/74586766/d0f28653-2a5f-48f2-a1b3-7087e9f80a69)
+
 
 ## 관리자 - 사원관리 기능
  - 사원 등록/삭제/수정
