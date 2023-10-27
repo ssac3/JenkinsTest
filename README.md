@@ -15,7 +15,7 @@
 ## 데이터베이스 설계
 ![ATTENDANCE_MANAGEMENT](https://github.com/ssac3/server/assets/74586766/d0f28653-2a5f-48f2-a1b3-7087e9f80a69)
 
-#역할분담
+# 역할분담
 
 ## 일별관리, 근태관리 [ME]
  - 일별 근태이력(출근/퇴근 시간. 정상/이상 판정시 색을 통해 표시)을 달력을 통해 표시한다.
